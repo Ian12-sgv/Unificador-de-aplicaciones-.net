@@ -1,0 +1,77 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="Appinventario.Views.MovTransferenciasPage"
+             xmlns:local="clr-namespace:Appinventario.Controls"
+             Visual="Material"
+             Title="Agregar Artículos">
+    <ContentPage.Content>
+        <AbsoluteLayout VerticalOptions="FillAndExpand">
+            <Label  x:Name="lblUrl"  
+             Text="{Binding IP, Mode=TwoWay}" 
+             FontSize="Small"  
+             TextColor="Orange"
+             IsVisible="false"/>
+            <Label x:Name="lblInserte" 
+            Text="Inserte código"
+            HorizontalOptions="StartAndExpand" 
+            FontSize="Header"
+            FontAttributes="Italic"
+            HorizontalTextAlignment="Center"/>
+            <Label x:Name="lblArt" 
+            Text="Artículo:"
+            HorizontalOptions="StartAndExpand" 
+            FontSize="Large"
+            FontAttributes="Italic"
+            AbsoluteLayout.LayoutBounds="0,0,400,100"
+            AbsoluteLayout.LayoutFlags="YProportional,XProportional"/>
+            <Label x:Name="lblArticulo" 
+            Text=""
+            HorizontalOptions="StartAndExpand" 
+            FontSize="Large"
+            TextColor="#f35e20"
+            AbsoluteLayout.LayoutBounds="0,0.05,400,100"
+            AbsoluteLayout.LayoutFlags="YProportional,XProportional"/>
+            <Label x:Name="lblCaja" 
+            Text="Número Caja:"
+            FontSize="Large"
+            FontAttributes="Italic"
+            AbsoluteLayout.LayoutBounds="0,0.21,400,100"
+            AbsoluteLayout.LayoutFlags="YProportional,XProportional"/>
+            <local:RoundedEntry2 x:Name="txtCaja" 
+            Text=""
+            FontSize="Medium"
+            TextColor="#f35e20"
+            AbsoluteLayout.LayoutBounds="0,0.21,500,100"
+            AbsoluteLayout.LayoutFlags="YProportional,XProportional"/>
+            <Label x:Name="lbCant" 
+            Text="Cantidad:"
+            FontSize="Medium"
+            FontAttributes="Italic"
+            AbsoluteLayout.LayoutBounds="0,0.5,500,100"
+            AbsoluteLayout.LayoutFlags="YProportional,XProportional"/>
+            <local:RoundedEntry2 x:Name="txtCantidad"
+                Placeholder="Cantidad" 
+                Text="{Binding Cantidad, Mode=TwoWay}" 
+                FontSize="Small" 
+                HorizontalTextAlignment="Start"
+                CursorPosition="0"
+                AbsoluteLayout.LayoutBounds="0,0.5,600,100"
+                AbsoluteLayout.LayoutFlags="YProportional,XProportional"/>
+            <local:SoftkeyboardDisabledEntry x:Name="BarcodeEntry" 
+                         Placeholder="Código de barra" 
+                         Completed="LoadInventario"
+                         FontSize="Large" 
+                         CursorPosition="0"
+                         HorizontalTextAlignment="Center"
+                         AbsoluteLayout.LayoutBounds="0.5,0.86,350,100"
+                         AbsoluteLayout.LayoutFlags="YProportional,XProportional"/>
+            <Button x:Name="btnAgregar"
+                    Text="Agregar"
+                    Clicked="Agregar_Clicked"
+                    AbsoluteLayout.LayoutBounds="0.5,0.97,220,55"
+                    AbsoluteLayout.LayoutFlags="PositionProportional"/>
+
+        </AbsoluteLayout>
+    </ContentPage.Content>
+</ContentPage>

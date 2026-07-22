@@ -1,0 +1,61 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp2.1</TargetFramework>
+    <AssemblyVersion>1.0.284.0</AssemblyVersion>
+    <FileVersion>1.0.284.0</FileVersion>
+    <UserSecretsId>21e48219-600c-408b-8a22-b87d830b32ad</UserSecretsId>
+    <AssemblyName>ServicioInventario</AssemblyName>
+    <ApplicationIcon>1024.ico</ApplicationIcon>
+    <IsPublishable>True</IsPublishable>
+    <DebugType>embedded</DebugType>
+    <ProduceReferenceAssembly>True</ProduceReferenceAssembly>
+    <GeneratePackageOnBuild>False</GeneratePackageOnBuild>
+    <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
+    <StartupObject></StartupObject>
+    <RunAnalyzersDuringBuild>True</RunAnalyzersDuringBuild>
+    <OutputType>Exe</OutputType>
+    <UseAppHost>true</UseAppHost>
+    <RuntimeIdentifiers>win-x64</RuntimeIdentifiers>
+    <NuGetAudit>false</NuGetAudit>
+    <NoWarn>$(NoWarn);NETSDK1138;CS1998</NoWarn>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <Optimize>True</Optimize>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <_WebToolingArtifacts Remove="Properties\PublishProfiles\FolderProfile2.pubxml" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Properties\PublishProfiles\" />
+    <Folder Include="wwwroot\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Update="config\**\*.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <None Update="config\README.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </None>
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Dapper" Version="2.0.78" />
+    <PackageReference Include="log4net" Version="2.0.13" />
+    <PackageReference Include="Microsoft.AspNetCore.App" />
+    <PackageReference Include="Swashbuckle.AspNetCore.SwaggerGen" Version="6.1.3" />
+    <PackageReference Include="Swashbuckle.AspNetCore.SwaggerUi" Version="6.1.3" />
+    <PackageReference Include="System.Data.SqlClient" Version="4.5.3" />
+    <PackageReference Include="System.Runtime.CompilerServices.Unsafe" Version="5.0.0" />
+    <PackageReference Include="System.Text.Encodings.Web" Version="4.6.0" />
+  </ItemGroup>
+
+  <ProjectExtensions><VisualStudio><UserProperties appsettings_1json__JsonSchema="" /></VisualStudio></ProjectExtensions>
+
+</Project>

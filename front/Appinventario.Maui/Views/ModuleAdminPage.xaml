@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="Appinventario.Views.ModuleAdminPage"
+             Title="Gestion de Apps"
+             BackgroundColor="#F4F6F8">
+    <ContentPage.Content>
+        <Grid Padding="12" RowSpacing="10">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="*" />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+
+            <Frame Grid.Row="0"
+                   Padding="12"
+                   CornerRadius="12"
+                   HasShadow="False"
+                   BorderColor="#D9E1E5"
+                   BackgroundColor="White">
+                <Label Text="Active o desactive módulos para los usuarios. Sistema siempre puede entrar a esta pantalla."
+                       TextColor="#24343A"
+                       FontSize="13" />
+            </Frame>
+
+            <CollectionView Grid.Row="1"
+                            x:Name="listModules"
+                            SelectionMode="None">
+                <CollectionView.ItemTemplate>
+                    <DataTemplate>
+                        <Border Margin="0,0,0,8"
+                                Padding="12"
+                                BackgroundColor="White"
+                                Stroke="#D9E1E5"
+                                StrokeThickness="1">
+                            <Border.StrokeShape>
+                                <RoundRectangle CornerRadius="10" />
+                            </Border.StrokeShape>
+                            <Grid ColumnDefinitions="*,Auto" ColumnSpacing="12">
+                                <VerticalStackLayout Grid.Column="0" Spacing="2">
+                                    <Label Text="{Binding Title}"
+                                           FontAttributes="Bold"
+                                           TextColor="#24343A" />
+                                    <Label Text="{Binding Key}"
+                                           FontSize="12"
+                                           TextColor="#60727A" />
+                                </VerticalStackLayout>
+                                <Switch Grid.Column="1"
+                                        IsToggled="{Binding IsEnabled, Mode=TwoWay}"
+                                        Toggled="OnModuleToggled" />
+                            </Grid>
+                        </Border>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
+
+            <Button Grid.Row="2"
+                    Text="Aplicar cambios"
+                    Clicked="OnApplyClicked"
+                    BackgroundColor="#0B8F72"
+                    TextColor="White"
+                    CornerRadius="10" />
+        </Grid>
+    </ContentPage.Content>
+</ContentPage>

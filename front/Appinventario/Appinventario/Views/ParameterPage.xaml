@@ -1,0 +1,54 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="Appinventario.Views.NewItemPage"
+             xmlns:local="clr-namespace:Appinventario.Controls"
+             Shell.PresentationMode="ModalAnimated"
+             Title="Parámetro(s)"
+             xmlns:ios="clr-namespace:Xamarin.Forms.PlatformConfiguration.iOSSpecific;assembly=Xamarin.Forms.Core"
+             ios:Page.UseSafeArea="true" 
+             IsVisible="{Binding SelectCommand}"  >
+    <ContentPage.Content>
+        <StackLayout Spacing="3" Padding="15" >
+            <Label Text="{Binding Id, Mode=TwoWay}" 
+                   FontSize="Medium" 
+                   IsVisible="false"/>
+            <Label Text="Ruta conexión" 
+                   FontSize="Medium" />
+            <local:RoundedEntry  Placeholder="URL: 192.168.10.10:8000" 
+                                 Text="{Binding IP, Mode=TwoWay}" 
+                                 FontSize="Medium"
+                                 Keyboard="Url"/>
+            <Label Text=" " />
+            <StackLayout Orientation="Horizontal">
+                <Label Text="Usar id único al procesar?" />
+                <CheckBox x:Name="chkImei" IsChecked="{Binding Idimei}"/>
+            </StackLayout>
+            <StackLayout Orientation="Horizontal">
+                <Button Text="Cancelar" 
+                        Command="{Binding CancelCommand}" 
+                        HorizontalOptions="FillAndExpand">
+                    
+                </Button>
+                <Button Text="Testear" 
+                        Clicked="OnButtonClicked" 
+                        HorizontalOptions="FillAndExpand">
+                    
+                </Button>
+                <Button Text="Guardar" Command="{Binding SaveCommand}" 
+                        HorizontalOptions="FillAndExpand"
+                        IsEnabled="False">
+                    
+                </Button>
+            </StackLayout>
+            <Label x:Name="lblMessage" 
+                   Text="{Binding Message, Mode=TwoWay}" 
+                   FontSize="Medium" 
+                   IsVisible="true"/>
+            <Label Text="{Binding Sucursal, Mode=TwoWay}"
+                   FontSize="Medium" 
+                   IsVisible="true"/>
+        </StackLayout>
+    </ContentPage.Content>
+    
+</ContentPage>

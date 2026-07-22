@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="Appinventario.Views.BorradorDev.BorradorDevSearchPage"
+             Visual="Material"
+             Title="Buscar Numero"
+             BackgroundColor="#F4F6F8">
+    <ContentPage.Content>
+        <StackLayout Padding="12" Spacing="10">
+            <SearchBar x:Name="searchBar"
+                       Placeholder="Buscar por numero, usuario u observacion"
+                       TextChanged="OnSearchTextChanged"
+                       SearchButtonPressed="OnSearchButtonPressed" />
+
+            <Frame x:Name="frameStatus"
+                   IsVisible="False"
+                   Padding="12,10"
+                   CornerRadius="10"
+                   HasShadow="False"
+                   BorderColor="#D6E0E5"
+                   BackgroundColor="#EEF5F7">
+                <Label x:Name="lblStatus"
+                       FontSize="13"
+                       TextColor="#1E4855"
+                       LineBreakMode="WordWrap" />
+            </Frame>
+
+            <ListView x:Name="listResults"
+                      HasUnevenRows="True"
+                      ItemTapped="OnItemTapped"
+                      SeparatorVisibility="None"
+                      BackgroundColor="Transparent">
+                <ListView.ItemTemplate>
+                    <DataTemplate>
+                        <ViewCell>
+                            <Frame Margin="0,0,0,8"
+                                   Padding="12"
+                                   CornerRadius="10"
+                                   HasShadow="False"
+                                   BorderColor="#D9E1E5"
+                                   BackgroundColor="White">
+                                <StackLayout Spacing="4">
+                                    <Label Text="{Binding NumeroDisplay}"
+                                           FontAttributes="Bold"
+                                           FontSize="16"
+                                           TextColor="#24343A" />
+                                    <Label Text="{Binding ResumenDisplay}"
+                                           FontSize="12"
+                                           TextColor="#60727A"
+                                           LineBreakMode="WordWrap" />
+                                </StackLayout>
+                            </Frame>
+                        </ViewCell>
+                    </DataTemplate>
+                </ListView.ItemTemplate>
+            </ListView>
+        </StackLayout>
+    </ContentPage.Content>
+</ContentPage>

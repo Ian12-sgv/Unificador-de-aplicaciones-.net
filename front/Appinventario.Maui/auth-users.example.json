@@ -1,0 +1,15 @@
+[
+  {
+    "username": "YOUR_USERNAME",
+    "password": "YOUR_PASSWORD",
+    "role": "Administrator",
+    "email": "user@example.invalid",
+    "allowedModules": [
+      "price",
+      "borrador",
+      "transferencias",
+      "parameters"
+    ],
+    "canManageModules": true
+  }
+]

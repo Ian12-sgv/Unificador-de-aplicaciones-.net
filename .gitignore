@@ -1,0 +1,71 @@
+# Visual Studio / .NET
+.vs/
+**/bin/
+**/obj/
+**/publish/
+*.user
+*.suo
+*.pdb
+**/Resource.designer.cs
+
+# Flutter / Dart
+**/.dart_tool/
+**/build/
+**/.flutter-plugins
+**/.flutter-plugins-dependencies
+**/.packages
+
+# Build and distribution artifacts
+dist/
+*.apk
+*.aab
+*.idsig
+*.rar
+*.zip
+*.7z
+*.dll
+*.exe
+
+# Local logs and diagnostic output
+*.log
+logcat*.txt
+run-stdout*.txt
+run-stderr*.txt
+front/Appinventario.Maui/pda-*.png
+front/Appinventario.Maui/view.xml
+front/Appinventario.Maui/wd*.xml
+front/Appinventario.Maui/window_dump.xml
+back/BackBorradorDev/api_response.json
+back/BackBorradorDev/api_transferencia.json
+back/BackBorradorDev/state*.json
+back/BackBorradorDev/summary.json
+
+# Local secrets and signing material
+.env
+.env.*
+!.env.example
+**/appsettings.json
+**/appsettings.Local.json
+**/appsettings.Production.json
+!**/appsettings.example.json
+*.keystore
+*.jks
+*.pfx
+*.p12
+*.pem
+*.key
+**/auth-users.json
+**/auth-users.local.json
+**/AuthService.Local.cs.disabled
+
+# Local scripts that currently contain database credentials
+back/BackBorradorDev/check_74581.ps1
+back/BackBorradorDev/check_74581.py
+back/BackBorradorDev/test_sql_connection.ps1
+back/WebServicesApiNetCor/config/escucha.json
+back/WebServicesApiNetCor/config/README.txt
+
+# OS and shortcuts
+.DS_Store
+Thumbs.db
+*.lnk

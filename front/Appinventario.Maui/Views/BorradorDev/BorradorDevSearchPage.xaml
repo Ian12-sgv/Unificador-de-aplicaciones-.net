@@ -1,0 +1,81 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="Appinventario.Views.BorradorDev.BorradorDevSearchPage"
+             Visual="Material"
+             Title="Buscar Numero"
+             BackgroundColor="#F4F6F8">
+    <ContentPage.Content>
+        <Grid Padding="12" RowSpacing="10">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="*" />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+
+            <Grid Grid.Row="0" ColumnSpacing="8">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+
+                <Entry x:Name="txtSearch"
+                       Grid.Column="0"
+                       Placeholder="Numero, usuario u observacion"
+                       TextChanged="OnSearchTextChanged"
+                       Completed="OnSearchCompleted"
+                       BackgroundColor="White"
+                       TextColor="#1D2E35" />
+
+                <Button Grid.Column="1"
+                        Text="Buscar"
+                        Clicked="OnSearchClicked"
+                        BackgroundColor="#EAF1F4"
+                        TextColor="#1E4855"
+                        CornerRadius="8" />
+            </Grid>
+
+            <Border x:Name="frameStatus"
+                    Grid.Row="1"
+                    IsVisible="False"
+                    Padding="12,10"
+                    Stroke="#D6E0E5"
+                    StrokeThickness="1"
+                    BackgroundColor="#EEF5F7">
+                <Border.StrokeShape>
+                    <RoundRectangle CornerRadius="10" />
+                </Border.StrokeShape>
+                <Label x:Name="lblStatus"
+                       FontSize="13"
+                       TextColor="#1E4855"
+                       LineBreakMode="WordWrap" />
+            </Border>
+
+            <Label Grid.Row="2"
+                   Text="Resultados"
+                   FontAttributes="Bold"
+                   FontSize="13"
+                   TextColor="#60727A" />
+
+            <ScrollView Grid.Row="3"
+                        VerticalScrollBarVisibility="Always">
+                <VerticalStackLayout x:Name="stackResults"
+                                     Spacing="8"
+                                     Padding="0,0,0,4" />
+            </ScrollView>
+
+            <Button x:Name="btnMore"
+                    Grid.Row="4"
+                    Text="Mas"
+                    Clicked="OnMoreClicked"
+                    IsVisible="False"
+                    BackgroundColor="#FFFFFF"
+                    TextColor="#1E4855"
+                    BorderColor="#C8D5DB"
+                    BorderWidth="1"
+                    CornerRadius="8" />
+        </Grid>
+    </ContentPage.Content>
+</ContentPage>

@@ -1,0 +1,66 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="Appinventario.Views.InventarioPage"
+             xmlns:local="clr-namespace:Appinventario.Controls"
+             Visual="Material"
+             Title="Inventario">
+    <ContentPage.Content>
+        <AbsoluteLayout VerticalOptions="FillAndExpand">
+            <Label  x:Name="lblUrl"  
+                    Text="{Binding IP, Mode=TwoWay}" 
+                    FontSize="Small"  
+                    TextColor="Orange"
+                    IsVisible="false"/>
+            <Label x:Name="lblInserte" 
+                   Text="Inserte código"
+                   HorizontalOptions="StartAndExpand" 
+                   FontSize="Header"
+                   FontAttributes="Italic"
+                   HorizontalTextAlignment="Center"/>
+            <Label x:Name="lblArt" 
+                   Text="Artículo:"
+                   HorizontalOptions="StartAndExpand" 
+                   FontSize="Large"
+                   FontAttributes="Italic"
+                   AbsoluteLayout.LayoutBounds="0,0,400,100"
+                   AbsoluteLayout.LayoutFlags="YProportional,XProportional"/>
+            <Label x:Name="lblArticulo" 
+                   Text=""
+                   HorizontalOptions="StartAndExpand" 
+                   FontSize="Large"
+                   TextColor="#f35e20"
+                   AbsoluteLayout.LayoutBounds="0,0.1,400,100"
+                   AbsoluteLayout.LayoutFlags="YProportional,XProportional"/>
+            <Label x:Name="lblExis" 
+                   Text="Existencia:"
+                   FontSize="Large"
+                   FontAttributes="Italic"
+                   AbsoluteLayout.LayoutBounds="0,0.2,400,100"
+                   AbsoluteLayout.LayoutFlags="YProportional,XProportional"/>
+            <Label x:Name="lblExistencia" 
+                   Text=""
+                   FontSize="Header"
+                   TextColor="#f35e20"
+                   AbsoluteLayout.LayoutBounds="0,0.3,400,150"
+                   AbsoluteLayout.LayoutFlags="YProportional,XProportional"/>
+            <local:SoftkeyboardDisabledEntry x:Name="BarcodeEntry" 
+                                Placeholder="Código de barra" 
+                                Completed="LoadInventario"
+                                FontSize="Large" 
+                                CursorPosition="0"
+                                HorizontalTextAlignment="Center"
+                                AbsoluteLayout.LayoutBounds="0.5,0.90,350,100"
+                                AbsoluteLayout.LayoutFlags="YProportional,XProportional"/>
+            <!--<local:RoundedEntry x:Name="BarcodeEntry" 
+                                Placeholder="Código de barra" 
+                                Completed="LoadInventario"
+                                FontSize="Large" 
+                                CursorPosition="0"
+                                HorizontalTextAlignment="Center"
+                                AbsoluteLayout.LayoutBounds="0.5,0.90,350,100"
+                                AbsoluteLayout.LayoutFlags="YProportional,XProportional"/>-->
+            
+        </AbsoluteLayout>
+    </ContentPage.Content>
+</ContentPage>

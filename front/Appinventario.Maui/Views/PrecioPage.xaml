@@ -1,0 +1,147 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="Appinventario.Views.PrecioPage"
+             xmlns:local="clr-namespace:Appinventario.Controls"
+             Title="Consultar Precio">
+
+    <ContentPage.Content>
+        <Grid RowSpacing="0">
+
+            <!-- CONTENIDO PRINCIPAL -->
+            <ScrollView Grid.Row="0">
+                <!-- Menos separación general -->
+                <StackLayout Padding="20,16,20,8" Spacing="6">
+
+                    <Label x:Name="lblUrl"
+                           Text="{Binding IP, Mode=TwoWay}"
+                           FontSize="Small"
+                           TextColor="Orange"
+                           IsVisible="false"/>
+
+                    <Label x:Name="lblInserte"
+                           Text="Inserte código"
+                           FontSize="Header"
+                           FontAttributes="Italic"
+                           HorizontalTextAlignment="Center"
+                           IsVisible="True"/>
+
+                    <!-- Artículo -->
+                    <StackLayout Spacing="2">
+                        <Label x:Name="lblArt"
+                               Text="Artículo:"
+                               FontSize="Medium"
+                               FontAttributes="Italic"
+                               IsVisible="False"/>
+                        <Label x:Name="lblArticulo"
+                               Text=""
+                               FontSize="Large"
+                               TextColor="#f35e20"
+                               LineBreakMode="TailTruncation"
+                               MaxLines="2"
+                               IsVisible="False"/>
+                    </StackLayout>
+
+                    <!-- Existencia (en una sola línea) -->
+                    <!-- Mantengo lblExi por compatibilidad con tu .cs, pero no lo usamos -->
+                    <Label x:Name="lblExi" IsVisible="False" />
+
+                    <Label x:Name="lblExistencia"
+                           Text="Existencia: Cantidad: "
+                           FontSize="Large"
+                           TextColor="#f35e20"
+                           IsVisible="False"/>
+
+                    <!-- Precio Detal -->
+                    <StackLayout Spacing="2">
+                        <Label x:Name="lblPrec"
+                               Text="Precio Detal:"
+                               FontSize="Medium"
+                               FontAttributes="Italic"
+                               IsVisible="False"/>
+                        <Label x:Name="lblPrecio"
+                               Text=""
+                               FontSize="Large"
+                               TextColor="#f35e20"
+                               IsVisible="False"/>
+                    </StackLayout>
+
+                    <!-- Costo Inicial -->
+                    <StackLayout Spacing="2">
+                        <Label x:Name="lblCosto"
+                               Text="Costo Inicial:"
+                               FontSize="Medium"
+                               FontAttributes="Italic"
+                               IsVisible="False"/>
+                        <Label x:Name="lblCostoInicial"
+                               Text=""
+                               FontSize="Large"
+                               TextColor="#f35e20"
+                               IsVisible="False"/>
+                    </StackLayout>
+
+                    <!-- Referencia -->
+                    <StackLayout Spacing="2">
+                        <Label x:Name="lblDol"
+                               Text="Referencia:"
+                               FontSize="Medium"
+                               FontAttributes="Italic"
+                               IsVisible="False"/>
+                        <Label x:Name="lblDolar"
+                               Text=""
+                               FontSize="Large"
+                               TextColor="#f35e20"
+                               IsVisible="False"/>
+                    </StackLayout>
+
+                    <!-- Promoción -->
+                    <StackLayout Spacing="2">
+                        <Label x:Name="lblPromo"
+                               Text="Promoción"
+                               FontSize="Medium"
+                               FontAttributes="Italic"
+                               IsVisible="False"/>
+
+                        <Grid ColumnSpacing="10">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition Width="Auto"/>
+                            </Grid.ColumnDefinitions>
+
+                            <Label x:Name="lblPromocion"
+                                   Grid.Column="0"
+                                   Text=""
+                                   FontSize="40"
+                                   TextColor="DarkRed"
+                                   IsVisible="False"/>
+
+                            <Label x:Name="lblPorcentaje"
+                                   Grid.Column="1"
+                                   Text=""
+                                   FontSize="40"
+                                   TextColor="DarkRed"
+                                   IsVisible="False"/>
+                        </Grid>
+                    </StackLayout>
+
+                    <!-- menos espacio abajo -->
+                    <BoxView HeightRequest="55" Opacity="0"/>
+                </StackLayout>
+            </ScrollView>
+
+            <!-- ENTRY FIJO ABAJO -->
+            <Grid VerticalOptions="End" Padding="20,0,20,16">
+                <local:RoundedEntry x:Name="BarcodeEntry"
+                                    Placeholder="Código de barra"
+                                    Completed="LoadInventario"
+                                    ReturnType="Search"
+                                    FontSize="Large"
+                                    CursorPosition="0"
+                                    HorizontalTextAlignment="Center"
+                                    HeightRequest="55"/>
+            </Grid>
+
+        </Grid>
+    </ContentPage.Content>
+</ContentPage>
+

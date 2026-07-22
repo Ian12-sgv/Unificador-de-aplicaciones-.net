@@ -1,0 +1,6 @@
+@BackBorradorDev_HostAddress = http://localhost:5082
+
+GET {{BackBorradorDev_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###

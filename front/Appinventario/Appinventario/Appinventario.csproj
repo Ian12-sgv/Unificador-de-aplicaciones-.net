@@ -1,0 +1,110 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <ProduceReferenceAssembly>true</ProduceReferenceAssembly>
+    <AssemblyVersion>1.0.122.799</AssemblyVersion>
+    <FileVersion>1.0.122.799</FileVersion>
+    <Company>CONETSOFT C.A.</Company>
+    <Product>stock+</Product>
+    <Copyright>2021</Copyright>
+    <Authors>Carlos Gómez</Authors>
+    <Version>1.0.0.413</Version>
+    <AssemblyName>AppInv</AssemblyName>
+    <ApplicationIcon>Windows Mobility Center.ico</ApplicationIcon>
+    <PackageId>AppInv</PackageId>
+    <PlatformTarget>x86</PlatformTarget>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNet.WebApi.Client" Version="5.2.7" />
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
+    <PackageReference Include="sqlite-net-pcl" Version="1.7.335" />
+    <PackageReference Include="Xamarin.Forms" Version="5.0.0.2012" />  
+    <PackageReference Include="Xamarin.Essentials" Version="1.6.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="Mono.Android">
+      <HintPath>C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\Common7\IDE\ReferenceAssemblies\Microsoft\Framework\MonoAndroid\v11.0\Mono.Android.dll</HintPath>
+    </Reference>
+    <Reference Include="Xamarin.AndroidX.AppCompat">
+      <HintPath>C:\Program Files (x86)\Microsoft\Xamarin\NuGet\xamarin.androidx.appcompat\1.2.0.6\lib\monoandroid90\Xamarin.AndroidX.AppCompat.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Update="Views\TomaFisicaPage.xaml.cs">
+      <DependentUpon>TomaFisicaPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Update="Views\ParameterPage.xaml.cs">
+      <DependentUpon>ParameterPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Update="Views\TransferenciaPage.xaml.cs">
+      <DependentUpon>TransferenciaPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Update="Views\BorradorDev\BorradorDevPage.xaml.cs">
+      <DependentUpon>BorradorDevPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Update="Views\BorradorDev\BorradorDevParametersPage.xaml.cs">
+      <DependentUpon>BorradorDevParametersPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Update="Views\BorradorDev\BorradorDevSearchPage.xaml.cs">
+      <DependentUpon>BorradorDevSearchPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Update="Views\BorradorDev\BorradorDevDetailPage.xaml.cs">
+      <DependentUpon>BorradorDevDetailPage.xaml</DependentUpon>
+    </Compile>
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Update="Views\AgregarArticuloPage.xaml">
+      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Views\BuscarTomaPage.xaml">
+      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Views\ConsultarTransferenciaPage.xaml">
+      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Views\EliminarTransferenciaPage.xaml">
+      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Views\InventarioPage.xaml">
+      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Views\ItemTransferenciaPage.xaml">
+      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Views\ModificarTransferenciaPage.xaml">
+      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Views\MovTransferenciasPage.xaml">
+      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Views\NuevaTransferenciaPage.xaml">
+      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Views\PrecioPage.xaml">
+      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Views\TomaFisicaDetallePage.xaml">
+      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Views\TransferenciaPage.xaml">
+      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Views\BorradorDev\BorradorDevPage.xaml">
+      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Views\BorradorDev\BorradorDevParametersPage.xaml">
+      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Views\BorradorDev\BorradorDevSearchPage.xaml">
+      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Views\BorradorDev\BorradorDevDetailPage.xaml">
+      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
+    </EmbeddedResource>
+  </ItemGroup>
+</Project>

@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="Appinventario.Views.BorradorDev.BorradorDevParametersPage"
+             Visual="Material"
+             Title="Parametros"
+             BackgroundColor="#F4F6F8">
+    <ContentPage.Content>
+        <ScrollView>
+            <StackLayout Padding="12" Spacing="10">
+                <Frame Padding="12"
+                       CornerRadius="12"
+                       HasShadow="False"
+                       BorderColor="#D9E1E5"
+                       BackgroundColor="#FFFFFF">
+                    <StackLayout Spacing="10">
+                        <Label Text="Configuracion del modulo"
+                               FontSize="16"
+                               FontAttributes="Bold"
+                               TextColor="#24343A" />
+
+                        <StackLayout Spacing="4">
+                            <Label Text="API Base URL"
+                                   FontSize="12"
+                                   TextColor="#5F7179" />
+                            <Entry x:Name="txtBaseUrl"
+                                   Placeholder="http://192.168.0.117:5001"
+                                   Keyboard="Url"
+                                   TextChanged="OnBaseUrlChanged"
+                                   BackgroundColor="#FAFBFC"
+                                   TextColor="#1D2E35" />
+                        </StackLayout>
+
+                        <Label Text="Usa la URL del backend de borradores y prueba la conexion antes de guardar."
+                               FontSize="12"
+                               TextColor="#60727A"
+                               LineBreakMode="WordWrap" />
+                    </StackLayout>
+                </Frame>
+
+                <Frame x:Name="frameStatus"
+                       IsVisible="False"
+                       Padding="12,10"
+                       CornerRadius="10"
+                       HasShadow="False"
+                       BorderColor="#F4C7C3"
+                       BackgroundColor="#FDECEA">
+                    <Label x:Name="lblStatus"
+                           FontSize="13"
+                           LineBreakMode="WordWrap" />
+                </Frame>
+
+                <Grid ColumnSpacing="8">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+
+                    <Button Grid.Column="0"
+                            x:Name="btnTest"
+                            Text="Probar conexion"
+                            Clicked="OnTestClicked"
+                            BackgroundColor="#EAF1F4"
+                            TextColor="#1E4855"
+                            CornerRadius="12" />
+                    <Button Grid.Column="1"
+                            x:Name="btnSave"
+                            Text="Guardar"
+                            Clicked="OnSaveClicked"
+                            BackgroundColor="#0B8F72"
+                            TextColor="White"
+                            CornerRadius="12" />
+                </Grid>
+            </StackLayout>
+        </ScrollView>
+    </ContentPage.Content>
+</ContentPage>

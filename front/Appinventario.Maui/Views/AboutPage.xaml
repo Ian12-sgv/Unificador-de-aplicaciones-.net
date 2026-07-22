@@ -1,0 +1,34 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="Appinventario.Views.AboutPage"
+             Title="PreciosPDB"
+             BackgroundColor="White">
+    
+    <ContentPage.Resources>
+        <ResourceDictionary>
+            <Color x:Key="Accent">#ffffff</Color>
+        </ResourceDictionary>
+    </ContentPage.Resources>
+
+    <Grid BackgroundColor="White">
+        <VerticalStackLayout Padding="0,28,0,0"
+                             Spacing="34"
+                             HorizontalOptions="Center"
+                             VerticalOptions="Start">
+            <Image Source="Conetsoft.png"
+                   HeightRequest="78"
+                   HorizontalOptions="Center"
+                   Aspect="AspectFit" />
+            <Image Source="logoblumer.png"
+                   HeightRequest="42"
+                   HorizontalOptions="Center"
+                   Aspect="AspectFit" />
+        </VerticalStackLayout>
+
+        <Label x:Name="lblImei"
+               IsVisible="False" />
+    </Grid>
+
+</ContentPage>
+

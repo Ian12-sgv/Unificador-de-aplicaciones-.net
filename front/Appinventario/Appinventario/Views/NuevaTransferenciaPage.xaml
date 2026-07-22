@@ -1,0 +1,30 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:viewmodels="clr-namespace:Appinventario.ViewModels" 
+             x:Class="Appinventario.Views.NuevaTransferenciaPage"
+             Visual="Material"
+             Title="Crear Trasferencia">
+    <ContentPage.Content>
+        <StackLayout>
+            <Label Text="Número de la transferencia" Padding="10,0,10,0"/>
+            <Entry x:Name="numero"/>
+            <Label Text="Fecha:" Padding="10,0,10,0"/>
+            <DatePicker x:Name="fecha" VerticalOptions="Center"/>
+            <Label Text="Observación" VerticalOptions="Center" Padding="10,0,10,0"/>
+            <Editor x:Name="observacion" AutoSize="TextChanges"/>
+            <Label Text="Envía:" VerticalOptions="Center" Padding="10,0,10,0"/>
+            <Picker x:Name="listaEnvia"
+                ItemsSource="{Binding Nombre, Mode=TwoWay}"
+                SelectedItem="{Binding Nombre, Mode=TwoWay}">
+            </Picker>
+            <Label Text="Recibe:" VerticalOptions="Center" Padding="10,0,10,0"/>
+            <Picker x:Name="listaRecibe"
+                ItemsSource="{Binding Nombre, Mode=TwoWay}"
+                SelectedItem="{Binding Nombre, Mode=TwoWay}">
+            </Picker>
+            <Button x:Name="Guardar" Text="Guardar" Clicked="Guardar_Clicked"  Margin="20,0"/>
+            <Button x:Name="Cancelar" Text="Cancelar" Margin="20,0"/>
+        </StackLayout>
+    </ContentPage.Content>
+</ContentPage>

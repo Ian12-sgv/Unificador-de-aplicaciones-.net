@@ -1,0 +1,17 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="Appinventario.Views.TransferenciaPage"
+             xmlns:local="clr-namespace:Appinventario.Controls"
+             Visual="Material"
+             Title="Transferencias">
+    <ContentPage.Content >
+        <StackLayout Margin="20,20" >
+            <Button Text="Nueva" Clicked="Button_Nueva" />
+            <Button Text="Consultar" Clicked="Button_Consultar" />
+            <Button Text="Modificar" Clicked="Button_Modificar" />
+            <Button Text="Eliminar" Clicked="Button_Eliminar" />
+            
+        </StackLayout>
+    </ContentPage.Content>
+</ContentPage>

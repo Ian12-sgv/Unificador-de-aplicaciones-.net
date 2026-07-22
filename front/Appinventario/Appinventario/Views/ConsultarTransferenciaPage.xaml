@@ -1,0 +1,27 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml" 
+             xmlns:d="http://xamarin.com/schemas/2014/forms/design"
+             x:Class="Appinventario.Views.ConsultarTransferenciaPage"
+             xmlns:local="clr-namespace:Appinventario.Controls"
+             Visual="Material"
+             Title="Consultar Transferencia">
+    <ContentPage.Content>
+        <StackLayout>
+            <Label  x:Name="lblUrl"  
+            Text= "192.168.0.176:8000"
+            FontSize="Small"  
+            TextColor="Orange"
+            IsVisible="false"/>
+            <ListView HasUnevenRows="True" x:Name="listaTranferencia" SeparatorColor="Black" ItemsSource="{Binding Items}" 
+                  SelectedItem="{Binding SelectedItem, Mode=TwoWay}" >
+                <ListView.ItemTemplate>
+                    <DataTemplate>
+                        <TextCell Text="{Binding Numero}" 
+                        Detail="{Binding Observacion}"/>
+                    </DataTemplate>
+                </ListView.ItemTemplate>
+            </ListView>
+        </StackLayout>
+    </ContentPage.Content>
+</ContentPage>

@@ -1,0 +1,106 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="Appinventario.Views.ItemsPage"
+             Title="{Binding Title}"
+             xmlns:local="clr-namespace:Appinventario.Controls" 
+             xmlns:model="clr-namespace:Appinventario.Models" 
+             x:Name="BrowseItemsPage" IsVisible="{Binding SelectCommand}" >
+
+    <ContentPage.ToolbarItems>
+      <!--  <ToolbarItem Name ="Save" IconImageSource="save.png" Text="" Clicked="OnButtonClicked" /> -->
+        <ToolbarItem Name ="Clear" IconImageSource="delete.png" Text="" Clicked="OnButtonClean" />
+        <ToolbarItem Name ="Search" IconImageSource="search.png" Text="" Clicked="SearchCatalogo" />
+    </ContentPage.ToolbarItems>
+    
+    <ContentPage.Content>
+        <StackLayout Spacing="3" Padding="15" >
+            <!--<Entry x:Name="txtPagina" 
+                   Placeholder="Página" 
+                   Text="{Binding NumeroPagina, Mode=TwoWay}" 
+                   FontSize="Small" 
+                   Keyboard="Numeric"/>
+            <Editor x:Name="txtObs" 
+                    Placeholder="Observación" 
+                    Text="{Binding Observacion, Mode=TwoWay}" 
+                    FontSize="Small" 
+                    HeightRequest="100"/>-->
+
+            <local:RoundedEntry2 x:Name="txtPagina"
+                   Completed ="OnButtonClicked" 
+                   Placeholder="Página" 
+                   Text="{Binding NumeroPagina, Mode=TwoWay}" 
+                   FontSize="Small" 
+                   HorizontalTextAlignment="Start"
+                   CursorPosition="0"
+                   AbsoluteLayout.LayoutBounds="0.5,1,400,100"
+                   AbsoluteLayout.LayoutFlags="YProportional,XProportional"/>
+            <local:RoundedEntry2 x:Name="txtObs"
+                   Completed ="OnButtonClicked" 
+                   Placeholder="Observación" 
+                   Text="{Binding Observacion, Mode=TwoWay}" 
+                   FontSize="Small" 
+                   HorizontalTextAlignment="Start"
+                   CursorPosition="0"
+                   AbsoluteLayout.LayoutBounds="0.5,1,400,100"
+                   AbsoluteLayout.LayoutFlags="YProportional,XProportional"/>           
+            <!--<Entry x:Name="txtCodigo" Placeholder="Código de barra" Text="{Binding CodigoBarra, Mode=TwoWay}" FontSize="Small" /> -->
+            <local:SoftkeyboardDisabledEntry x:Name="txtCodigo"
+                   Completed ="OnButtonClicked" 
+                   Placeholder="Código de barra" 
+                   Text="{Binding CodigoBarra, Mode=TwoWay}" 
+                   FontSize="Large" 
+                   HorizontalTextAlignment="Center"
+                   CursorPosition="0"
+                   AbsoluteLayout.LayoutBounds="0.5,1,400,100"
+                   AbsoluteLayout.LayoutFlags="YProportional,XProportional"/>
+            <Label x:Name="lblArt" 
+                   Text="Artículo" 
+                   HorizontalOptions="StartAndExpand" 
+                   FontSize="Small"
+                   FontAttributes="Italic"/>
+            <Label x:Name="lblArticulo"
+                   Text=""
+                   HorizontalOptions="StartAndExpand" 
+                   FontSize="Large"
+                   TextColor="#f35e20"/>
+            <Label x:Name="lblExis" 
+                   Text="Cantidad:"
+                   FontSize="Small"
+                   FontAttributes="Italic" />
+            <Label x:Name="lblExistencia" 
+                   TextColor="#f35e20"
+                   FontSize="Large" />
+            <Button Text="Ver detalle"
+                    VerticalOptions="CenterAndExpand"
+                    HorizontalOptions="Center"
+                    Clicked="LoadDetalle" />
+            <StackLayout>
+            <Label Text="Servidor:" FontSize="Small" TextColor="Orange"/>
+            <Label  x:Name="lblUrl"  Text="{Binding IP, Mode=TwoWay}" FontSize="Small"  TextColor="Orange"/>
+            </StackLayout>
+        </StackLayout>
+        
+        
+        
+        
+    </ContentPage.Content>
+
+
+
+
+    
+
+
+
+
+
+
+
+
+    <!--
+      x:DataType enables compiled bindings for better performance and compile time validation of binding expressions.
+      https://docs.microsoft.com/xamarin/xamarin-forms/app-fundamentals/data-binding/compiled-bindings
+    -->
+    
+</ContentPage>

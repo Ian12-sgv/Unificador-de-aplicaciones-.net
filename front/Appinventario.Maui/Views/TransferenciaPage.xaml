@@ -1,0 +1,172 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:shapes="clr-namespace:Microsoft.Maui.Controls.Shapes;assembly=Microsoft.Maui.Controls"
+             x:Class="Appinventario.Views.TransferenciaPage"
+             Visual="Material"
+             Title="Transferencias"
+             BackgroundColor="#F3F4F6">
+    <ContentPage.Resources>
+        <Style x:Key="Card" TargetType="Border">
+            <Setter Property="BackgroundColor" Value="White"/>
+            <Setter Property="Padding" Value="12"/>
+            <Setter Property="StrokeThickness" Value="0"/>
+            <Setter Property="StrokeShape">
+                <Setter.Value>
+                    <shapes:RoundRectangle CornerRadius="4"/>
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </ContentPage.Resources>
+
+    <ScrollView>
+        <VerticalStackLayout Padding="12,14,12,24" Spacing="16">
+            <Grid>
+                <VerticalStackLayout Spacing="2">
+                    <Label Text="Bienvenido,"
+                           FontSize="12"
+                           TextColor="#111827"/>
+                    <Label Text="Portal de Transferencias"
+                           FontSize="18"
+                           FontAttributes="Bold"
+                           TextColor="#111827"/>
+                </VerticalStackLayout>
+            </Grid>
+
+            <Grid ColumnDefinitions="*,*,*"
+                  ColumnSpacing="8">
+                <Border Style="{StaticResource Card}"
+                        Padding="8">
+                    <VerticalStackLayout Spacing="4">
+                        <HorizontalStackLayout Spacing="3">
+                            <Label Text="o"
+                                   FontSize="14"
+                                   TextColor="#F59E0B"
+                                   VerticalOptions="Center"/>
+                            <Label Text="Guardadas"
+                                   FontSize="11"
+                                   FontAttributes="Bold"
+                                   TextColor="#111827"
+                                   VerticalOptions="Center"/>
+                        </HorizontalStackLayout>
+                        <Label x:Name="abiertasNumero"
+                               Text="0"
+                               FontSize="13"
+                               FontAttributes="Bold"
+                               TextColor="#111827"/>
+                        <Label x:Name="abiertasItems"
+                               Text="Guardada"
+                               FontSize="10"
+                               TextColor="#111827"/>
+                    </VerticalStackLayout>
+                </Border>
+
+                <Border Grid.Column="1"
+                        Style="{StaticResource Card}"
+                        Padding="8">
+                    <VerticalStackLayout Spacing="4">
+                        <HorizontalStackLayout Spacing="3">
+                            <Label Text="o"
+                                   FontSize="14"
+                                   TextColor="#10B981"
+                                   VerticalOptions="Center"/>
+                            <Label Text="Aprobadas"
+                                   FontSize="11"
+                                   FontAttributes="Bold"
+                                   TextColor="#111827"
+                                   VerticalOptions="Center"/>
+                        </HorizontalStackLayout>
+                        <Label x:Name="procesadasNumero"
+                               Text="0"
+                               FontSize="13"
+                               FontAttributes="Bold"
+                               TextColor="#111827"/>
+                        <Label Text="Aprobada"
+                               FontSize="10"
+                               TextColor="#111827"/>
+                    </VerticalStackLayout>
+                </Border>
+
+                <Border Grid.Column="2"
+                        Style="{StaticResource Card}"
+                        Padding="8">
+                    <VerticalStackLayout Spacing="4">
+                        <HorizontalStackLayout Spacing="3">
+                            <Label Text="o"
+                                   FontSize="14"
+                                   TextColor="#2563EB"
+                                   VerticalOptions="Center"/>
+                            <Label Text="Exportadas"
+                                   FontSize="11"
+                                   FontAttributes="Bold"
+                                   TextColor="#111827"
+                                   VerticalOptions="Center"/>
+                        </HorizontalStackLayout>
+                        <Label x:Name="exportadasNumero"
+                               Text="0"
+                               FontSize="13"
+                               FontAttributes="Bold"
+                               TextColor="#111827"/>
+                        <Label Text="Exportada"
+                               FontSize="10"
+                               TextColor="#111827"/>
+                    </VerticalStackLayout>
+                </Border>
+            </Grid>
+
+            <VerticalStackLayout Spacing="10">
+                <Label Text="Acciones Rapidas"
+                       FontSize="15"
+                       FontAttributes="Bold"
+                       TextColor="#111827"/>
+
+                <Grid ColumnDefinitions="*,*"
+                      ColumnSpacing="10">
+                    <Border Style="{StaticResource Card}">
+                        <VerticalStackLayout Spacing="6"
+                                             HorizontalOptions="Center">
+                            <Label Text="+"
+                                   FontSize="18"
+                                   TextColor="#1D4ED8"
+                                   HorizontalTextAlignment="Center"/>
+                            <Label Text="Nueva"
+                                   FontSize="12"
+                                   TextColor="#111827"
+                                   HorizontalTextAlignment="Center"/>
+                            <Label Text="Adaptacion Desktop"
+                                   FontSize="12"
+                                   TextColor="#111827"
+                                   HorizontalTextAlignment="Center"/>
+                        </VerticalStackLayout>
+                        <Border.GestureRecognizers>
+                            <TapGestureRecognizer Tapped="NuevaCard_Tapped"/>
+                        </Border.GestureRecognizers>
+                    </Border>
+
+                    <Border Grid.Column="1" Style="{StaticResource Card}">
+                        <VerticalStackLayout Spacing="6"
+                                             HorizontalOptions="Center">
+                            <Label Text="&lt;-&gt;"
+                                   FontSize="18"
+                                   TextColor="#1D4ED8"
+                                   HorizontalTextAlignment="Center"/>
+                            <Label Text="Historial"
+                                   FontSize="12"
+                                   FontAttributes="Bold"
+                                   TextColor="#111827"
+                                   HorizontalTextAlignment="Center"/>
+                            <Label Text="Consultar Lista"
+                                   FontSize="12"
+                                   TextColor="#111827"
+                                   HorizontalTextAlignment="Center"/>
+                        </VerticalStackLayout>
+                        <Border.GestureRecognizers>
+                            <TapGestureRecognizer Tapped="HistorialCard_Tapped"/>
+                        </Border.GestureRecognizers>
+                    </Border>
+                </Grid>
+            </VerticalStackLayout>
+
+        </VerticalStackLayout>
+    </ScrollView>
+</ContentPage>

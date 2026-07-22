@@ -1,0 +1,33 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="Appinventario.Views.TomaFisicaDetallePage">
+  <CollectionView x:Name="ListTomaDetalle"
+                   SelectionMode="Single"
+                   SelectionChanged="itemClicked">
+    <CollectionView.ItemTemplate>
+        <DataTemplate>
+            <StackLayout BackgroundColor="#eee"
+                         Orientation="Vertical">
+                <StackLayout Orientation="Horizontal">
+                    <Label Text="{Binding Nombre}"
+                           HorizontalOptions="StartAndExpand"
+                           TextColor="#503026" />
+                    <Label Text="{Binding Cantidad}"
+                           HorizontalOptions="CenterAndExpand"
+                           TextColor="#503026" 
+                           MinimumWidthRequest="50"/>
+                    <Label Text="{Binding CodigoBarra}"
+                           HorizontalOptions="EndAndExpand"
+                           TextColor="#f35e20" />
+                </StackLayout>
+            </StackLayout>
+        </DataTemplate>
+    </CollectionView.ItemTemplate>
+  </CollectionView>
+  <Label x:Name="lblExistencia" 
+         TextColor="#f35e20"
+         FontSize="Large" 
+         HorizontalOptions="EndAndExpand"/>
+</ContentPage>
+

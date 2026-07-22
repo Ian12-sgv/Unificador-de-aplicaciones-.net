@@ -1,0 +1,181 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:shapes="clr-namespace:Microsoft.Maui.Controls.Shapes;assembly=Microsoft.Maui.Controls"
+             x:Class="Appinventario.Views.ConsultarTransferenciaPage"
+             Title="Transferencias"
+             BackgroundColor="#F4F4F5">
+    <Grid RowDefinitions="Auto,*"
+          Padding="8,12,8,0"
+          RowSpacing="10">
+        <VerticalStackLayout Grid.Row="0"
+                             Spacing="8">
+            <VerticalStackLayout Spacing="0">
+                <Label Text="Transferencias"
+                       FontSize="20"
+                       FontAttributes="Bold"
+                       TextColor="#111827"/>
+                <Label Text="Historial y Estado de Inventario"
+                       FontSize="13"
+                       TextColor="#111827"/>
+            </VerticalStackLayout>
+
+            <Border BackgroundColor="White"
+                    Stroke="#E2E8F0"
+                    StrokeThickness="1"
+                    Padding="0">
+                <Border.StrokeShape>
+                    <shapes:RoundRectangle CornerRadius="7"/>
+                </Border.StrokeShape>
+                <SearchBar x:Name="buscarTransferencia"
+                           Placeholder="Buscar por N, sucursal u observacion..."
+                           TextChanged="BuscarTransferencia_TextChanged"
+                           BackgroundColor="Transparent"
+                           CancelButtonColor="#1F4AB8"
+                           FontSize="12"
+                           HeightRequest="44"/>
+            </Border>
+
+            <ScrollView Orientation="Horizontal"
+                        HorizontalScrollBarVisibility="Never"
+                        HeightRequest="36">
+                <HorizontalStackLayout Spacing="7">
+                    <Button x:Name="btnTodas"
+                            Text="Todas"
+                            Clicked="FiltroTodas_Clicked"
+                            HeightRequest="32"
+                            Padding="13,0"
+                            FontSize="12"
+                            FontAttributes="Bold"
+                            CornerRadius="16"
+                            BackgroundColor="#2447B8"
+                            TextColor="White"/>
+                    <Button x:Name="btnAbierta"
+                            Text="GUARDADA"
+                            Clicked="FiltroAbierta_Clicked"
+                            HeightRequest="32"
+                            Padding="13,0"
+                            FontSize="12"
+                            FontAttributes="Bold"
+                            CornerRadius="16"
+                            BackgroundColor="#E9EEF6"
+                            TextColor="#475569"/>
+                    <Button x:Name="btnConfirmada"
+                            Text="APROBADA"
+                            Clicked="FiltroConfirmada_Clicked"
+                            HeightRequest="32"
+                            Padding="13,0"
+                            FontSize="12"
+                            FontAttributes="Bold"
+                            CornerRadius="16"
+                            BackgroundColor="#E9EEF6"
+                            TextColor="#475569"/>
+                    <Button x:Name="btnProcesada"
+                            Text="EXPORTADA"
+                            Clicked="FiltroProcesada_Clicked"
+                            HeightRequest="32"
+                            Padding="13,0"
+                            FontSize="12"
+                            FontAttributes="Bold"
+                            CornerRadius="16"
+                            BackgroundColor="#E9EEF6"
+                            TextColor="#475569"/>
+                </HorizontalStackLayout>
+            </ScrollView>
+
+            <Label x:Name="estadoCarga"
+                   IsVisible="False"
+                   FontSize="12"
+                   TextColor="#9C2F27"/>
+        </VerticalStackLayout>
+
+        <CollectionView Grid.Row="1"
+                        x:Name="listaTranferencia"
+                        SelectionMode="None"
+                        ItemsSource="{Binding TransferenciasFiltradas}">
+            <CollectionView.EmptyView>
+                <Grid Padding="12,40">
+                    <Label Text="Sin transferencias para mostrar."
+                           FontSize="13"
+                           HorizontalTextAlignment="Center"
+                           TextColor="#64748B"/>
+                </Grid>
+            </CollectionView.EmptyView>
+            <CollectionView.ItemTemplate>
+                <DataTemplate>
+                    <Border BackgroundColor="White"
+                            Stroke="#EEF2F7"
+                            StrokeThickness="1"
+                            Margin="0,0,0,10"
+                            Padding="13,12">
+                        <Border.GestureRecognizers>
+                            <TapGestureRecognizer Tapped="Transferencia_Tapped"/>
+                        </Border.GestureRecognizers>
+                        <Border.StrokeShape>
+                            <shapes:RoundRectangle CornerRadius="8"/>
+                        </Border.StrokeShape>
+                        <Grid RowDefinitions="Auto,Auto,1,Auto"
+                              ColumnDefinitions="*,Auto"
+                              RowSpacing="8">
+                            <Label Grid.Row="0"
+                                   Grid.Column="0"
+                                   Text="{Binding NumeroDisplay}"
+                                   FontAttributes="Bold"
+                                   FontSize="13"
+                                   TextColor="#111827"/>
+                            <Border Grid.Row="0"
+                                    Grid.Column="1"
+                                    BackgroundColor="{Binding EstadoFondo}"
+                                    StrokeThickness="0"
+                                    Padding="8,3">
+                                <Border.StrokeShape>
+                                    <shapes:RoundRectangle CornerRadius="4"/>
+                                </Border.StrokeShape>
+                                <Label Text="{Binding EstadoTexto}"
+                                       TextColor="{Binding EstadoColor}"
+                                       FontAttributes="Bold"
+                                       FontSize="12"/>
+                            </Border>
+
+                            <VerticalStackLayout Grid.Row="1"
+                                                 Grid.ColumnSpan="2"
+                                                 Spacing="8">
+                                <Label Text="{Binding SucursalNombreDisplay}"
+                                       FontSize="12"
+                                       TextColor="#111827"/>
+                                <Label Text="{Binding ObservacionDisplay}"
+                                       FontSize="12"
+                                       FontAttributes="Italic"
+                                       TextColor="#111827"/>
+                            </VerticalStackLayout>
+
+                            <BoxView Grid.Row="2"
+                                     Grid.ColumnSpan="2"
+                                     HeightRequest="1"
+                                     Color="#EEF2F7"/>
+
+                            <Grid Grid.Row="3"
+                                  Grid.ColumnSpan="2"
+                                  ColumnDefinitions="*,*,Auto"
+                                  ColumnSpacing="8">
+                                <Label Grid.Column="0"
+                                       Text="{Binding FechaDisplay}"
+                                       FontSize="12"
+                                       TextColor="#111827"/>
+                                <Label Grid.Column="1"
+                                       Text="{Binding ResumenItems}"
+                                       FontSize="12"
+                                       TextColor="#111827"/>
+                                <Label Grid.Column="2"
+                                       Text=">"
+                                       FontSize="18"
+                                       TextColor="#94A3B8"
+                                       VerticalTextAlignment="Center"/>
+                            </Grid>
+                        </Grid>
+                    </Border>
+                </DataTemplate>
+            </CollectionView.ItemTemplate>
+        </CollectionView>
+    </Grid>
+</ContentPage>

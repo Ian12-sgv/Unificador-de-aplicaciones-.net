@@ -1,0 +1,160 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="Appinventario.Views.BorradorDev.BorradorDevDetailPage"
+             Visual="Material"
+             Title="Detalle Borrador"
+             BackgroundColor="#F4F6F8">
+    <ContentPage.Content>
+        <Grid Padding="10" RowSpacing="10">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="*" />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+
+            <Frame Grid.Row="0"
+                   Padding="12"
+                   CornerRadius="12"
+                   HasShadow="False"
+                   BorderColor="#D9E1E5"
+                   BackgroundColor="#FFFFFF">
+                <StackLayout Spacing="4">
+                    <Label x:Name="lblHeaderNumero"
+                           FontAttributes="Bold"
+                           FontSize="16"
+                           TextColor="#24343A" />
+                    <Label x:Name="lblHeaderFecha"
+                           FontSize="12"
+                           TextColor="#60727A" />
+                    <Label x:Name="lblHeaderUsuario"
+                           FontSize="12"
+                           TextColor="#60727A" />
+                    <Label x:Name="lblHeaderObservacion"
+                           FontSize="12"
+                           TextColor="#60727A"
+                           LineBreakMode="WordWrap" />
+                    <Label x:Name="lblHeaderStatus"
+                           FontSize="12"
+                           TextColor="#60727A" />
+                </StackLayout>
+            </Frame>
+
+            <Frame Grid.Row="1"
+                   x:Name="frameLock"
+                   IsVisible="False"
+                   Padding="12,10"
+                   CornerRadius="10"
+                   HasShadow="False"
+                   BorderColor="#F2D6A2"
+                   BackgroundColor="#FFF4DB">
+                <Label x:Name="lblLock"
+                       FontSize="13"
+                       FontAttributes="Bold"
+                       TextColor="#8A5A00"
+                       LineBreakMode="WordWrap" />
+            </Frame>
+
+            <Frame Grid.Row="2"
+                   x:Name="frameStatus"
+                   IsVisible="False"
+                   Padding="12,10"
+                   CornerRadius="10"
+                   HasShadow="False"
+                   BorderColor="#F4C7C3"
+                   BackgroundColor="#FDECEA">
+                <Label x:Name="lblStatus"
+                       FontSize="13"
+                       LineBreakMode="WordWrap" />
+            </Frame>
+
+            <Grid Grid.Row="3">
+                <Label x:Name="lblEmpty"
+                       IsVisible="False"
+                       FontSize="13"
+                       TextColor="#60727A"
+                       Text="No existe ese numero en la base de datos." />
+
+                <CollectionView x:Name="listDetails"
+                                SelectionMode="None">
+                    <CollectionView.ItemTemplate>
+                        <DataTemplate>
+                            <Border Margin="0,0,0,8"
+                                    Padding="12"
+                                    BackgroundColor="White"
+                                    Stroke="#D9E1E5"
+                                    StrokeThickness="1">
+                                <Border.StrokeShape>
+                                    <RoundRectangle CornerRadius="10" />
+                                </Border.StrokeShape>
+
+                                <VerticalStackLayout Spacing="8">
+                                    <FlexLayout Direction="Row"
+                                                Wrap="Wrap"
+                                                AlignItems="Start"
+                                                JustifyContent="Start">
+                                        <Border Margin="0,0,8,6"
+                                                Padding="8,4"
+                                                BackgroundColor="#EEF5F7"
+                                                Stroke="#D6E0E5"
+                                                StrokeThickness="1">
+                                            <Border.StrokeShape>
+                                                <RoundRectangle CornerRadius="14" />
+                                            </Border.StrokeShape>
+                                            <Label Text="{Binding CodigoDisplay}"
+                                                   FontSize="12"
+                                                   TextColor="#1E4855" />
+                                        </Border>
+
+                                        <Border Margin="0,0,8,6"
+                                                Padding="8,4"
+                                                BackgroundColor="#EEF5F7"
+                                                Stroke="#D6E0E5"
+                                                StrokeThickness="1">
+                                            <Border.StrokeShape>
+                                                <RoundRectangle CornerRadius="14" />
+                                            </Border.StrokeShape>
+                                            <Label Text="{Binding CajaDisplay}"
+                                                   FontSize="12"
+                                                   TextColor="#1E4855" />
+                                        </Border>
+                                    </FlexLayout>
+
+                                    <Label Text="{Binding ReferenciaDisplay}"
+                                           FontAttributes="Bold"
+                                           TextColor="#24343A" />
+                                    <Label Text="{Binding NombreDisplay}"
+                                           TextColor="#4F646D"
+                                           LineBreakMode="TailTruncation"
+                                           MaxLines="2" />
+                                    <Label Text="Cantidad"
+                                           FontSize="12"
+                                           TextColor="#60727A" />
+                                    <Entry Text="{Binding CantidadText, Mode=TwoWay}"
+                                           Keyboard="Numeric"
+                                           IsEnabled="{Binding CanEdit}"
+                                           BackgroundColor="#FAFBFC"
+                                           TextColor="#1D2E35" />
+                                    <Label Text="Solo se puede editar cantidad."
+                                           FontSize="12"
+                                           TextColor="#60727A" />
+                                </VerticalStackLayout>
+                            </Border>
+                        </DataTemplate>
+                    </CollectionView.ItemTemplate>
+                </CollectionView>
+            </Grid>
+
+            <Button Grid.Row="4"
+                    x:Name="btnSave"
+                    Text="Guardar cambios"
+                    Clicked="OnSaveClicked"
+                    BackgroundColor="#0B8F72"
+                    TextColor="White"
+                    CornerRadius="12" />
+        </Grid>
+    </ContentPage.Content>
+</ContentPage>
+

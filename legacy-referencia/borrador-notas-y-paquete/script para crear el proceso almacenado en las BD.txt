@@ -1,0 +1,130 @@
+USE [GDC_CASA_MATRIZ]--Colocar la base de datos
+GO
+/****** Object:  StoredProcedure [dbo].[Borrador_Dev]    Script Date: 19/02/2026 9:45:32 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+
+CREATE PROCEDURE [dbo].[Borrador_Dev]
+  @Numero           INT = NULL,   -- NULL = procesa todos
+  @MarcarProcesado  BIT = 0       -- 1 = aprueba (Status=1)
+AS
+BEGIN
+  SET NOCOUNT ON;
+  SET XACT_ABORT ON;
+
+  BEGIN TRY
+    SET TRANSACTION ISOLATION LEVEL SERIALIZABLE;
+    BEGIN TRAN;
+
+    IF OBJECT_ID('tempdb..#src') IS NOT NULL DROP TABLE #src;
+
+    -- Fuente: JOIN con INVENTARIO para traer el costo
+    SELECT
+        d.Numero,
+        d.Fecha,
+        d.Observacion,
+        d.Usuario,
+        CAST(CASE WHEN @MarcarProcesado = 1 THEN 1 ELSE d.Status END AS INT) AS Status,
+        m.CodigoBarra,
+        m.Cantidad,
+        m.NumeroCaja,
+        m.Item,
+        CAST(COALESCE(i.[CostoInicial], m.Costo, 0) AS DECIMAL(18,8)) AS Costo
+    INTO #src
+    FROM dbo.DEVBORRADOR d
+    INNER JOIN dbo.MOVDEVBORRADOR m
+      ON m.Numero = d.Numero
+    LEFT JOIN dbo.INVENTARIO i
+      ON i.CodigoBarra = m.CodigoBarra
+    WHERE (@Numero IS NULL OR d.Numero = @Numero);
+
+    IF NOT EXISTS (SELECT 1 FROM #src)
+    BEGIN
+      COMMIT;
+      SELECT 0 AS NumerosProcesados, 0 AS FilasProcesadas;
+      RETURN;
+    END
+
+    /* =========================================
+       1) UPSERT CABECERA EN dbo.DEVBORRADOR
+       ========================================= */
+
+    ;WITH H AS (
+      SELECT DISTINCT Numero, Fecha, Observacion, Usuario, Status
+      FROM #src
+    )
+    UPDATE d
+      SET d.Fecha       = h.Fecha,
+          d.Observacion = h.Observacion,
+          d.Usuario     = h.Usuario,
+          d.Status      = h.Status
+    FROM dbo.DEVBORRADOR d
+    INNER JOIN H h
+      ON h.Numero = d.Numero;
+
+    ;WITH H AS (
+      SELECT DISTINCT Numero, Fecha, Observacion, Usuario, Status
+      FROM #src
+    )
+    INSERT INTO dbo.DEVBORRADOR (Numero, Fecha, Observacion, Usuario, Status)
+    SELECT h.Numero, h.Fecha, h.Observacion, h.Usuario, h.Status
+    FROM H h
+    WHERE NOT EXISTS (
+      SELECT 1
+      FROM dbo.DEVBORRADOR d WITH (UPDLOCK, HOLDLOCK)
+      WHERE d.Numero = h.Numero
+    );
+
+    /* =========================================
+       2) UPSERT DETALLE EN dbo.MOVDEVBORRADOR
+          Clave: (Numero, Item, CodigoBarra)
+          ✅ Costo viene de INVENTARIO.[Costo Inicial]
+       ========================================= */
+
+    UPDATE m
+      SET m.Cantidad   = s.Cantidad,
+          m.NumeroCaja = s.NumeroCaja,
+          m.Costo      = s.Costo
+    FROM dbo.MOVDEVBORRADOR m
+    INNER JOIN #src s
+      ON  s.Numero      = m.Numero
+      AND s.Item        = m.Item
+      AND s.CodigoBarra = m.CodigoBarra;
+
+    INSERT INTO dbo.MOVDEVBORRADOR (Numero, CodigoBarra, Cantidad, NumeroCaja, Item, Costo)
+    SELECT s.Numero, s.CodigoBarra, s.Cantidad, s.NumeroCaja, s.Item, s.Costo
+    FROM #src s
+    WHERE NOT EXISTS (
+      SELECT 1
+      FROM dbo.MOVDEVBORRADOR m WITH (UPDLOCK, HOLDLOCK)
+      WHERE m.Numero = s.Numero
+        AND m.Item = s.Item
+        AND m.CodigoBarra = s.CodigoBarra
+    );
+
+    /* =========================================
+       3) Si se pidió aprobar, dejar Status=1 en cabecera
+       ========================================= */
+    IF @MarcarProcesado = 1
+    BEGIN
+      UPDATE d
+        SET d.Status = 1
+      FROM dbo.DEVBORRADOR d
+      INNER JOIN (SELECT DISTINCT Numero FROM #src) s
+        ON s.Numero = d.Numero;
+    END
+
+    COMMIT;
+
+    SELECT
+      (SELECT COUNT(DISTINCT Numero) FROM #src) AS NumerosProcesados,
+      (SELECT COUNT(*) FROM #src) AS FilasProcesadas;
+
+  END TRY
+  BEGIN CATCH
+    IF @@TRANCOUNT > 0 ROLLBACK;
+    THROW;
+  END CATCH
+END

@@ -1,0 +1,29 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml" 
+             xmlns:d="http://xamarin.com/schemas/2014/forms/design"
+             x:Class="Appinventario.Views.EliminarTransferenciaPage"
+             Visual="Material"
+             Title="Eliminar Trasferencia">
+    <ContentPage.Content>
+        <StackLayout>
+            <ListView  x:Name="listaTranferencia" SeparatorColor="Black" HasUnevenRows="True">
+                <ListView.ItemTemplate>
+                    <DataTemplate>
+                        <ViewCell>
+                            <StackLayout Orientation="Horizontal">
+                                <StackLayout HorizontalOptions="StartAndExpand">
+                                    <Label Text="{Binding Numero}"/>
+                                    <Label Text="{Binding Observacion}"/>
+                                </StackLayout>
+                                <StackLayout Orientation="Horizontal">
+                                    <ImageButton Source="delete.png" Clicked="EliminarTransfer_Clicked"/>
+                                </StackLayout>
+                            </StackLayout>
+                        </ViewCell>
+                    </DataTemplate>
+                </ListView.ItemTemplate>
+            </ListView>
+        </StackLayout>
+    </ContentPage.Content>
+</ContentPage>

@@ -1,0 +1,250 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:controls="clr-namespace:Appinventario.Controls"
+             x:Class="Appinventario.Views.BorradorDev.BorradorDevPage"
+             Visual="Material"
+             Title="Borrador Dev"
+             BackgroundColor="#F4F6F8">
+    <ContentPage.Content>
+        <Grid Padding="10" RowSpacing="10">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="*" />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+
+            <Frame Grid.Row="0"
+                   Padding="12,10"
+                   CornerRadius="12"
+                   HasShadow="False"
+                   BorderColor="#D6E0E5"
+                   BackgroundColor="#EEF5F7">
+                <StackLayout Spacing="2">
+                    <Label Text="Modulo de borradores de devolucion"
+                           FontSize="12"
+                           TextColor="#5F7179" />
+                    <Label x:Name="lblBaseUrl"
+                           FontSize="12"
+                           TextColor="#173B47" />
+                </StackLayout>
+            </Frame>
+
+            <Frame Grid.Row="1"
+                   x:Name="frameStatus"
+                   IsVisible="False"
+                   Padding="12,10"
+                   CornerRadius="10"
+                   HasShadow="False"
+                   BorderColor="#F4C7C3"
+                   BackgroundColor="#FDECEA">
+                <Label x:Name="lblStatus"
+                       FontSize="13"
+                       LineBreakMode="WordWrap" />
+            </Frame>
+
+            <Grid Grid.Row="2"
+                  ColumnSpacing="8">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+
+                <Button Grid.Column="0"
+                        x:Name="btnNuevoTop"
+                        Text="Nuevo"
+                        Clicked="OnNuevoClicked"
+                        BackgroundColor="#FFFFFF"
+                        TextColor="#1E4855"
+                        CornerRadius="10"
+                        BorderColor="#C8D5DB"
+                        BorderWidth="1" />
+                <Button Grid.Column="1"
+                        x:Name="btnBuscarTop"
+                        Text="Buscar"
+                        Clicked="OnBuscarClicked"
+                        BackgroundColor="#FFFFFF"
+                        TextColor="#1E4855"
+                        CornerRadius="10"
+                        BorderColor="#C8D5DB"
+                        BorderWidth="1" />
+            </Grid>
+
+            <ScrollView Grid.Row="3">
+                <StackLayout Spacing="10">
+                    <Frame Padding="12"
+                           CornerRadius="12"
+                           HasShadow="False"
+                           BorderColor="#D9E1E5"
+                           BackgroundColor="#FFFFFF">
+                        <StackLayout Spacing="10">
+                            <Label Text="Cabecera"
+                                   FontSize="16"
+                                   FontAttributes="Bold"
+                                   TextColor="#24343A" />
+
+                            <Grid ColumnSpacing="10"
+                                  RowDefinitions="Auto">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="Auto" />
+                                    <ColumnDefinition Width="Auto" />
+                                </Grid.ColumnDefinitions>
+
+                                <StackLayout Grid.Column="0" Spacing="4">
+                                    <Label Text="Numero"
+                                           FontSize="12"
+                                           TextColor="#5F7179" />
+                                    <Entry x:Name="txtNumero"
+                                           IsReadOnly="True"
+                                           Placeholder="Se crea al guardar"
+                                           BackgroundColor="#FAFBFC"
+                                           TextColor="#1D2E35" />
+                                </StackLayout>
+
+                                <Button Grid.Column="1"
+                                        x:Name="btnBuscarNumero"
+                                        Text="Buscar"
+                                        Clicked="OnBuscarClicked"
+                                        VerticalOptions="End"
+                                        BackgroundColor="#EAF1F4"
+                                        TextColor="#1E4855"
+                                        CornerRadius="10" />
+
+                                <Button Grid.Column="2"
+                                        x:Name="btnNuevoNumero"
+                                        Text="Nuevo"
+                                        Clicked="OnNuevoClicked"
+                                        VerticalOptions="End"
+                                        BackgroundColor="#EAF1F4"
+                                        TextColor="#1E4855"
+                                        CornerRadius="10" />
+                            </Grid>
+
+                            <Grid ColumnSpacing="10">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="*" />
+                                </Grid.ColumnDefinitions>
+
+                                <StackLayout Grid.Column="0" Spacing="4">
+                                    <Label Text="Fecha"
+                                           FontSize="12"
+                                           TextColor="#5F7179" />
+                                    <DatePicker x:Name="dpFecha"
+                                                BackgroundColor="#FAFBFC"
+                                                TextColor="#1D2E35" />
+                                </StackLayout>
+
+                                <StackLayout Grid.Column="1" Spacing="4">
+                                    <Label Text="Usuario"
+                                           FontSize="12"
+                                           TextColor="#5F7179" />
+                                    <Entry Text="admi"
+                                           IsReadOnly="True"
+                                           BackgroundColor="#FAFBFC"
+                                           TextColor="#1D2E35" />
+                                </StackLayout>
+                            </Grid>
+
+                            <StackLayout Spacing="4">
+                                <Label Text="Observacion"
+                                       FontSize="12"
+                                       TextColor="#5F7179" />
+                                <Entry x:Name="txtObservacion"
+                                       Placeholder="Observacion"
+                                       BackgroundColor="#FAFBFC"
+                                       TextColor="#1D2E35" />
+                            </StackLayout>
+
+                            <Label x:Name="lblMode"
+                                   FontSize="12"
+                                   TextColor="#60727A"
+                                   LineBreakMode="WordWrap" />
+                        </StackLayout>
+                    </Frame>
+
+                    <Frame Padding="12"
+                           CornerRadius="12"
+                           HasShadow="False"
+                           BorderColor="#D9E1E5"
+                           BackgroundColor="#FFFFFF">
+                        <StackLayout Spacing="10">
+                            <Label Text="Escaneo"
+                                   FontSize="16"
+                                   FontAttributes="Bold"
+                                   TextColor="#24343A" />
+
+                            <StackLayout Spacing="4">
+                                <Label Text="CodigoBarra"
+                                       FontSize="12"
+                                       TextColor="#5F7179" />
+                                <controls:RoundedEntry x:Name="txtCodigoBarra"
+                                                       Placeholder="Escanea o escribe aqui"
+                                                       Completed="OnBarcodeCompleted"
+                                                       ReturnType="Search"
+                                                       HorizontalTextAlignment="Center"
+                                                       FontSize="Large"
+                                                       HeightRequest="56"
+                                                       BackgroundColor="#FAFBFC"
+                                                       TextColor="#1D2E35" />
+                            </StackLayout>
+
+                            <StackLayout Spacing="4">
+                                <Label Text="NumeroCaja"
+                                       FontSize="12"
+                                       TextColor="#5F7179" />
+                                <Entry x:Name="txtNumeroCaja"
+                                       Keyboard="Numeric"
+                                       Text="1"
+                                       Unfocused="OnNumeroCajaUnfocused"
+                                       BackgroundColor="#FAFBFC"
+                                       TextColor="#1D2E35" />
+                            </StackLayout>
+
+                            <Label Text="Tip: si repites codigo en la misma caja, el backend suma la cantidad automaticamente."
+                                   FontSize="12"
+                                   TextColor="#60727A"
+                                   LineBreakMode="WordWrap" />
+                        </StackLayout>
+                    </Frame>
+                </StackLayout>
+            </ScrollView>
+
+            <Grid Grid.Row="4" ColumnSpacing="8">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+
+                <Button Grid.Column="0"
+                        x:Name="btnGuardar"
+                        Text="Guardar"
+                        Clicked="OnGuardarClicked"
+                        BackgroundColor="#0B8F72"
+                        TextColor="White"
+                        CornerRadius="12" />
+                <Button Grid.Column="1"
+                        x:Name="btnAprobar"
+                        Text="Aprobar"
+                        Clicked="OnAprobarClicked"
+                        BackgroundColor="#E9EFF3"
+                        TextColor="#1E4855"
+                        CornerRadius="12" />
+                <Button Grid.Column="2"
+                        x:Name="btnDetalle"
+                        Text="Detalle"
+                        Clicked="OnDetalleClicked"
+                        BackgroundColor="#FFFFFF"
+                        TextColor="#1E4855"
+                        CornerRadius="12"
+                        BorderColor="#C8D5DB"
+                        BorderWidth="1" />
+            </Grid>
+        </Grid>
+    </ContentPage.Content>
+</ContentPage>
+
