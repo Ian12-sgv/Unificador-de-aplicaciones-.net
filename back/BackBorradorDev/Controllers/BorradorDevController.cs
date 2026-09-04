@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Data.SqlClient;
 using System.Data;
 
@@ -322,8 +322,7 @@ SELECT
     M.Nombre AS NombreMarca,
     ROUND(I.PrecioDetal + (I.PrecioDetal * IMP.PorcentajeImpuesto / 100), 2)
         / (SELECT TOP 1 Valor FROM dbo.TASA_CAMBIO ORDER BY Fecha DESC) AS PrecioDolaresDetal,
-    ROUND(I.PrecioMayor + (I.PrecioMayor * IMP.PorcentajeImpuesto / 100), 2)
-        / (SELECT TOP 1 Valor FROM dbo.TASA_CAMBIO ORDER BY Fecha DESC) AS PrecioDolaresMayor,
+    I.CostoDolar AS PrecioDolaresMayor,
     ROUND(I.PrecioDetal + (I.PrecioDetal * IMP.PorcentajeImpuesto / 100), 2) AS PrecioDetal,
     ROUND(I.PrecioMayor + (I.PrecioMayor * IMP.PorcentajeImpuesto / 100), 2) AS PrecioMayor,
     ROUND(I.PrecioAfiliado + (I.PrecioAfiliado * IMP.PorcentajeImpuesto / 100), 2) AS PrecioAfiliado,

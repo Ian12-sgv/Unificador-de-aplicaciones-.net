@@ -1,4 +1,4 @@
-﻿using Appinventario.Models;
+using Appinventario.Models;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -85,34 +85,38 @@ namespace Appinventario.ViewModels
 
         private async void OnSave()
         {
-            var sharedEndpoint = BorradorDevSettings.BuildPrecioEndpointFromBorradorBaseUrl(IP);
-            if (string.IsNullOrWhiteSpace(sharedEndpoint))
-                sharedEndpoint = (IP ?? string.Empty).Trim();
+            try
+            {
+                var sharedEndpoint = BorradorDevSettings.BuildPrecioEndpointFromBorradorBaseUrl(IP);
+                if (string.IsNullOrWhiteSpace(sharedEndpoint))
+                    sharedEndpoint = (IP ?? string.Empty).Trim();
 
-            var parameter = new Parameter
-            {
-                Id= Id,
-                IP = sharedEndpoint,
-                IDIMEI = Idimei
-            };
-            Util.EstatusImei = parameter.IDIMEI;
-            if ( Util.TestGuardar == false)
-            {
-                Message = "Url debe aprobarse en el test.";
+                var parameter = new Parameter
+                {
+                    Id = Id,
+                    IP = sharedEndpoint,
+                    IDIMEI = Idimei
+                };
+                Util.EstatusImei = parameter.IDIMEI;
+                if (!Util.TestGuardar)
+                {
+                    Message = "Url debe aprobarse en el test.";
+                    return;
+                }
+
+                await App.Database.SaveParameterAsync(ref parameter);
+                Util.TestGuardar = false;
+                await LoadCurrentParameterAsync();
+                Message = parameter.Id > 0 ? "Se guardó satisfactoriamente." : "No se pudo guardar.";
                 await ClosePageAsync();
-                 return;
             }
-
-            await App.Database.SaveParameterAsync(ref parameter);
-            if (parameter.Id> 0)
-                Message = "Se guardó satisfactoriamente.";
-            else
-                Message = "No se pudo guarda.";
-            Util.TestGuardar = false;
-            await LoadCurrentParameterAsync();
-            await ClosePageAsync();
+            catch (Exception ex)
+            {
+                Util.TestGuardar = false;
+                Message = "No se pudo guardar la configuración.";
+                await Application.Current.MainPage.DisplayAlert("Error", "No se pudo guardar Parámetros: " + ex.Message, "OK");
+            }
         }
-
         public async void OnSelect()
         {
             await LoadCurrentParameterAsync();
@@ -137,7 +141,9 @@ namespace Appinventario.ViewModels
                 return;
             }
 
-            await Shell.Current.GoToAsync("//PrecioPage");
+            var firstModule = Shell.Current?.Items.FirstOrDefault();
+            if (firstModule != null)
+                Shell.Current.CurrentItem = firstModule;
         }
         #endregion
 

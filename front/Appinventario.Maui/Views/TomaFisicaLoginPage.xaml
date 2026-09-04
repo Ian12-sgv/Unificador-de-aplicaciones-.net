@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="Appinventario.Views.TomaFisicaLoginPage"
+             Title="Toma física"
+             BackgroundColor="#F4F6F8">
+    <Grid Padding="24">
+        <Border VerticalOptions="Center"
+                Padding="20"
+                BackgroundColor="White"
+                Stroke="#D9E1E5"
+                StrokeThickness="1">
+            <Border.StrokeShape>
+                <RoundRectangle CornerRadius="14" />
+            </Border.StrokeShape>
+            <VerticalStackLayout Spacing="13">
+                <Image Source="barcodescanner.png"
+                       HeightRequest="54"
+                       Aspect="AspectFit" />
+                <Label Text="Toma física"
+                       FontSize="25"
+                       FontAttributes="Bold"
+                       TextColor="#24343A"
+                       HorizontalTextAlignment="Center" />
+                <Label Text="Ingrese sus credenciales de inventario"
+                       FontSize="13"
+                       TextColor="#60727A"
+                       HorizontalTextAlignment="Center" />
+                <Label x:Name="lblServidor"
+                       FontSize="12"
+                       TextColor="#60727A"
+                       HorizontalTextAlignment="Center" />
+                <Entry x:Name="txtUsuario"
+                       Placeholder="Usuario"
+                       ReturnType="Next"
+                       Completed="OnUsuarioCompleted" />
+                <Entry x:Name="txtPassword"
+                       Placeholder="Contraseña"
+                       IsPassword="True"
+                       ReturnType="Go"
+                       Completed="OnPasswordCompleted" />
+                <Button x:Name="btnIngresar"
+                        Text="Ingresar"
+                        Clicked="OnIngresarClicked"
+                        BackgroundColor="#0B8F72"
+                        TextColor="White"
+                        CornerRadius="10" />
+                <ActivityIndicator x:Name="indicador"
+                                   IsVisible="False"
+                                   IsRunning="False"
+                                   Color="#0B8F72" />
+                <Label x:Name="lblMensaje"
+                       IsVisible="False"
+                       TextColor="#9C2F27"
+                       FontSize="13"
+                       HorizontalTextAlignment="Center" />
+                <Label Text="La dirección se administra únicamente desde Parámetros en el menú."
+                       FontSize="11"
+                       TextColor="#60727A"
+                       HorizontalTextAlignment="Center" />
+            </VerticalStackLayout>
+        </Border>
+    </Grid>
+</ContentPage>

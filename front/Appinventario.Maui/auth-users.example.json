@@ -8,6 +8,7 @@
       "price",
       "borrador",
       "transferencias",
+      "toma_fisica",
       "parameters"
     ],
     "canManageModules": true

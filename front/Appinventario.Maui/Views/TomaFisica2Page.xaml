@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:local="clr-namespace:Appinventario.Controls"
+             x:Class="Appinventario.Views.TomaFisica2Page"
+             Title="Toma F&#237;sica 2">
+    <ContentPage.ToolbarItems>
+        <ToolbarItem IconImageSource="delete.png" Text="" Clicked="OnLimpiarClicked" />
+        <ToolbarItem IconImageSource="search.png" Text="" Clicked="SearchCatalogo2" />
+    </ContentPage.ToolbarItems>
+
+    <StackLayout Spacing="3" Padding="15">
+        <local:RoundedEntry2 x:Name="txtPagina"
+                             Placeholder="P&#225;gina"
+                             Text="{Binding NumeroPagina, Mode=TwoWay}"
+                             Keyboard="Numeric"
+                             Completed="OnPaginaCompleted" />
+        <local:RoundedEntry2 x:Name="txtObs"
+                             Placeholder="Observaci&#243;n"
+                             Text="{Binding Observacion, Mode=TwoWay}"
+                             Completed="OnObservacionCompleted" />
+        <local:SoftkeyboardDisabledEntry x:Name="txtCodigo"
+                                         Placeholder="C&#243;digo de barra"
+                                         Text="{Binding CodigoBarra, Mode=TwoWay}"
+                                         FontSize="Large"
+                                         HorizontalTextAlignment="Center"
+                                         TextChanged="CodigoTextChanged"
+                                         Completed="OnCodigoCompleted" />
+        <Label x:Name="lblArt" Text="Art&#237;culo" FontSize="Small" FontAttributes="Italic" />
+        <Label x:Name="lblArticulo"
+               FontSize="{OnIdiom Phone=14, Tablet=16, Desktop=18}"
+               LineBreakMode="WordWrap"
+               TextColor="#F35E20" />
+        <Label x:Name="lblExis" Text="Cantidad:" FontSize="Small" FontAttributes="Italic" />
+        <Label x:Name="lblExistencia" FontSize="Large" TextColor="#F35E20" />
+        <Button Text="Ver detalle"
+                VerticalOptions="Center"
+                HorizontalOptions="Center"
+                HeightRequest="42"
+                MinimumWidthRequest="130"
+                Padding="16,6"
+                Clicked="LoadDetalle" />
+        <Label x:Name="lblUrl" Text="{Binding IP, Mode=TwoWay}" IsVisible="False" />
+    </StackLayout>
+</ContentPage>

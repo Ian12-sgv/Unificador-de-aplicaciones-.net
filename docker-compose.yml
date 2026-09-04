@@ -1,0 +1,35 @@
+version: '3.8'
+
+services:
+  servicioinventario:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: servicioinventario:latest
+    ports:
+      - "8000:8000"
+    env_file:
+      - .env
+    environment:
+      - ASPNETCORE_ENVIRONMENT=${ASPNETCORE_ENVIRONMENT}
+      - Urls=http://0.0.0.0:8000
+      - ConnectionStrings__SqlServer=Server=db,1433;Database=${DB_NAME};User Id=${DB_USER};Password=${DB_SA_PASSWORD};
+    depends_on:
+      - db
+    restart: unless-stopped
+
+  db:
+    image: mcr.microsoft.com/mssql/server:2019-latest
+    env_file:
+      - .env
+    environment:
+      - ACCEPT_EULA=Y
+      - SA_PASSWORD=${DB_SA_PASSWORD}
+    ports:
+      - "1433:1433"
+    volumes:
+      - mssqldata:/var/opt/mssql
+    restart: unless-stopped
+
+volumes:
+  mssqldata:

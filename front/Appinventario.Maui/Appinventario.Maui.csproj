@@ -14,8 +14,8 @@
 
 		<ApplicationId>AppPreciosPDB_.AppPreciosPDB_.maui</ApplicationId>
 
-		<ApplicationDisplayVersion>1.0.3</ApplicationDisplayVersion>
-		<ApplicationVersion>4</ApplicationVersion>
+		<ApplicationDisplayVersion>1.0.7</ApplicationDisplayVersion>
+		<ApplicationVersion>8</ApplicationVersion>
 		<RuntimeIdentifiers>android-arm64;android-x64</RuntimeIdentifiers>
 		<SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'android'">21.0</SupportedOSPlatformVersion>
 	</PropertyGroup>
@@ -41,6 +41,7 @@
 	</ItemGroup>
 
 	<ItemGroup>
+		<EmbeddedResource Include="auth-users.json" />
 		<PackageReference Include="Microsoft.Maui.Controls" Version="$(MauiVersion)" />
 		<PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="9.0.8" />
 		<PackageReference Include="Newtonsoft.Json" Version="13.0.3" />

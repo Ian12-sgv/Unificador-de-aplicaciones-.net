@@ -1,4 +1,4 @@
-﻿using Appinventario.Models;
+using Appinventario.Models;
 using Appinventario.Services;
 using Appinventario.ViewModels;
 using Newtonsoft.Json;
@@ -24,52 +24,58 @@ namespace Appinventario.Views
         public TomaFisica tomaFisica;
         public List<TomaFisica> listT;
         public string urlL;
+        private readonly bool esToma2;
         public string ImeiL;
         public bool EstatusImeiL = false;
        
 
-        public BuscarTomaPage(string url)
+        public BuscarTomaPage(string url, bool esToma2 = false)
         {
             InitializeComponent();
+            this.esToma2 = esToma2;
+            Title = "Cat\u00E1logo";
             this.ImeiL = Util.Imei;
             this.EstatusImeiL= Util.EstatusImei;
             this.urlL = url;
             LoadTomaFisica();
         }
 
-         void Handle_ItemTapped(object sender, SelectionChangedEventArgs e)
+         private async void Handle_ItemTapped(object sender, SelectionChangedEventArgs e)
         {
             try
             {
                 if (e.CurrentSelection.Count == 0)
                     return;
 
-                var m = (TomaFisica)e.CurrentSelection.FirstOrDefault();
+                var tomaSeleccionada = e.CurrentSelection.FirstOrDefault() as TomaFisica;
+                if (tomaSeleccionada == null || !tomaSeleccionada.NumeroPagina.HasValue)
+                    return;
 
-                Util.NumPagG = m.NumeroPagina.ToString();
-                Util.ObsG = m.Observacion;
-                Shell.Current.GoToAsync("..");
+                ListToma.SelectedItem = null;
+                Util.NumPagG = tomaSeleccionada.NumeroPagina.Value.ToString();
+                Util.ObsG = tomaSeleccionada.Observacion ?? string.Empty;
+                await Navigation.PopAsync();
             }
             catch (Exception fail)
             {
-                DisplayAlert("Error", "Error: " + fail.Message, "ok");
+                await DisplayAlert("Error", "Error: " + fail.Message, "ok");
             }
-            //wait DisplayAlert("Item Tapped", m.NumeroPagina.ToString(), "OK");
         }
-
         private void Search_TextChanged(object sender, TextChangedEventArgs e)
         {
-            if (Search.Text !="")
-            {
-                var search = listT.Where(x => x.NumeroPagina.ToString() == Search.Text);
-                this.ListToma.ItemsSource = search;
-            }
-            else 
-            {
-                this.ListToma.ItemsSource = listT;
-            }
-        }
+            var source = listT ?? new List<TomaFisica>();
+            var query = (Search.Text ?? string.Empty).Trim();
 
+            if (string.IsNullOrWhiteSpace(query))
+            {
+                ListToma.ItemsSource = source;
+                return;
+            }
+
+            ListToma.ItemsSource = source
+                .Where(x => x.NumeroPagina.ToString().Contains(query, StringComparison.OrdinalIgnoreCase))
+                .ToList();
+        }
         private async void LoadTomaFisica()
         {
             try
@@ -82,7 +88,14 @@ namespace Appinventario.Views
                     imei = "*";
                 else
                     imei = Util.Imei;
-                request.RequestUri = new Uri("http://" + this.urlL + "/api/TomaFisica/" + imei);
+                var baseUrl = Util.NormalizeServiceUrl(this.urlL);
+                if (string.IsNullOrWhiteSpace(baseUrl))
+                {
+                    await DisplayAlert("Advertencia", "No se ha configurado el servidor.", "OK");
+                    return;
+                }
+                var route = esToma2 ? "/api/TomaFisica2/" : "/api/TomaFisica/";
+                request.RequestUri = new Uri(baseUrl + route + imei);
                 request.Method = HttpMethod.Get;
                 request.Headers.Add("Accept", "application/json");
                 var client = Util.CreateHttpClient();
@@ -91,9 +104,15 @@ namespace Appinventario.Views
                 if (response.StatusCode == HttpStatusCode.OK)
                 {
                     string content = await response.Content.ReadAsStringAsync();
-                    var resultado = JsonConvert.DeserializeObject<List<TomaFisica>>(content);
-                    listT = resultado;
-                    this.ListToma.ItemsSource = resultado;
+                    var resultado = JsonConvert.DeserializeObject<List<TomaFisica>>(content) ?? new List<TomaFisica>();
+                    // La API puede devolver varios articulos del mismo numero.
+                    // La lupa muestra una sola fila por numero de toma.
+                    listT = resultado
+                        .GroupBy(x => x.NumeroPagina)
+                        .Select(group => group.First())
+                        .OrderBy(x => x.NumeroPagina)
+                        .ToList();
+                    this.ListToma.ItemsSource = listT;
 
                 }
                 if (imei == "*")

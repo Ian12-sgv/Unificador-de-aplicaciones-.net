@@ -1,5 +1,6 @@
 ﻿using Appinventario.Models;
 using Appinventario.Services;
+using Appinventario.Services.BorradorDev;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -116,7 +117,7 @@ namespace Appinventario.ViewModels
         {
             foreach (var l in await App.Database.GetParameters())
             {              
-                IP = l.IP;
+                IP = BorradorDevSettings.BuildBaseUrlFromPrecioEndpoint(l.IP);
                 Estatusimei = l.IDIMEI;
                 Util.EstatusImei = l.IDIMEI;
             } 

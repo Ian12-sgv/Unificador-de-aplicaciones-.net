@@ -15,9 +15,12 @@ if (!string.IsNullOrWhiteSpace(urls))
 {
     if (!ValidateConfiguredIp(urls, localIp, out var invalidIp))
     {
-        LogStartupInfo(builder.Configuration, localIp);
-        WriteStartupLine("IP INCORRECTA: " + invalidIp + " no coincide con la IP LOCAL: " + localIp);
-        return;
+        var configuredPort = GetConfiguredPorts(urls).FirstOrDefault();
+        if (configuredPort <= 0)
+            configuredPort = 5001;
+
+        WriteStartupLine("IP configurada " + invalidIp + " no coincide con la IP LOCAL " + localIp + ". Se usara la IP local automaticamente.");
+        urls = "http://0.0.0.0:" + configuredPort;
     }
 
     var stopExistingSetting = builder.Configuration["Startup:StopExistingBackBorradorDevOnSamePort"];
@@ -41,6 +44,7 @@ builder.Services
         o.JsonSerializerOptions.PropertyNamingPolicy = null;
         o.JsonSerializerOptions.DictionaryKeyPolicy = null;
     });
+builder.Services.AddSingleton<TomaFisicaSessionStore>();
 
 // ==============================
 // CORS (NECESARIO para Flutter Web / Debug en navegador)
@@ -143,8 +147,8 @@ static string BuildListenUrls(string urls, string localIp)
             return entry;
 
         var host = uri.Host;
-        if (host is "0.0.0.0" or "*" or "+")
-            host = localIp;
+        if (host is "*" or "+")
+            host = "0.0.0.0";
 
         var uriBuilder = new UriBuilder(uri)
         {

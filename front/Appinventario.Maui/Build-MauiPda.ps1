@@ -129,12 +129,25 @@ $sharedLibPath = Join-Path $runtimeIntermediateRoot ("app_shared_libraries\" + $
 $wrappedAssembliesRoot = Join-Path $runtimeIntermediateRoot "wrapped-disabled"
 $managedAssembliesRoot = Join-Path $runtimeIntermediateRoot ("android\assets\" + $AndroidAbi)
 
-$dotnetPacksRoot = "C:\Program Files\dotnet\packs"
-$androidRuntimePack = Get-LatestDirectoryByName -ParentPath $dotnetPacksRoot -Filter "Microsoft.Android.Runtime.*.$RuntimeIdentifier"
-$androidRuntimeNativeRoot = Join-Path (Get-LatestVersionDirectory -ParentPath $androidRuntimePack) ("runtimes\" + $RuntimeIdentifier + "\native")
-$monoRuntimePack = Get-LatestDirectoryByName -ParentPath $dotnetPacksRoot -Filter "Microsoft.NETCore.App.Runtime.Mono.$RuntimeIdentifier"
-$monoRuntimeNativeRoot = Join-Path (Get-LatestVersionDirectory -ParentPath $monoRuntimePack) ("runtimes\" + $RuntimeIdentifier + "\native")
+$dotnetRoot = Split-Path -Parent (Get-Command dotnet -ErrorAction Stop).Source
+$dotnetPacksRoot = Join-Path $dotnetRoot "packs"
+if (-not (Test-Path $dotnetPacksRoot)) {
+    throw "No se encontro la carpeta de packs de dotnet en '$dotnetPacksRoot'."
+}
 
+$androidRuntimePack = Get-LatestDirectoryByName -ParentPath $dotnetPacksRoot -Filter "Microsoft.Android.Runtime.35.$RuntimeIdentifier"
+$androidRuntimeNativeRoot = Join-Path (Get-LatestVersionDirectory -ParentPath $androidRuntimePack) ("runtimes\" + $RuntimeIdentifier + "\native")
+
+$targetRuntimeVersion = ($Framework -split "-")[0].Replace("net", "")
+$monoRuntimePack = Get-LatestDirectoryByName -ParentPath $dotnetPacksRoot -Filter "Microsoft.NETCore.App.Runtime.Mono.$RuntimeIdentifier"
+$monoRuntimeVersion = Get-ChildItem -Path $monoRuntimePack -Directory |
+    Where-Object { $_.Name -like ($targetRuntimeVersion + ".*") } |
+    Sort-Object { [version]$_.Name } -Descending |
+    Select-Object -First 1
+if ($null -eq $monoRuntimeVersion) {
+    throw "No se encontro el runtime Mono $targetRuntimeVersion para '$RuntimeIdentifier'."
+}
+$monoRuntimeNativeRoot = Join-Path $monoRuntimeVersion.FullName ("runtimes\" + $RuntimeIdentifier + "\native")
 if (-not (Test-Path $zipAlign)) { throw "No se encontro zipalign en '$zipAlign'." }
 if (-not (Test-Path $apkSigner)) { throw "No se encontro apksigner en '$apkSigner'." }
 if (-not (Test-Path $adb)) { throw "No se encontro adb en '$adb'." }

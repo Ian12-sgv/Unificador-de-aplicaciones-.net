@@ -11,6 +11,7 @@ namespace Appinventario.Views
         public LoginPage()
         {
             InitializeComponent();
+            txtUser.Text = AuthService.SavedUsername;
         }
 
         private void OnLoginClicked(object sender, EventArgs e)

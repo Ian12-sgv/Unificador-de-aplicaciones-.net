@@ -11,4 +11,10 @@
     <PackageReference Include="Microsoft.Data.SqlClient" Version="6.1.4" />
   </ItemGroup>
 
+  <!-- Las publicaciones se guardan dentro de este repositorio; no son contenido de la API. -->
+  <ItemGroup>
+    <Content Remove="publish-*\**" />
+    <None Remove="publish-*\**" />
+  </ItemGroup>
+
 </Project>

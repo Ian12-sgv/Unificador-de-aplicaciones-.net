@@ -9,6 +9,7 @@ namespace Appinventario.Models
         public string Role { get; set; }
         public string Email { get; set; }
         public List<string> AllowedModules { get; set; } = new List<string>();
+        public List<string> AllowedTomaFisicaModes { get; set; } = new List<string>();
         public bool CanManageModules { get; set; }
     }
 }

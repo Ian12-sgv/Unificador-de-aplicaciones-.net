@@ -21,6 +21,7 @@ namespace WebServicesApiNetCor.Models
         public string Nombre { get; set; }
         public bool Valor { get; set; }
         public string Imei { get; set; }
+        public string Autor { get; set; }
 
 
 

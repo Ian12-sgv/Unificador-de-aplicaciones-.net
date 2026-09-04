@@ -9,6 +9,8 @@ using System;
 using System.Collections.Generic;
 using System.Net;
 using System.Net.Http;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace Appinventario.Views
 {
@@ -18,6 +20,8 @@ namespace Appinventario.Views
         private readonly ArticuloViewModel _viewModel;
         private readonly HttpClient _httpClient;
         public List<Articulo> listArt;
+        private CancellationTokenSource _scanDebounce;
+        private bool _loadingBarcode;
 
         public PrecioPage()
         {
@@ -54,6 +58,8 @@ namespace Appinventario.Views
 
             lblPrec.IsVisible = true;
             lblPrecio.IsVisible = true;
+            lblPrecMayor.IsVisible = true;
+            lblPrecioMayor.IsVisible = true;
             lblDol.IsVisible = true;
             lblDolar.IsVisible = true;
         }
@@ -69,6 +75,8 @@ namespace Appinventario.Views
 
             lblPrec.IsVisible = false;
             lblPrecio.IsVisible = false;
+            lblPrecMayor.IsVisible = false;
+            lblPrecioMayor.IsVisible = false;
             lblDol.IsVisible = false;
             lblDolar.IsVisible = false;
             lblPromo.IsVisible = false;
@@ -76,9 +84,32 @@ namespace Appinventario.Views
             lblPorcentaje.IsVisible = false;
         }
 
+
+        private async void BarcodeEntry_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            _scanDebounce?.Cancel();
+            var codigo = (e.NewTextValue ?? string.Empty).Trim();
+            if (string.IsNullOrWhiteSpace(codigo) || _loadingBarcode)
+                return;
+
+            var cts = _scanDebounce = new CancellationTokenSource();
+            try
+            {
+                await Task.Delay(250, cts.Token);
+                if (!cts.IsCancellationRequested && string.Equals(codigo, (BarcodeEntry.Text ?? string.Empty).Trim(), StringComparison.Ordinal))
+                    LoadInventario(sender, EventArgs.Empty);
+            }
+            catch (TaskCanceledException)
+            {
+            }
+        }
         private async void LoadInventario(object sender, EventArgs e)
         {
-            var codigoBarra = (BarcodeEntry.Text ?? string.Empty).Trim();
+                        if (_loadingBarcode)
+                return;
+            _loadingBarcode = true;
+
+var codigoBarra = (BarcodeEntry.Text ?? string.Empty).Trim();
             var baseUrl = Util.NormalizeServiceUrl(lblUrl.Text);
 
             try
@@ -148,8 +179,9 @@ namespace Appinventario.Views
                 {
                     lblArticulo.Text = ls.Nombre;
                     lblExistencia.Text = "Existencia: " + Math.Round(ls.Existencia, 2).ToString("0.##");
-                    lblPrecio.Text = "Precio Deatal: " + Math.Round(ls.PrecioDetal, 2).ToString("0.00");
-                    lblDolar.Text = "Precio Dolar: " + Math.Round(ls.PrecioDolaresDetal, 2).ToString("0.00");
+                    lblPrecio.Text = "Precio Detal: " + Math.Round(ls.PrecioDetal, 2).ToString("0.00");
+                    lblPrecioMayor.Text = "Precio Mayor: " + Math.Round(ls.PrecioMayor, 2).ToString("0.00");
+                    lblDolar.Text = "Detal: $" + Math.Round(ls.PrecioDolaresDetal, 2).ToString("0.00") + " | Mayor: $" + Math.Round(ls.PrecioDolaresMayor, 2).ToString("0.00");
                     lblPorcentaje.Text = "Descuento: " + Math.Round(ls.PorcentajeDescuento, 2).ToString("0") + "%";
                     lblPromocion.Text = "Promocion: " + Math.Round(ls.PrecioPromocion, 2).ToString("0.00");
 
@@ -169,7 +201,8 @@ namespace Appinventario.Views
             }
             finally
             {
-                BarcodeEntry.Text = string.Empty;
+                                _loadingBarcode = false;
+BarcodeEntry.Text = string.Empty;
                 BarcodeEntry.Focus();
             }
         }

@@ -61,32 +61,19 @@ namespace Appinventario.Views
         private static string BuildMainMessage(ServiceHealthResponse borradorHealth)
         {
             if (borradorHealth.ListenerOk)
-                return "Conexion satisfactoria con Borrador Dev.";
+                return "Conexion satisfactoria";
 
             return "Borrador Dev no respondio como se esperaba.";
         }
 
         private static string BuildSummary(ServiceHealthResponse borradorHealth)
         {
-            var summary = new List<string>
-            {
-                "Borrador Dev: Listener OK",
-                "SQL: no validado en esta prueba"
-            };
-
-            return string.Join(" | ", summary);
+            return string.Empty;
         }
 
         private static string BuildDetail(ServiceHealthResponse borradorHealth)
         {
-            var lines = new List<string>
-            {
-                "Borrador Dev listener: " + (borradorHealth.ListenerOk ? "OK" : "Sin respuesta"),
-                "Base de datos: no validada en esta prueba.",
-                "Con VPN activa es normal que SQL no responda, pero la app si debe poder llegar al escucha."
-            };
-
-            return string.Join(Environment.NewLine, lines);
+            return borradorHealth.ListenerOk ? "Conexion satisfactoria" : "Sin respuesta";
         }
 
         private static string CleanMessage(string message)

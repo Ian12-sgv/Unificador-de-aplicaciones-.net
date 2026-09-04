@@ -1,2 +1,0 @@
-D:\Borrador-dev-apk\BackBorradorDev\bin\Release\net9.0\win-x64\publish
-dentro de publish solo ejecutar el programa: BackBorradorDev para ejecutarlo en otra pc copiar la carpeta publish completa y pegarla en la otra pc

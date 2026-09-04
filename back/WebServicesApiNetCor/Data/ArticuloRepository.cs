@@ -1,4 +1,4 @@
-﻿using Dapper;
+using Dapper;
 using log4net;
 using System;
 using System.Collections.Generic;
@@ -40,6 +40,7 @@ namespace WebServicesApiNetCor.Data
 
                 try
                 {
+                    dbConnection.Open();
                     string sql = @"
 SELECT
     I.Nombre,
@@ -79,7 +80,6 @@ INNER JOIN MARCAS M ON M.Codigo = I.CodigoMarca
 WHERE I.CodigoBarra = @CodigoBarra;
 ";
 
-                    dbConnection.Open();
                     return await dbConnection.QueryAsync<Articulo>(sql, new { CodigoBarra });
                 }
                 catch (Exception fail)

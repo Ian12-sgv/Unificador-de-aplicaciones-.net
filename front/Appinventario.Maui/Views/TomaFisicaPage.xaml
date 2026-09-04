@@ -1,8 +1,8 @@
-﻿<?xml version="1.0" encoding="utf-8" ?>
+<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="Appinventario.Views.ItemsPage"
-             Title="{Binding Title}"
+             Title="Toma física 1"
              xmlns:local="clr-namespace:Appinventario.Controls" 
              xmlns:model="clr-namespace:Appinventario.Models" 
              x:Name="BrowseItemsPage" IsVisible="{Binding SelectCommand}" >
@@ -25,7 +25,6 @@
                     Text="{Binding Observacion, Mode=TwoWay}" 
                     FontSize="Small" 
                     HeightRequest="100"/>-->
-
             <local:RoundedEntry2 x:Name="txtPagina"
                    Completed ="OnButtonClicked" 
                    Placeholder="Página" 
@@ -46,6 +45,7 @@
                    AbsoluteLayout.LayoutFlags="YProportional,XProportional"/>           
             <!--<Entry x:Name="txtCodigo" Placeholder="Código de barra" Text="{Binding CodigoBarra, Mode=TwoWay}" FontSize="Small" /> -->
             <local:SoftkeyboardDisabledEntry x:Name="txtCodigo"
+                   TextChanged="CodigoTextChanged"
                    Completed ="OnButtonClicked" 
                    Placeholder="Código de barra" 
                    Text="{Binding CodigoBarra, Mode=TwoWay}" 
@@ -62,7 +62,8 @@
             <Label x:Name="lblArticulo"
                    Text=""
                    HorizontalOptions="StartAndExpand" 
-                   FontSize="Large"
+                   FontSize="{OnIdiom Phone=14, Tablet=16, Desktop=18}"
+                   LineBreakMode="WordWrap"
                    TextColor="#f35e20"/>
             <Label x:Name="lblExis" 
                    Text="Cantidad:"
@@ -72,13 +73,13 @@
                    TextColor="#f35e20"
                    FontSize="Large" />
             <Button Text="Ver detalle"
-                    VerticalOptions="CenterAndExpand"
+                    VerticalOptions="Center"
                     HorizontalOptions="Center"
+                    HeightRequest="42"
+                    MinimumWidthRequest="130"
+                    Padding="16,6"
                     Clicked="LoadDetalle" />
-            <StackLayout>
-            <Label Text="Servidor:" FontSize="Small" TextColor="Orange"/>
-            <Label  x:Name="lblUrl"  Text="{Binding IP, Mode=TwoWay}" FontSize="Small"  TextColor="Orange"/>
-            </StackLayout>
+            <Label x:Name="lblUrl" Text="{Binding IP, Mode=TwoWay}" IsVisible="False" />
         </StackLayout>
         
         

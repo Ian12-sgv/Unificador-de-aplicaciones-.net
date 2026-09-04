@@ -1,12 +1,14 @@
-﻿using Appinventario.Models;
+using Appinventario.Models;
 using Appinventario.ViewModels;
 using Appinventario.Views;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Threading;
 using Microsoft.Maui.Controls;
 using System.Net;
 using System.Net.Http;
@@ -24,6 +26,8 @@ namespace Appinventario.Views
         TomaFisicaViewModel _viewModel;
         public List<TomaFisica> listToma;
         string ImeiL = "";
+        private CancellationTokenSource _scanDebounce;
+        private bool _registrandoCodigo;
         
 
         public ItemsPage()
@@ -40,7 +44,12 @@ namespace Appinventario.Views
 
         protected async override void OnAppearing()
         {
-          //  base.OnAppearing();
+            base.OnAppearing();
+            if (!AuthService.CanUseTomaFisica1() || !TomaFisicaAuthService.IsAuthenticated)
+            {
+                await Navigation.PopToRootAsync();
+                return;
+            }
             _viewModel.OnSelect();
 
             //***Valida que en parametros este activado o no este atributo
@@ -61,8 +70,29 @@ namespace Appinventario.Views
         }
 
 
+        private async void CodigoTextChanged(object sender, TextChangedEventArgs e)
+        {
+            _scanDebounce?.Cancel();
+            var codigo = (e.NewTextValue ?? string.Empty).Trim();
+            if (string.IsNullOrWhiteSpace(codigo) || _registrandoCodigo)
+                return;
+
+            var cts = _scanDebounce = new CancellationTokenSource();
+            try
+            {
+                await Task.Delay(250, cts.Token);
+                if (!cts.IsCancellationRequested && string.Equals(codigo, (txtCodigo.Text ?? string.Empty).Trim(), StringComparison.Ordinal))
+                    OnButtonClicked(sender, EventArgs.Empty);
+            }
+            catch (TaskCanceledException)
+            {
+            }
+        }
         private async void OnButtonClicked(object sender, EventArgs e)
         {
+            if (_registrandoCodigo)
+                return;
+            _registrandoCodigo = true;
             try
             {
                 bool result = Int32.TryParse(this.txtPagina.Text, out int n);
@@ -134,8 +164,14 @@ namespace Appinventario.Views
                     Imei = Util.EstatusImei == true ? Util.Imei : ""
                  };
               
-                Uri RequestUri = new Uri("http://" + this.lblUrl.Text + "/api/TomaFisica");
+                var baseUrl = Util.NormalizeServiceUrl(this.lblUrl.Text);
+                Uri RequestUri = new Uri(baseUrl + "/api/TomaFisica");
                 var client = Util.CreateHttpClient();
+                if (!TomaFisicaAuthService.ConfigureAuthorization(client))
+                {
+                    await VolverAlLoginAsync("Debe iniciar sesion para registrar una toma fisica.");
+                    return;
+                }
                 var json = JsonConvert.SerializeObject(toma);
                 var contentJson = new StringContent(json,Encoding.UTF8,"application/json");
                 var response = await client.PostAsync(RequestUri,contentJson);
@@ -144,11 +180,10 @@ namespace Appinventario.Views
                     if (response.StatusCode == HttpStatusCode.OK)
                     {
                         var content = await response.Content.ReadAsStringAsync();
-                    GetPost(Convert.ToInt32(toma.NumeroPagina), toma.CodigoBarra);
                    
                      if (content == "-1")
                     {
-                        DependencyService.Get<IAudio>().PlayAudioFile("no-valido.mp3");
+                        Util.TryPlayAudioFile("no-valido.mp3");
                         await DisplayAlert("Información", "Código de barra no existe o Toma física existente en otro dispositivo.", "ok");
                         SelectTextCodigo();
                         txtCodigo.Text = "";
@@ -156,6 +191,7 @@ namespace Appinventario.Views
                         return;
                     }
 
+                    await MostrarResultadoEscaneoAsync(Convert.ToInt32(toma.NumeroPagina), toma.CodigoBarra);
                     SelectTextCodigo();
                     txtCodigo.Text = "";
                     txtCodigo.Focus();
@@ -163,8 +199,11 @@ namespace Appinventario.Views
                     }
                     else
                     {
-                        DependencyService.Get<IAudio>().PlayAudioFile("no-valido.mp3");
-                        await DisplayAlert("Error", response.StatusCode.ToString(), "ok");
+                        Util.TryPlayAudioFile("no-valido.mp3");
+                        var mensaje = response.StatusCode == HttpStatusCode.Conflict
+                            ? "Este número de Toma Física ya pertenece a otro usuario."
+                            : "El escucha respondió: " + response.StatusCode;
+                        await DisplayAlert("Toma Física", mensaje, "OK");
                         SelectTextCodigo();
                         txtCodigo.Text = "";
                         txtCodigo.Focus();
@@ -173,70 +212,76 @@ namespace Appinventario.Views
             }
             catch (Exception fail)
             {
-                DependencyService.Get<IAudio>().PlayAudioFile("no-valido.mp3");
+                Util.TryPlayAudioFile("no-valido.mp3");
                 await DisplayAlert( "Error", "Error: " + fail.Message, "ok");
                 txtCodigo.Text = "";
                 txtCodigo.Focus();
                 SelectTextCodigo();
             }
+            finally
+            {
+                _registrandoCodigo = false;
+            }
         }
 
-        private async void GetPost(int numeroPagina ,string codigoBarra)
+        private sealed class ArticuloEscaneado
         {
-            try
-            {
-              
-                LimpiarArticulo();
-                var request = new HttpRequestMessage();
-                if (Util.EstatusImei == false)
-                    ImeiL = "*";
-                else
-                    ImeiL = Util.Imei;
-                request.RequestUri = new Uri("http://" + lblUrl.Text + "/api/TomaFisica/byParameters?numeroPagina=" + numeroPagina + "&codigoBarra=" + codigoBarra + "&imei=" + ImeiL);
-                request.Method = HttpMethod.Get;
-                request.Headers.Add("Accept", "application/json");
-                var client = new HttpClient();
-                HttpResponseMessage response = await client.SendAsync(request);
-                Task.Delay(200).Wait();
-                toma = new TomaFisica();
-                if (response.StatusCode == HttpStatusCode.OK )
-                {
-                    string content = await response.Content.ReadAsStringAsync();
-                    listToma = JsonConvert.DeserializeObject<List<TomaFisica>>(content);
-
-                    foreach (var ls in listToma)
-                    {
-                        toma.Fecha = ls.Fecha;
-                        toma.Status = ls.Status;
-                        toma.CodigoBarra = ls.CodigoBarra;
-                        toma.Prenda = ls.Prenda;
-                        toma.NumeroPagina = ls.NumeroPagina;
-                        toma.Nombre = ls.Nombre;
-                        toma.Cantidad = ls.Cantidad;
-                        toma.Id = ls.Id;
-                        toma.Observacion = ls.Observacion;
-                        toma.Referencia = ls.Referencia;
-                        toma.Text = ls.Text;    
-                        toma.Usuario = ls.Usuario;  
-
-                        this.lblArticulo.Text = ls.Nombre;
-                        this.lblExistencia.Text = ls.Cantidad.ToString();
-                    }
-                    if (listToma.Count > 0)
-                        EtiquetaVisible();
-                    else
-                        EtiquetaInVisible();
-                }
-                if (ImeiL == "*")
-                    ImeiL = "";
-               
-            }
-            catch (Exception fail)
-            {
-                await DisplayAlert("Error", "Error: " + fail.Message, "ok");
-            }
+            public string Nombre { get; set; }
         }
 
+        private async Task MostrarResultadoEscaneoAsync(int numeroPagina, string codigoBarra)
+        {
+            LimpiarArticulo();
+            var baseUrl = Util.NormalizeServiceUrl(lblUrl.Text);
+            var imei = Util.EstatusImei ? Util.Imei : "*";
+
+            using var client = Util.CreateHttpClient();
+            if (!TomaFisicaAuthService.ConfigureAuthorization(client))
+            {
+                await VolverAlLoginAsync("Debe iniciar sesion para consultar el resultado del escaneo.");
+                return;
+            }
+
+            var tomaUrl = baseUrl + "/api/TomaFisica/byParameters?numeroPagina=" + numeroPagina
+                + "&codigoBarra=" + Uri.EscapeDataString(codigoBarra)
+                + "&imei=" + Uri.EscapeDataString(imei);
+            using var tomaResponse = await client.GetAsync(tomaUrl);
+            if (tomaResponse.StatusCode == HttpStatusCode.Unauthorized)
+            {
+                await VolverAlLoginAsync("La sesion vencio. Inicie sesion nuevamente.");
+                return;
+            }
+            tomaResponse.EnsureSuccessStatusCode();
+
+            var tomas = Newtonsoft.Json.Linq.JArray.Parse(await tomaResponse.Content.ReadAsStringAsync());
+            var cantidad = tomas.Sum(item =>
+            {
+                var valor = item["Cantidad"]?.ToString();
+                return decimal.TryParse(valor, NumberStyles.Number, CultureInfo.InvariantCulture, out var cantidadLeida)
+                    ? cantidadLeida
+                    : 0m;
+            });
+
+            using var articuloResponse = await client.GetAsync(baseUrl + "/api/Articulo/" + Uri.EscapeDataString(codigoBarra));
+            articuloResponse.EnsureSuccessStatusCode();
+            var articuloJson = Newtonsoft.Json.Linq.JToken.Parse(await articuloResponse.Content.ReadAsStringAsync());
+            var articulo = articuloJson.Type == Newtonsoft.Json.Linq.JTokenType.Array
+                ? articuloJson.First?.ToObject<ArticuloEscaneado>()
+                : articuloJson.ToObject<ArticuloEscaneado>();
+
+            lblArticulo.Text = string.IsNullOrWhiteSpace(articulo?.Nombre)
+                ? "Articulo sin nombre en INVENTARIO"
+                : articulo.Nombre;
+            lblExistencia.Text = cantidad.ToString("0.##", CultureInfo.InvariantCulture);
+            EtiquetaVisible();
+        }
+
+        private async Task VolverAlLoginAsync(string mensaje)
+        {
+            TomaFisicaAuthService.Clear();
+            await DisplayAlert("Sesion", mensaje, "OK");
+            await Navigation.PopToRootAsync();
+        }
         private void EtiquetaVisible()
         {
             lblArt.IsVisible = true;
@@ -255,10 +300,9 @@ namespace Appinventario.Views
 
         private void LimpiarArticulo()
         {
-            lblArt.Text = "";
             lblArticulo.Text = "";
-            lblExis.Text = "";
-            lblExistencia.Text = "";          
+            lblExistencia.Text = "";
+            EtiquetaInVisible();
         }
         private void SelectTextCodigo()
         {

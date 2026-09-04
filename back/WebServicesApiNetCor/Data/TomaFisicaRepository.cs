@@ -20,7 +20,7 @@ namespace WebServicesApiNetCor.Data
             connectionString = Modulo.connectionString;
         }
 
-        public IDbConnection Connection
+        public SqlConnection Connection
         {
             get
             {
@@ -71,27 +71,50 @@ namespace WebServicesApiNetCor.Data
 
         public int Create(TomaFisicaMae data)
         {
-            using (IDbConnection dbConnection = Connection)
+            using (SqlConnection dbConnection = Connection)
             {
                 var log = LogManager.GetLogger(Startup.repository.Name, typeof(Startup));
+                IDbTransaction transaction = null;
                 try
                 {
                     dbConnection.Open();
-                    //dbConnection.BeginTransaction();
+                    transaction = dbConnection.BeginTransaction();
                     var dbparams = new DynamicParameters();
                     dbparams.Add("@CodigoBarra", data.CodigoBarra);
                     dbparams.Add("@NumeroPagina", data.NumeroPagina);
                     dbparams.Add("@Observacion", data.Observacion);
                     dbparams.Add("@Cantidad", data.Cantidad);
                     dbparams.Add("@Valor", data.Valor);
-                    dbparams.Add("@Imei", data.Imei);
-                    // var result = Connection.Execute("EXECUTE [dbo].[ApiProcesarToma] ", dbparams);
-                    var result = dbConnection.Execute("[dbo].[ApiProcesarToma]", param: dbparams, commandType: CommandType.StoredProcedure);
-                    //dbConnection.Close();
-                    return result;
+                    dbConnection.Execute(
+                        "[dbo].[ApiProcesarToma]",
+                        param: dbparams,
+                        transaction: transaction,
+                        commandType: CommandType.StoredProcedure);
+
+                    const string actualizarAutor = @"
+UPDATE dbo.TOMAFISICA1
+SET autor = @Autor
+WHERE NumeroPagina = @NumeroPagina;";
+
+                    var filasActualizadas = dbConnection.Execute(
+                        actualizarAutor,
+                        new { Autor = data.Autor, NumeroPagina = data.NumeroPagina },
+                        transaction: transaction);
+
+                    if (filasActualizadas == 0)
+                        throw new InvalidOperationException("No se encontro la Toma Fisica 1 para asignar el autor.");
+
+                    transaction.Commit();
+                    return 1;
                 }
                 catch(Exception fail)
                 {
+                    if (transaction != null)
+                    {
+                        try { transaction.Rollback(); }
+                        catch (Exception rollbackFail) { log.Error(rollbackFail.Message); }
+                    }
+
                     log.Error(fail.Message);
                     return -1;
                 }

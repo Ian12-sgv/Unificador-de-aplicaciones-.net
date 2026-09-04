@@ -21,6 +21,7 @@ namespace WebServicesApiNetCor
                     .SetBasePath(basePath)
                     .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true)
                     .AddJsonFile(Path.Combine("config", "escucha.json"), optional: true, reloadOnChange: true)
+                    .AddEnvironmentVariables()
                     .AddCommandLine(args)
                     .Build();
 

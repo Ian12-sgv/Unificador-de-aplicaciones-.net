@@ -6,6 +6,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using WebServicesApiNetCor.Data;
 using WebServicesApiNetCor.Models;
+using WebServicesApiNetCor.Util;
 
 namespace WebServicesApiNetCor.Controllers
 {
@@ -15,9 +16,11 @@ namespace WebServicesApiNetCor.Controllers
     public class TomaFisicaController : ControllerBase
     {
         private readonly TomaFisicaRepository tomaFisicaRepository;
+        private readonly SesionUsuarioStore sesionUsuarioStore;
 
-        public TomaFisicaController()
+        public TomaFisicaController(SesionUsuarioStore sesionUsuarioStore)
         {
+            this.sesionUsuarioStore = sesionUsuarioStore;
             tomaFisicaRepository = new TomaFisicaRepository();
         }
 
@@ -42,11 +45,32 @@ namespace WebServicesApiNetCor.Controllers
         }
 
         [HttpPost]
-        public int Post(TomaFisicaMae data)
+        public IActionResult Post([FromBody] TomaFisicaMae data)
         {
+            var codUsuario = ObtenerUsuarioSesion();
+            if (codUsuario == null)
+                return Unauthorized();
+
+            if (data == null)
+                return BadRequest();
+
+            data.Autor = codUsuario;
             var result =  tomaFisicaRepository.Create(data);
-            return result;
+            return Ok(result);
            
+        }
+
+        private string ObtenerUsuarioSesion()
+        {
+            const string bearerPrefix = "Bearer ";
+            var authorization = Request.Headers["Authorization"].ToString();
+
+            if (string.IsNullOrWhiteSpace(authorization) ||
+                !authorization.StartsWith(bearerPrefix, StringComparison.OrdinalIgnoreCase))
+                return null;
+
+            var token = authorization.Substring(bearerPrefix.Length).Trim();
+            return token.Length == 0 ? null : sesionUsuarioStore.ObtenerUsuario(token);
         }
 
 

@@ -43,6 +43,7 @@ namespace WebServicesApiNetCor
         {
            
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
+            services.AddSingleton<SesionUsuarioStore>();
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1",  new Microsoft.OpenApi.Models.OpenApiInfo { Title = "My API", Version = "v1" });

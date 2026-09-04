@@ -25,6 +25,8 @@ dist/
 *.7z
 *.dll
 *.exe
+back/BackBorradorDev/publish*/
+back/BackBorradorDev/apk unificada/
 
 # Local logs and diagnostic output
 *.log

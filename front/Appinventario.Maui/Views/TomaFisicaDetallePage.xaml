@@ -1,33 +1,52 @@
-﻿<?xml version="1.0" encoding="utf-8" ?>
+<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="Appinventario.Views.TomaFisicaDetallePage">
-  <CollectionView x:Name="ListTomaDetalle"
-                   SelectionMode="Single"
-                   SelectionChanged="itemClicked">
-    <CollectionView.ItemTemplate>
-        <DataTemplate>
-            <StackLayout BackgroundColor="#eee"
-                         Orientation="Vertical">
-                <StackLayout Orientation="Horizontal">
-                    <Label Text="{Binding Nombre}"
-                           HorizontalOptions="StartAndExpand"
-                           TextColor="#503026" />
-                    <Label Text="{Binding Cantidad}"
-                           HorizontalOptions="CenterAndExpand"
-                           TextColor="#503026" 
-                           MinimumWidthRequest="50"/>
-                    <Label Text="{Binding CodigoBarra}"
-                           HorizontalOptions="EndAndExpand"
-                           TextColor="#f35e20" />
-                </StackLayout>
-            </StackLayout>
-        </DataTemplate>
-    </CollectionView.ItemTemplate>
-  </CollectionView>
-  <Label x:Name="lblExistencia" 
-         TextColor="#f35e20"
-         FontSize="Large" 
-         HorizontalOptions="EndAndExpand"/>
-</ContentPage>
+    <Grid RowDefinitions="*,Auto" RowSpacing="0">
+        <CollectionView x:Name="ListTomaDetalle"
+                        Grid.Row="0"
+                        SelectionMode="Single"
+                        SelectionChanged="itemClicked">
+            <CollectionView.ItemTemplate>
+                <DataTemplate>
+                    <Grid ColumnDefinitions="*,48,96"
+                          ColumnSpacing="8"
+                          Padding="6,8"
+                          BackgroundColor="#EEEEEE">
+                        <Label Grid.Column="0"
+                               Text="{Binding Nombre}"
+                               FontSize="{OnIdiom Phone=14, Tablet=16, Desktop=18}"
+                               LineBreakMode="WordWrap"
+                               TextColor="#503026"
+                               VerticalOptions="Center" />
+                        <Label Grid.Column="1"
+                               Text="{Binding Cantidad}"
+                               FontSize="{OnIdiom Phone=15, Tablet=17, Desktop=19}"
+                               FontAttributes="Bold"
+                               HorizontalTextAlignment="Center"
+                               TextColor="#503026"
+                               VerticalOptions="Center" />
+                        <Label Grid.Column="2"
+                               Text="{Binding CodigoBarra}"
+                               FontSize="{OnIdiom Phone=14, Tablet=16, Desktop=18}"
+                               HorizontalTextAlignment="End"
+                               LineBreakMode="WordWrap"
+                               TextColor="#F35E20"
+                               VerticalOptions="Center" />
+                    </Grid>
+                </DataTemplate>
+            </CollectionView.ItemTemplate>
+        </CollectionView>
 
+        <Grid Grid.Row="1"
+              Padding="8,10"
+              BackgroundColor="White">
+            <Label x:Name="lblExistencia"
+                   Text="TOTAL CANTIDAD: 0"
+                   FontSize="{OnIdiom Phone=22, Tablet=26, Desktop=30}"
+                   FontAttributes="Bold"
+                   HorizontalOptions="End"
+                   TextColor="#F35E20" />
+        </Grid>
+    </Grid>
+</ContentPage>

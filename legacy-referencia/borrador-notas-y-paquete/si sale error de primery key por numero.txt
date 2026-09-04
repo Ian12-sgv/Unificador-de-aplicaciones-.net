@@ -1,6 +1,0 @@
-DECLARE @Next INT = ISNULL((SELECT MAX(Numero) FROM dbo.DEVBORRADOR), 0) + 1;
-
-DECLARE @sql NVARCHAR(200) =
-  N'ALTER SEQUENCE dbo.seq_devborrador_numero RESTART WITH ' + CAST(@Next AS NVARCHAR(20)) + N';';
-
-EXEC sp_executesql @sql;

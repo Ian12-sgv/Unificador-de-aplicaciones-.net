@@ -1,0 +1,50 @@
+# Control de versiones y configuracion local
+.git/
+.github/
+.vs/
+.env
+.env.*
+!.env.example
+
+# El Dockerfile raiz solo compila WebServicesApiNetCor
+front/
+legacy-referencia/
+back/BackBorradorDev/
+
+# Artefactos generados
+**/bin/
+**/obj/
+**/publish*/
+APK/
+*.apk
+*.aab
+*.idsig
+*.dll
+*.exe
+*.pdb
+*.zip
+*.rar
+*.7z
+
+# Archivos de configuracion con credenciales
+**/appsettings.json
+**/appsettings.Local.json
+**/appsettings.Production.json
+**/auth-users*.json
+back/WebServicesApiNetCor/config/escucha.json
+*.pfx
+*.p12
+*.pem
+*.key
+*.keystore
+*.jks
+
+# Registros, capturas y archivos del sistema
+*.log
+*.png
+*.jpg
+*.jpeg
+*.xml
+*.tmp
+.DS_Store
+Thumbs.db

@@ -11,6 +11,7 @@ using System.Net;
 using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
+using System.Threading;
 
 namespace Appinventario.Views
 {
@@ -23,6 +24,8 @@ namespace Appinventario.Views
         private readonly DateTime fechaTransferencia;
         private int item = 1;
         private string codigoBarraActual = string.Empty;
+        private CancellationTokenSource _scanDebounce;
+        private bool _loadingBarcode;
 
         public MovTransferenciasPage()
             : this(0, DateTime.Now)
@@ -62,9 +65,32 @@ namespace Appinventario.Views
             lblCaja.IsVisible = false;
         }
 
+        private async void BarcodeEntry_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            _scanDebounce?.Cancel();
+            var codigo = (e.NewTextValue ?? string.Empty).Trim();
+            if (string.IsNullOrWhiteSpace(codigo) || _loadingBarcode)
+                return;
+
+            var cts = _scanDebounce = new CancellationTokenSource();
+            try
+            {
+                await Task.Delay(250, cts.Token);
+                if (!cts.IsCancellationRequested && string.Equals(codigo, (BarcodeEntry.Text ?? string.Empty).Trim(), StringComparison.Ordinal))
+                    LoadInventario(sender, EventArgs.Empty);
+            }
+            catch (TaskCanceledException)
+            {
+            }
+        }
+
         private async void LoadInventario(object sender, EventArgs e)
         {
-            try
+            if (_loadingBarcode)
+                return;
+            _loadingBarcode = true;
+
+try
             {
                 if (string.IsNullOrWhiteSpace(lblUrl.Text))
                 {
@@ -116,6 +142,9 @@ namespace Appinventario.Views
                 BarcodeEntry.Focus();
                 DependencyService.Get<IAudio>().PlayAudioFile("no-valido.mp3");
                 await DisplayAlert("Error", "Error: " + fail.Message, "ok");
+            }            finally
+            {
+                _loadingBarcode = false;
             }
         }
 
@@ -195,6 +224,9 @@ namespace Appinventario.Views
             {
                 BarcodeEntry.Focus();
                 await DisplayAlert("Error", "Error: " + Util.NormalizeHttpExceptionMessage(fail), "ok");
+            }            finally
+            {
+                _loadingBarcode = false;
             }
         }
     }

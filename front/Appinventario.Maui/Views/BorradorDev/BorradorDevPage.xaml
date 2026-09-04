@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8" ?>
+<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:controls="clr-namespace:Appinventario.Controls"
@@ -183,6 +183,7 @@
                                        TextColor="#5F7179" />
                                 <controls:RoundedEntry x:Name="txtCodigoBarra"
                                                        Placeholder="Escanea o escribe aqui"
+                                                       TextChanged="BarcodeTextChanged"
                                                        Completed="OnBarcodeCompleted"
                                                        ReturnType="Search"
                                                        HorizontalTextAlignment="Center"

@@ -1,7 +1,8 @@
-﻿using Appinventario.Services;
+using Appinventario.Services;
 using Appinventario.Services.BorradorDev;
 using System;
 using System.Threading.Tasks;
+using System.Threading;
 using Microsoft.Maui.Controls;
 using Microsoft.Maui.Controls.Xaml;
 
@@ -14,6 +15,7 @@ namespace Appinventario.Views.BorradorDev
         private string baseUrl;
         private BorradorDevApiService apiService;
         private bool isBusy;
+        private CancellationTokenSource _scanDebounce;
 
         public BorradorDevPage()
         {
@@ -93,6 +95,25 @@ namespace Appinventario.Views.BorradorDev
         private async void OnGuardarClicked(object sender, EventArgs e)
         {
             await SaveCurrentAsync();
+        }
+
+        private async void BarcodeTextChanged(object sender, TextChangedEventArgs e)
+        {
+            _scanDebounce?.Cancel();
+            var codigo = (e.NewTextValue ?? string.Empty).Trim();
+            if (string.IsNullOrWhiteSpace(codigo) || isBusy)
+                return;
+
+            var cts = _scanDebounce = new CancellationTokenSource();
+            try
+            {
+                await Task.Delay(250, cts.Token);
+                if (!cts.IsCancellationRequested && string.Equals(codigo, (txtCodigoBarra.Text ?? string.Empty).Trim(), StringComparison.Ordinal))
+                    await SaveCurrentAsync();
+            }
+            catch (TaskCanceledException)
+            {
+            }
         }
 
         private async void OnBarcodeCompleted(object sender, EventArgs e)

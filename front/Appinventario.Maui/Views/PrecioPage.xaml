@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8" ?>
+<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="Appinventario.Views.PrecioPage"
@@ -66,6 +66,20 @@
                                IsVisible="False"/>
                     </StackLayout>
 
+                    <!-- Precio Mayor -->
+                    <StackLayout Spacing="2">
+                        <Label x:Name="lblPrecMayor"
+                               Text="Precio Mayor:"
+                               FontSize="Medium"
+                               FontAttributes="Italic"
+                               IsVisible="False"/>
+                        <Label x:Name="lblPrecioMayor"
+                               Text=""
+                               FontSize="Large"
+                               TextColor="#f35e20"
+                               IsVisible="False"/>
+                    </StackLayout>
+
                     <!-- Costo Inicial -->
                     <StackLayout Spacing="2">
                         <Label x:Name="lblCosto"
@@ -83,13 +97,15 @@
                     <!-- Referencia -->
                     <StackLayout Spacing="2">
                         <Label x:Name="lblDol"
-                               Text="Referencia:"
+                               Text="Precios en $:"
                                FontSize="Medium"
                                FontAttributes="Italic"
                                IsVisible="False"/>
                         <Label x:Name="lblDolar"
                                Text=""
-                               FontSize="Large"
+                               FontSize="Medium"
+                               LineBreakMode="WordWrap"
+                               MaxLines="2"
                                TextColor="#f35e20"
                                IsVisible="False"/>
                     </StackLayout>
@@ -133,6 +149,7 @@
             <Grid VerticalOptions="End" Padding="20,0,20,16">
                 <local:RoundedEntry x:Name="BarcodeEntry"
                                     Placeholder="Código de barra"
+                                    TextChanged="BarcodeEntry_TextChanged"
                                     Completed="LoadInventario"
                                     ReturnType="Search"
                                     FontSize="Large"

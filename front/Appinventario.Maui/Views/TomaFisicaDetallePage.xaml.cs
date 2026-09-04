@@ -1,4 +1,4 @@
-﻿using Appinventario.Models;
+using Appinventario.Models;
 using Appinventario.ViewModels;
 using Newtonsoft.Json;
 using System;
@@ -30,16 +30,18 @@ namespace Appinventario.Views
         public string obsL = "";
         public string codigoBarra;
         public bool esEditableCantidad= false;
+        private readonly bool esToma2;
 
-         public TomaFisicaDetallePage(int numeroPagina, string url,string Obs)
+         public TomaFisicaDetallePage(int numeroPagina, string url,string Obs, bool esToma2 = false)
         {
             InitializeComponent();
+            this.esToma2 = esToma2;
+            Title = esToma2 ? "Detalle Toma F\u00EDsica 2" : "Detalle Toma F\u00EDsica 1";
             BindingContext = _viewModel = new TomaFisicaViewModel();
             this.numeroPaginaL = numeroPagina;
             this.urlL = url;
             this.obsL = Obs;
             LoadTomaFisica();
-            this.ListTomaDetalle.SelectionChanged += itemClicked;
             LoadVariables();
         }
 
@@ -52,7 +54,14 @@ namespace Appinventario.Views
                 if (Util.EstatusImei == false)
                     imei = "*";
                
-                request.RequestUri = new Uri("http://" + this.urlL + "/api/TomaFisicaDet/byParameters?numeroPagina=" + this.numeroPaginaL.ToString() + "&tipo=DETALLE&" + "imei=" + imei);
+                var baseUrl = Util.NormalizeServiceUrl(this.urlL);
+                if (string.IsNullOrWhiteSpace(baseUrl))
+                {
+                    await DisplayAlert("Advertencia", "No se ha configurado el servidor.", "OK");
+                    return;
+                }
+                var detailRoute = esToma2 ? "/api/TomaFisicaDet2/byParameters" : "/api/TomaFisicaDet/byParameters";
+                request.RequestUri = new Uri(baseUrl + detailRoute + "?numeroPagina=" + this.numeroPaginaL.ToString() + "&tipo=DETALLE&imei=" + imei);
                 request.Method = HttpMethod.Get;
                 request.Headers.Add("Accept", "application/json");
                 var client = new HttpClient();
@@ -62,7 +71,7 @@ namespace Appinventario.Views
                 if (response.StatusCode == HttpStatusCode.OK)
                 {
                     string content = await response.Content.ReadAsStringAsync();
-                    var resultado = JsonConvert.DeserializeObject<List<TomaFisica>>(content);
+                    var resultado = DeserializeTomasFisicas(content);
                     this.ListTomaDetalle.ItemsSource = resultado;                    
                     LoadTotal();
                 }
@@ -76,36 +85,46 @@ namespace Appinventario.Views
         }
         private async void LoadVariables()
         {
-            var request = new HttpRequestMessage();
-            request.RequestUri = new Uri("http://" + this.urlL + "/api/Valores");
-            request.Method = HttpMethod.Get;
-            request.Headers.Add("Accept", "application/json");
-            var client = new HttpClient();
-            //client.Timeout = TimeSpan.FromSeconds(2);
-            HttpResponseMessage response = await client.SendAsync(request);
-            string content = await response.Content.ReadAsStringAsync();
-            listValores = JsonConvert.DeserializeObject<List<Valores>>(content);
             try
             {
-                if (response.StatusCode == HttpStatusCode.OK)
-                {
-                    foreach (var ls in listValores)
-                    {
-                        if (ls.Descripcion != null) 
-                            esEditableCantidad = Convert.ToBoolean(ls.Descripcion);
-                        else
-                            esEditableCantidad = false;
-                    }
-                }
-            }
-            catch (Exception fail)
-            {
+                var baseUrl = Util.NormalizeServiceUrl(this.urlL);
+                if (string.IsNullOrWhiteSpace(baseUrl))
+                    return;
+
+                using var request = new HttpRequestMessage(HttpMethod.Get, baseUrl + (esToma2 ? "/api/Valores2" : "/api/Valores"));
+                request.Headers.Add("Accept", "application/json");
+                using var client = Util.CreateHttpClient();
+                var response = await client.SendAsync(request);
+                if (response.StatusCode != HttpStatusCode.OK)
+                    return;
+
+                var content = await response.Content.ReadAsStringAsync();
+                listValores = JsonConvert.DeserializeObject<List<Valores>>(content) ?? new List<Valores>();
+
                 foreach (var ls in listValores)
                 {
-                   esEditableCantidad = false;
+                    esEditableCantidad = ls.Descripcion != null && Convert.ToBoolean(ls.Descripcion);
                 }
-                //  await DisplayAlert("Error", "Error: " + fail.Message, "ok");
             }
+            catch (Exception)
+            {
+                esEditableCantidad = false;
+            }
+        }
+        private static List<TomaFisica> DeserializeTomasFisicas(string content)
+        {
+            var items = Newtonsoft.Json.Linq.JArray.Parse(content);
+            foreach (var item in items)
+            {
+                var cantidadTexto = item["Cantidad"]?.ToString();
+                if (decimal.TryParse(cantidadTexto, System.Globalization.NumberStyles.Number,
+                    System.Globalization.CultureInfo.InvariantCulture, out var cantidad))
+                {
+                    item["Cantidad"] = (int)Math.Round(cantidad, 0, MidpointRounding.AwayFromZero);
+                }
+            }
+
+            return items.ToObject<List<TomaFisica>>() ?? new List<TomaFisica>();
         }
         private async void LoadTotal()
         {
@@ -116,7 +135,11 @@ namespace Appinventario.Views
                 if (Util.EstatusImei == false)
                     imei = "*";
 
-                request.RequestUri = new Uri("http://" + this.urlL + "/api/TomaFisicaDet/byParameters?numeroPagina=" + this.numeroPaginaL.ToString() + "&tipo=TOTAL&imei=" + imei);
+                var baseUrl = Util.NormalizeServiceUrl(this.urlL);
+                if (string.IsNullOrWhiteSpace(baseUrl))
+                    return;
+                var totalRoute = esToma2 ? "/api/TomaFisicaDet2/byParameters" : "/api/TomaFisicaDet/byParameters";
+                request.RequestUri = new Uri(baseUrl + totalRoute + "?numeroPagina=" + this.numeroPaginaL.ToString() + "&tipo=TOTAL&imei=" + imei);
                 request.Method = HttpMethod.Get;
                 request.Headers.Add("Accept", "application/json");
                 var client = Util.CreateHttpClient();
@@ -125,12 +148,10 @@ namespace Appinventario.Views
                 if (response.StatusCode == HttpStatusCode.OK)
                 {
                     string content = await response.Content.ReadAsStringAsync();
-                    listToma = JsonConvert.DeserializeObject<List<TomaFisica>>(content);
+                    listToma = DeserializeTomasFisicas(content);
 
-                    foreach (var ls in listToma)
-                    {
-                        this.lblExistencia.Text = "TOTAL CANTIDAD:  " + ls.Cantidad.ToString();
-                    }
+                    var totalCantidad = listToma.Sum(ls => ls.Cantidad);
+                    this.lblExistencia.Text = "TOTAL CANTIDAD: " + totalCantidad;
                 }
                 if (imei == "*")
                     imei = "";
@@ -202,11 +223,29 @@ namespace Appinventario.Views
                     Imei = Util.EstatusImei == true? Util.Imei: ""
                 };
 
-                Uri RequestUri = new Uri("http://" + this.urlL + "/api/TomaFisica");
+                var baseUrl = Util.NormalizeServiceUrl(this.urlL);
+                if (string.IsNullOrWhiteSpace(baseUrl))
+                {
+                    await DisplayAlert("Advertencia", "No se ha configurado el servidor.", "OK");
+                    return;
+                }
+                var postRoute = esToma2 ? "/api/TomaFisica2" : "/api/TomaFisica";
+                Uri RequestUri = new Uri(baseUrl + postRoute);
                 var client = Util.CreateHttpClient();
+                if (!TomaFisicaAuthService.ConfigureAuthorization(client))
+                {
+                    await VolverAlLoginAsync("Debe iniciar sesión para modificar la toma física.");
+                    return;
+                }
                 var json = JsonConvert.SerializeObject(toma);
                 var contentJson = new StringContent(json, Encoding.UTF8, "application/json");
                 var response = await client.PostAsync(RequestUri, contentJson);
+
+                if (response.StatusCode == HttpStatusCode.Unauthorized)
+                {
+                    await VolverAlLoginAsync("La sesión venció. Inicie sesión nuevamente.");
+                    return;
+                }
 
                 if (response.StatusCode == HttpStatusCode.OK)
                 {
@@ -223,6 +262,13 @@ namespace Appinventario.Views
             {
                 await DisplayAlert("Error", "Error: " + fail.Message, "ok");
             }
+        }
+
+        private async System.Threading.Tasks.Task VolverAlLoginAsync(string mensaje)
+        {
+            TomaFisicaAuthService.Clear();
+            await DisplayAlert("Sesión", mensaje, "OK");
+            await Navigation.PopToRootAsync();
         }
 
 

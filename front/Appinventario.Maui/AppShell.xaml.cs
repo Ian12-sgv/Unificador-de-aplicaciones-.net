@@ -17,6 +17,8 @@ namespace Appinventario
 
         public ICommand HelpCommand => new Command(async () => await Salir());
 
+        public ICommand LogoutCommand => HelpCommand;
+
         private void BuildMenu()
         {
             Items.Clear();
@@ -46,6 +48,7 @@ namespace Appinventario
                 return;
 
             AuthService.Logout();
+            TomaFisicaAuthService.Clear();
             Application.Current.MainPage = new LoginPage();
         }
     }

@@ -15,9 +15,11 @@ namespace Appinventario.Services
         public const string ModulePrice = "price";
         public const string ModuleBorrador = "borrador";
         public const string ModuleTransferencias = "transferencias";
+        public const string ModuleTomaFisica = "toma_fisica";
         public const string ModuleParameters = "parameters";
 
         private const string SavedUsernameKey = "auth_saved_username";
+        private const string LastUsernameKey = "auth_last_username";
         private const string AuthUsersFileName = "auth-users.json";
         private const string AuthUsersPathVariable = "APP_AUTH_USERS_FILE";
 
@@ -26,6 +28,7 @@ namespace Appinventario.Services
             new AppModule { Key = ModulePrice, Title = "Lector de Precios", Icon = "moneda.png", Route = "PrecioPage", PageType = typeof(PrecioPage) },
             new AppModule { Key = ModuleBorrador, Title = "Borrador Dev", Icon = "editar.png", Route = "BorradorDevPage", PageType = typeof(BorradorDevPage) },
             new AppModule { Key = ModuleTransferencias, Title = "Transferencias", Icon = "icon_feed.png", Route = "TransferenciaPage", PageType = typeof(TransferenciaPage) },
+            new AppModule { Key = ModuleTomaFisica, Title = "Toma física", Icon = "barcodescanner.png", Route = "TomaFisicaLoginPage", PageType = typeof(TomaFisicaLoginPage) },
             new AppModule { Key = ModuleParameters, Title = "Parámetros", Icon = "icon_feed.png", Route = "ParameterPage", PageType = typeof(NewItemPage) },
         };
 
@@ -43,7 +46,10 @@ namespace Appinventario.Services
 
             CurrentUser = user;
             if (user != null)
+            {
                 Preferences.Set(SavedUsernameKey, user.Username);
+                Preferences.Set(LastUsernameKey, user.Username);
+            }
 
             return user != null;
         }
@@ -71,13 +77,15 @@ namespace Appinventario.Services
             Preferences.Remove(SavedUsernameKey);
         }
 
+        public static string SavedUsername => Preferences.Get(LastUsernameKey, string.Empty);
+
         public static IReadOnlyList<AppModule> GetVisibleModules()
         {
             if (CurrentUser == null)
                 return new List<AppModule>();
 
             return modules
-                .Where(module => module.IsAlwaysVisible || UserCanSee(module))
+                .Where(UserCanSee)
                 .ToList();
         }
 
@@ -86,16 +94,61 @@ namespace Appinventario.Services
             if (module == null || CurrentUser == null)
                 return false;
 
-            if (module.IsAlwaysVisible)
+            // Parametros es comun a todos los usuarios.
+            if (module.Key == ModuleParameters)
+                return true;
+
+            // Toma fisica se muestra solo si el usuario tiene al menos una toma autorizada.
+            if (module.Key == ModuleTomaFisica)
+                return HasAnyTomaFisicaAccess();
+
+            // ADMIN y SUPER_ADMIN tienen acceso completo.
+            if (IsFullAccessUser())
                 return true;
 
             if (!CurrentUser.AllowedModules.Contains(module.Key))
                 return false;
 
-            if (CurrentUser.CanManageModules)
+            return Preferences.Get(GetEnabledPreferenceKey(module.Key), true);
+        }
+
+        public static bool CanUseTomaFisica1()
+        {
+            return HasTomaFisicaAccess("1");
+        }
+
+        public static bool CanUseTomaFisica2()
+        {
+            return HasTomaFisicaAccess("2");
+        }
+
+        private static bool HasAnyTomaFisicaAccess()
+        {
+            return IsFullAccessUser() ||
+                (CurrentUser?.AllowedTomaFisicaModes?.Count > 0);
+        }
+
+        private static bool HasTomaFisicaAccess(string mode)
+        {
+            if (CurrentUser == null)
+                return false;
+
+            if (IsFullAccessUser())
                 return true;
 
-            return Preferences.Get(GetEnabledPreferenceKey(module.Key), true);
+            return CurrentUser.AllowedTomaFisicaModes?.Any(value =>
+                string.Equals(value, mode, StringComparison.OrdinalIgnoreCase)) == true;
+        }
+
+        private static bool IsFullAccessUser()
+        {
+            if (CurrentUser == null)
+                return false;
+
+            return CurrentUser.CanManageModules ||
+                string.Equals(CurrentUser.Role, "ADMIN", StringComparison.OrdinalIgnoreCase) ||
+                string.Equals(CurrentUser.Role, "SUPER_ADMIN", StringComparison.OrdinalIgnoreCase) ||
+                string.Equals(CurrentUser.Role, "Administrator", StringComparison.OrdinalIgnoreCase);
         }
 
         public static bool IsModuleEnabled(string moduleKey)
@@ -128,6 +181,7 @@ namespace Appinventario.Services
                         .Select(user =>
                         {
                             user.AllowedModules ??= new List<string>();
+                            user.AllowedTomaFisicaModes ??= new List<string>();
                             return user;
                         })
                         .ToList() ?? new List<AppUser>();
@@ -138,6 +192,34 @@ namespace Appinventario.Services
                 }
             }
 
+            try
+            {
+                var resourceName = typeof(AuthService).Assembly.GetManifestResourceNames()
+                    .FirstOrDefault(name => name.EndsWith("auth-users.json", StringComparison.OrdinalIgnoreCase));
+                if (!string.IsNullOrWhiteSpace(resourceName))
+                {
+                    using var stream = typeof(AuthService).Assembly.GetManifestResourceStream(resourceName);
+                    using var reader = new StreamReader(stream!);
+                    var configuredUsers = JsonSerializer.Deserialize<List<AppUser>>(reader.ReadToEnd(), new JsonSerializerOptions
+                    {
+                        PropertyNameCaseInsensitive = true
+                    });
+
+                    return configuredUsers?
+                        .Where(user => !string.IsNullOrWhiteSpace(user.Username) && user.Password != null)
+                        .Select(user =>
+                        {
+                            user.AllowedModules ??= new List<string>();
+                            user.AllowedTomaFisicaModes ??= new List<string>();
+                            return user;
+                        })
+                        .ToList() ?? new List<AppUser>();
+                }
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine($"No se pudo cargar el usuario administrador integrado: {ex.Message}");
+            }
             Debug.WriteLine("No se encontro auth-users.json. Consulta auth-users.example.json para configurar el acceso local.");
             return new List<AppUser>();
         }
