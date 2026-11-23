@@ -71,3 +71,11 @@ back/WebServicesApiNetCor/config/README.txt
 .DS_Store
 Thumbs.db
 *.lnk
+
+# Carpetas locales que no se versionan
+Nueva carpeta/
+respaldo-*/
+trabajo de compañero/
+back/BackBorradorDev/app unificada/
+.impeccable/
+.claude/
