@@ -41,6 +41,16 @@ namespace Appinventario.Views
         private List<TransferenciaDespachoItem> listaDespachos = new List<TransferenciaDespachoItem>();
         private List<TransferenciaLoteItem> listaLotes = new List<TransferenciaLoteItem>();
 
+        // Borrador local y confirmacion al salir.
+        private bool hayCambios;
+        private bool suspenderSeguimiento;
+        private bool borradorRevisado;
+        private bool lineaBaseFijada;
+        private bool saliendo;
+        private bool EsNueva => !numeroParaCargar.HasValue;
+        private static string ClaveBorrador =>
+            "transferencia_nueva_borrador_" + (AuthService.CurrentUser?.Username ?? "anonimo");
+
         public NuevaTransferenciaPage()
         {
             InitializeComponent();
@@ -65,12 +75,42 @@ namespace Appinventario.Views
             cantidadTotal.Text = "0.00";
             SeleccionarCaja(1);
             ActualizarEncabezado();
+
+            documentoOrigen.TextChanged += (_, _) => NotificarCambio();
+            observacion.TextChanged += (_, _) => NotificarCambio();
+            fecha.DateSelected += (_, _) => NotificarCambio();
+            fechaEmision.DateSelected += (_, _) => NotificarCambio();
+            transferenciaCorreccion.Toggled += (_, _) => NotificarCambio();
+            despacho.SelectedIndexChanged += (_, _) => NotificarCambio();
+            lote.SelectedIndexChanged += (_, _) => NotificarCambio();
+
+            // Flecha "atras" de la barra de Shell (el boton fisico va por OnBackButtonPressed).
+            Shell.SetBackButtonBehavior(this, new BackButtonBehavior
+            {
+                Command = new Command(async () => await IntentarSalirAsync())
+            });
         }
 
         protected override void OnAppearing()
         {
             base.OnAppearing();
             _ = PrepararDatosAsync();
+        }
+
+        protected override void OnDisappearing()
+        {
+            base.OnDisappearing();
+            // Cubre cambios de pestaña/flyout sin pasar por "atras".
+            GuardarBorradorLocal();
+        }
+
+        protected override bool OnBackButtonPressed()
+        {
+            if (saliendo || !TieneCambiosSinGuardar())
+                return base.OnBackButtonPressed();
+
+            Dispatcher.Dispatch(async () => await IntentarSalirAsync());
+            return true;
         }
 
         private async Task PrepararDatosAsync()
@@ -108,6 +148,19 @@ namespace Appinventario.Views
                 {
                     await LoadTransferenciaGuardadaAsync(numeroParaCargar.Value);
                 }
+
+                if (numeroParaCargar.HasValue && !lineaBaseFijada)
+                {
+                    // Lo que disparo la carga inicial (pickers, campos) no cuenta como cambio del usuario.
+                    hayCambios = false;
+                    lineaBaseFijada = true;
+                }
+
+                if (EsNueva && !borradorRevisado)
+                {
+                    await OfrecerRecuperarBorradorAsync();
+                    borradorRevisado = true;
+                }
             }
             finally
             {
@@ -128,7 +181,7 @@ namespace Appinventario.Views
                 var serviceUrl = Util.NormalizeServiceUrl(url);
                 if (string.IsNullOrWhiteSpace(serviceUrl))
                 {
-                    MostrarEstadoConexion("No se ha configurado url del servicio en parametros.");
+                    MostrarEstadoConexion("Configure el servidor en Parámetros.");
                     return;
                 }
 
@@ -145,7 +198,7 @@ namespace Appinventario.Views
 
                 if (response.StatusCode != HttpStatusCode.OK)
                 {
-                    MostrarEstadoConexion("Error cargando sucursales: " + ObtenerDetalleError(content) + "\nEscucha: " + serviceUrl);
+                    MostrarEstadoConexion("No se pudieron cargar las sucursales: " + ObtenerDetalleError(content) + "\nServidor: " + serviceUrl);
                     return;
                 }
 
@@ -155,7 +208,7 @@ namespace Appinventario.Views
 
                 if (listSucur.Count == 0)
                 {
-                    MostrarEstadoConexion("No se encontraron sucursales. Escucha: " + serviceUrl);
+                    MostrarEstadoConexion("El servidor no devolvió sucursales. Servidor: " + serviceUrl);
                 }
                 else
                 {
@@ -167,7 +220,7 @@ namespace Appinventario.Views
             catch (Exception fail)
             {
                 Util.TryPlayAudioFile("no-valido.mp3");
-                MostrarEstadoConexion("Sin conexion con el escucha: " + Util.NormalizeHttpExceptionMessage(fail));
+                MostrarEstadoConexion("Sin conexión con el servidor. Revise la red y Parámetros (" + Util.NormalizeHttpExceptionMessage(fail) + ").");
             }
         }
 
@@ -184,7 +237,7 @@ namespace Appinventario.Views
                 var serviceUrl = Util.NormalizeServiceUrl(url);
                 if (string.IsNullOrWhiteSpace(serviceUrl))
                 {
-                    MostrarEstadoConexion("No se ha configurado url del servicio en parametros.");
+                    MostrarEstadoConexion("Configure el servidor en Parámetros.");
                     return;
                 }
 
@@ -194,7 +247,7 @@ namespace Appinventario.Views
 
                 if (response.StatusCode != HttpStatusCode.OK)
                 {
-                    MostrarEstadoConexion("Error cargando despachos: " + ObtenerDetalleError(content));
+                    MostrarEstadoConexion("No se pudieron cargar los despachos: " + ObtenerDetalleError(content));
                     return;
                 }
 
@@ -204,7 +257,7 @@ namespace Appinventario.Views
             }
             catch (Exception fail)
             {
-                MostrarEstadoConexion("Sin conexion cargando despachos: " + Util.NormalizeHttpExceptionMessage(fail));
+                MostrarEstadoConexion("Sin conexión: no se pudieron cargar los despachos (" + Util.NormalizeHttpExceptionMessage(fail) + ").");
             }
         }
 
@@ -215,7 +268,7 @@ namespace Appinventario.Views
                 var serviceUrl = Util.NormalizeServiceUrl(url);
                 if (string.IsNullOrWhiteSpace(serviceUrl))
                 {
-                    MostrarEstadoConexion("No se ha configurado url del servicio en parametros.");
+                    MostrarEstadoConexion("Configure el servidor en Parámetros.");
                     return;
                 }
 
@@ -225,7 +278,7 @@ namespace Appinventario.Views
 
                 if (response.StatusCode != HttpStatusCode.OK)
                 {
-                    MostrarEstadoConexion("Error cargando lotes: " + ObtenerDetalleError(content));
+                    MostrarEstadoConexion("No se pudieron cargar los lotes: " + ObtenerDetalleError(content));
                     return;
                 }
 
@@ -235,7 +288,7 @@ namespace Appinventario.Views
             }
             catch (Exception fail)
             {
-                MostrarEstadoConexion("Sin conexion cargando lotes: " + Util.NormalizeHttpExceptionMessage(fail));
+                MostrarEstadoConexion("Sin conexión: no se pudieron cargar los lotes (" + Util.NormalizeHttpExceptionMessage(fail) + ").");
             }
         }
 
@@ -260,11 +313,13 @@ namespace Appinventario.Views
         private void Numero_TextChanged(object sender, TextChangedEventArgs e)
         {
             ActualizarEncabezado();
+            NotificarCambio();
         }
 
         private void Sucursal_SelectedIndexChanged(object sender, EventArgs e)
         {
             ActualizarEncabezado();
+            NotificarCambio();
         }
 
         private async Task LoadTransferenciaGuardadaAsync(int numeroTransferencia)
@@ -274,7 +329,7 @@ namespace Appinventario.Views
                 var serviceUrl = Util.NormalizeServiceUrl(url);
                 if (string.IsNullOrWhiteSpace(serviceUrl))
                 {
-                    MostrarEstadoConexion("No se ha configurado url del servicio en parametros.");
+                    MostrarEstadoConexion("Configure el servidor en Parámetros.");
                     return;
                 }
 
@@ -300,7 +355,7 @@ namespace Appinventario.Views
 
                 if (header == null)
                 {
-                    MostrarEstadoConexion("Respuesta de transferencia incompleta.");
+                    MostrarEstadoConexion("El servidor devolvió la transferencia incompleta.");
                     return;
                 }
 
@@ -347,7 +402,7 @@ namespace Appinventario.Views
             }
             catch (Exception fail)
             {
-                MostrarEstadoConexion("Error cargando transferencia: " + Util.NormalizeHttpExceptionMessage(fail));
+                MostrarEstadoConexion("No se pudo cargar la transferencia (" + Util.NormalizeHttpExceptionMessage(fail) + ").");
             }
         }
 
@@ -389,19 +444,22 @@ namespace Appinventario.Views
 
             var sucursal = listaSucursal?.SelectedItem as Sucursales;
             subtituloSucursal.Text = "Sucursal: " + (sucursal?.Nombre ?? string.Empty);
-            resumenReferencias.Text = detalles.Count + (detalles.Count == 1 ? " Referencia en lista" : " Referencias en lista");
+            resumenReferencias.Text = detalles.Count + (detalles.Count == 1 ? " referencia en lista" : " referencias en lista");
         }
 
         private void SeleccionarCaja(int numeroCaja)
         {
             cajaSeleccionada = numeroCaja;
             cajaDetalle.Text = numeroCaja.ToString();
-            box1Button.BackgroundColor = numeroCaja == 1 ? Color.FromArgb("#1D4ED8") : Color.FromArgb("#E2E8F0");
-            box1Button.TextColor = numeroCaja == 1 ? Colors.White : Color.FromArgb("#475569");
-            box2Button.BackgroundColor = numeroCaja == 2 ? Color.FromArgb("#1D4ED8") : Color.FromArgb("#E2E8F0");
-            box2Button.TextColor = numeroCaja == 2 ? Colors.White : Color.FromArgb("#475569");
-            box3Button.BackgroundColor = numeroCaja == 3 ? Color.FromArgb("#1D4ED8") : Color.FromArgb("#E2E8F0");
-            box3Button.TextColor = numeroCaja == 3 ? Colors.White : Color.FromArgb("#475569");
+            PintarCaja(box1Button, numeroCaja == 1);
+            PintarCaja(box2Button, numeroCaja == 2);
+            PintarCaja(box3Button, numeroCaja == 3);
+        }
+
+        private static void PintarCaja(Button boton, bool seleccionada)
+        {
+            boton.BackgroundColor = seleccionada ? AppColors.Primary : AppColors.SurfaceMuted;
+            boton.TextColor = seleccionada ? AppColors.OnPrimary : AppColors.TextSecondary;
         }
 
         private void BoxButton_Clicked(object sender, EventArgs e)
@@ -492,13 +550,13 @@ namespace Appinventario.Views
 
                 if (string.IsNullOrWhiteSpace(serviceUrl))
                 {
-                    await DisplayAlert("Advertencia", "No se ha configurado url del servicio en parametros.", "ok");
+                    await DisplayAlert("Advertencia", "Configure el servidor en Parámetros.", "Aceptar");
                     return;
                 }
 
                 if (string.IsNullOrWhiteSpace(codigo))
                 {
-                    await DisplayAlert("Advertencia", "Debe indicar un codigo de barra.", "ok");
+                    await FeedbackService.ShowAsync("Escanee o escriba un código de barra.");
                     return;
                 }
 
@@ -514,7 +572,7 @@ namespace Appinventario.Views
                 if (response.StatusCode != HttpStatusCode.OK)
                 {
                     DependencyService.Get<IAudio>()?.PlayAudioFile("no-valido.mp3");
-                    await DisplayAlert("Error", "Error de codigo de barra.", "ok");
+                    await DisplayAlert("Error", "No se encontró ningún artículo con ese código.", "Aceptar");
                     return;
                 }
 
@@ -525,13 +583,13 @@ namespace Appinventario.Views
                 if (articuloActual == null)
                 {
                     DependencyService.Get<IAudio>()?.PlayAudioFile("no-valido.mp3");
-                    await DisplayAlert("Error", "Error de codigo de barra.", "ok");
+                    await DisplayAlert("Error", "No se encontró ningún artículo con ese código.", "Aceptar");
                 }
             }
             catch (Exception fail)
             {
                 DependencyService.Get<IAudio>()?.PlayAudioFile("no-valido.mp3");
-                await DisplayAlert("Error", "Error: " + Util.NormalizeHttpExceptionMessage(fail), "ok");
+                await DisplayAlert("Error", Util.NormalizeHttpExceptionMessage(fail), "Aceptar");
             }
         }
 
@@ -547,20 +605,20 @@ namespace Appinventario.Views
                 var serviceUrl = Util.NormalizeServiceUrl(url);
                 if (string.IsNullOrWhiteSpace(serviceUrl))
                 {
-                    await DisplayAlert("Advertencia", "No se ha configurado url del servicio en parametros.", "ok");
+                    await DisplayAlert("Advertencia", "Configure el servidor en Parámetros.", "Aceptar");
                     return;
                 }
 
                 var sucursal = listaSucursal.SelectedItem as Sucursales;
                 if (sucursal == null)
                 {
-                    await DisplayAlert("Advertencia", "Debe seleccionar la sucursal.", "ok");
+                    await FeedbackService.ShowAsync("Seleccione la sucursal.");
                     return;
                 }
 
                 if (detalles.Count == 0)
                 {
-                    await DisplayAlert("Advertencia", "Debe agregar al menos un articulo.", "ok");
+                    await FeedbackService.ShowAsync("Agregue al menos un artículo.");
                     return;
                 }
 
@@ -607,15 +665,19 @@ namespace Appinventario.Views
                 var headerResponse = esTransferenciaExistente
                     ? await client.PutAsync(serviceUrl + "/api/Transferencia/" + transferencia.Numero, headerContent)
                     : await client.PostAsync(serviceUrl + "/api/Transferencia", headerContent);
-                if (!await ValidarInsercionAsync(headerResponse, "El escucha no inserto la transferencia."))
+                if (!await ValidarInsercionAsync(headerResponse, "El servidor no guardó la transferencia."))
                     return;
 
-                await DisplayAlert("Exito", "Transferencia guardada correctamente.", "ok");
+                if (EsNueva)
+                    EliminarBorradorLocal();
+
+                saliendo = true;
+                await FeedbackService.ShowAsync("Transferencia guardada.");
                 await Navigation.PopAsync(false);
             }
             catch (Exception fail)
             {
-                await DisplayAlert("Error", "Error: " + Util.NormalizeHttpExceptionMessage(fail), "ok");
+                await DisplayAlert("Error", Util.NormalizeHttpExceptionMessage(fail), "Aceptar");
             }
         }
 
@@ -666,6 +728,7 @@ namespace Appinventario.Views
             detalleGrid.ItemsSource = null;
             detalleGrid.ItemsSource = detalles;
             ActualizarTotales();
+            NotificarCambio();
         }
 
         private async Task<bool> ValidarInsercionAsync(HttpResponseMessage response, string mensaje)
@@ -674,7 +737,7 @@ namespace Appinventario.Views
 
             if (response.StatusCode != HttpStatusCode.OK)
             {
-                await DisplayAlert("Error", mensaje + Environment.NewLine + ObtenerDetalleError(resultText), "ok");
+                await DisplayAlert("Error", mensaje + Environment.NewLine + ObtenerDetalleError(resultText), "Aceptar");
                 return false;
             }
 
@@ -694,7 +757,7 @@ namespace Appinventario.Views
                     // La respuesta no vino como JSON del escucha compartido.
                 }
 
-                await DisplayAlert("Error", mensaje + Environment.NewLine + ObtenerDetalleError(resultText), "ok");
+                await DisplayAlert("Error", mensaje + Environment.NewLine + ObtenerDetalleError(resultText), "Aceptar");
                 return false;
             }
 
@@ -728,8 +791,205 @@ namespace Appinventario.Views
 
         private async void Cancelar_Clicked(object sender, EventArgs e)
         {
+            await IntentarSalirAsync();
+        }
+
+        #region Borrador local y confirmacion al salir
+
+        private void NotificarCambio()
+        {
+            if (suspenderSeguimiento)
+                return;
+
+            hayCambios = true;
+            GuardarBorradorLocal();
+        }
+
+        private bool TieneCambiosSinGuardar()
+        {
+            if (EsNueva)
+            {
+                return detalles.Count > 0
+                    || !string.IsNullOrWhiteSpace(documentoOrigen.Text)
+                    || !string.IsNullOrWhiteSpace(observacion.Text);
+            }
+
+            return hayCambios;
+        }
+
+        private async Task IntentarSalirAsync()
+        {
+            if (saliendo)
+                return;
+
+            if (!TieneCambiosSinGuardar())
+            {
+                saliendo = true;
+                await Navigation.PopAsync(false);
+                return;
+            }
+
+            if (EsNueva)
+            {
+                const string conservar = "Salir y conservar borrador";
+                const string descartar = "Descartar transferencia";
+                var opcion = await DisplayActionSheet(
+                    "La transferencia no se ha guardado en el servidor (" + detalles.Count + " artículo(s)).",
+                    "Seguir editando", descartar, conservar);
+
+                if (opcion == conservar)
+                {
+                    GuardarBorradorLocal();
+                }
+                else if (opcion == descartar)
+                {
+                    EliminarBorradorLocal();
+                }
+                else
+                {
+                    return;
+                }
+            }
+            else
+            {
+                var salir = await DisplayAlert(
+                    "Cambios sin guardar",
+                    "¿Salir sin guardar los cambios de la transferencia " + numeroParaCargar + "?",
+                    "Salir", "Seguir editando");
+                if (!salir)
+                    return;
+            }
+
+            saliendo = true;
             await Navigation.PopAsync(false);
         }
+
+        private void GuardarBorradorLocal()
+        {
+            // Solo para transferencias nuevas, y nunca antes de haber ofrecido recuperar el anterior
+            // (si no, la carga inicial lo sobrescribiria).
+            if (!EsNueva || !borradorRevisado || suspenderSeguimiento || saliendo)
+                return;
+
+            try
+            {
+                if (!TieneCambiosSinGuardar())
+                {
+                    EliminarBorradorLocal();
+                    return;
+                }
+
+                var borrador = new BorradorTransferencia
+                {
+                    GuardadoEn = DateTime.Now,
+                    Numero = numero.Text ?? string.Empty,
+                    DocumentoOrigen = documentoOrigen.Text ?? string.Empty,
+                    Observacion = observacion.Text ?? string.Empty,
+                    Correccion = transferenciaCorreccion.IsToggled,
+                    Fecha = fecha.Date,
+                    FechaEmision = fechaEmision.Date,
+                    CodigoSucursal = (listaSucursal.SelectedItem as Sucursales)?.Codigo ?? string.Empty,
+                    IdDespacho = (despacho.SelectedItem as TransferenciaDespachoItem)?.IdDespacho ?? 0,
+                    IdLote = (lote.SelectedItem as TransferenciaLoteItem)?.IdLote ?? 0,
+                    Detalles = detalles.ToList()
+                };
+
+                Preferences.Set(ClaveBorrador, JsonConvert.SerializeObject(borrador));
+            }
+            catch (Exception ex)
+            {
+                CrashReportService.LogException(ex, "NuevaTransferenciaPage.GuardarBorradorLocal");
+            }
+        }
+
+        private static void EliminarBorradorLocal()
+        {
+            Preferences.Remove(ClaveBorrador);
+        }
+
+        private async Task OfrecerRecuperarBorradorAsync()
+        {
+            BorradorTransferencia borrador;
+            try
+            {
+                var json = Preferences.Get(ClaveBorrador, string.Empty);
+                if (string.IsNullOrWhiteSpace(json))
+                    return;
+
+                borrador = JsonConvert.DeserializeObject<BorradorTransferencia>(json);
+            }
+            catch (Exception ex)
+            {
+                CrashReportService.LogException(ex, "NuevaTransferenciaPage.LeerBorradorLocal");
+                EliminarBorradorLocal();
+                return;
+            }
+
+            if (borrador == null)
+                return;
+
+            var cantidadLineas = borrador.Detalles?.Count ?? 0;
+            var recuperar = await DisplayAlert(
+                "Transferencia sin guardar",
+                "Hay una transferencia sin guardar del " + borrador.GuardadoEn.ToString("dd/MM/yyyy HH:mm", CultureInfo.CurrentCulture)
+                    + " con " + cantidadLineas + " artículo(s). ¿Desea recuperarla?",
+                "Recuperar", "Descartar");
+
+            if (!recuperar)
+            {
+                EliminarBorradorLocal();
+                return;
+            }
+
+            suspenderSeguimiento = true;
+            try
+            {
+                numero.Text = borrador.Numero;
+                documentoOrigen.Text = borrador.DocumentoOrigen;
+                observacion.Text = borrador.Observacion;
+                transferenciaCorreccion.IsToggled = borrador.Correccion;
+                if (borrador.Fecha != default)
+                    fecha.Date = borrador.Fecha;
+                if (borrador.FechaEmision != default)
+                    fechaEmision.Date = borrador.FechaEmision;
+
+                SeleccionarSucursalPorCodigo(borrador.CodigoSucursal);
+                SeleccionarDespachoPorId(borrador.IdDespacho);
+                SeleccionarLotePorId(borrador.IdLote);
+
+                detalles.Clear();
+                foreach (var linea in borrador.Detalles ?? new List<TransferenciaDetalleLinea>())
+                    detalles.Add(linea);
+                ReenumerarDetalles();
+
+                detalleGrid.ItemsSource = null;
+                detalleGrid.ItemsSource = detalles;
+                ActualizarTotales();
+            }
+            finally
+            {
+                suspenderSeguimiento = false;
+            }
+
+            MostrarEstadoConexion("Transferencia sin guardar recuperada. Recuerde pulsar Guardar.");
+        }
+
+        private sealed class BorradorTransferencia
+        {
+            public DateTime GuardadoEn { get; set; }
+            public string Numero { get; set; }
+            public string DocumentoOrigen { get; set; }
+            public string Observacion { get; set; }
+            public bool Correccion { get; set; }
+            public DateTime Fecha { get; set; }
+            public DateTime FechaEmision { get; set; }
+            public string CodigoSucursal { get; set; }
+            public int IdDespacho { get; set; }
+            public int IdLote { get; set; }
+            public List<TransferenciaDetalleLinea> Detalles { get; set; }
+        }
+
+        #endregion
 
         private void ActualizarTotales()
         {

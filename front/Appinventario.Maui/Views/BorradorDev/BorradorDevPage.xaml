@@ -5,7 +5,7 @@
              x:Class="Appinventario.Views.BorradorDev.BorradorDevPage"
              Visual="Material"
              Title="Borrador Dev"
-             BackgroundColor="#F4F6F8">
+             BackgroundColor="{StaticResource Canvas}">
     <ContentPage.Content>
         <Grid Padding="10" RowSpacing="10">
             <Grid.RowDefinitions>
@@ -20,15 +20,15 @@
                    Padding="12,10"
                    CornerRadius="12"
                    HasShadow="False"
-                   BorderColor="#D6E0E5"
-                   BackgroundColor="#EEF5F7">
+                   BorderColor="{StaticResource Outline}"
+                   BackgroundColor="{StaticResource SurfaceMuted}">
                 <StackLayout Spacing="2">
-                    <Label Text="Modulo de borradores de devolucion"
-                           FontSize="12"
-                           TextColor="#5F7179" />
+                    <Label Text="Módulo de borradores de devolución"
+                           FontSize="{StaticResource FontCaption}"
+                           TextColor="{StaticResource TextSecondary}" />
                     <Label x:Name="lblBaseUrl"
-                           FontSize="12"
-                           TextColor="#173B47" />
+                           FontSize="{StaticResource FontCaption}"
+                           TextColor="{StaticResource TextPrimary}" />
                 </StackLayout>
             </Frame>
 
@@ -38,10 +38,10 @@
                    Padding="12,10"
                    CornerRadius="10"
                    HasShadow="False"
-                   BorderColor="#F4C7C3"
-                   BackgroundColor="#FDECEA">
+                   BorderColor="{StaticResource ErrorOutline}"
+                   BackgroundColor="{StaticResource ErrorContainer}">
                 <Label x:Name="lblStatus"
-                       FontSize="13"
+                       FontSize="{StaticResource FontBody}"
                        LineBreakMode="WordWrap" />
             </Frame>
 
@@ -56,19 +56,19 @@
                         x:Name="btnNuevoTop"
                         Text="Nuevo"
                         Clicked="OnNuevoClicked"
-                        BackgroundColor="#FFFFFF"
-                        TextColor="#1E4855"
+                        BackgroundColor="{StaticResource Surface}"
+                        TextColor="{StaticResource Brand}"
                         CornerRadius="10"
-                        BorderColor="#C8D5DB"
+                        BorderColor="{StaticResource Outline}"
                         BorderWidth="1" />
                 <Button Grid.Column="1"
                         x:Name="btnBuscarTop"
                         Text="Buscar"
                         Clicked="OnBuscarClicked"
-                        BackgroundColor="#FFFFFF"
-                        TextColor="#1E4855"
+                        BackgroundColor="{StaticResource Surface}"
+                        TextColor="{StaticResource Brand}"
                         CornerRadius="10"
-                        BorderColor="#C8D5DB"
+                        BorderColor="{StaticResource Outline}"
                         BorderWidth="1" />
             </Grid>
 
@@ -77,13 +77,13 @@
                     <Frame Padding="12"
                            CornerRadius="12"
                            HasShadow="False"
-                           BorderColor="#D9E1E5"
-                           BackgroundColor="#FFFFFF">
+                           BorderColor="{StaticResource Outline}"
+                           BackgroundColor="{StaticResource Surface}">
                         <StackLayout Spacing="10">
                             <Label Text="Cabecera"
-                                   FontSize="16"
+                                   FontSize="{StaticResource FontSubtitle}"
                                    FontAttributes="Bold"
-                                   TextColor="#24343A" />
+                                   TextColor="{StaticResource TextPrimary}" />
 
                             <Grid ColumnSpacing="10"
                                   RowDefinitions="Auto">
@@ -94,14 +94,14 @@
                                 </Grid.ColumnDefinitions>
 
                                 <StackLayout Grid.Column="0" Spacing="4">
-                                    <Label Text="Numero"
-                                           FontSize="12"
-                                           TextColor="#5F7179" />
+                                    <Label Text="Número"
+                                           FontSize="{StaticResource FontCaption}"
+                                           TextColor="{StaticResource TextSecondary}" />
                                     <Entry x:Name="txtNumero"
                                            IsReadOnly="True"
                                            Placeholder="Se crea al guardar"
-                                           BackgroundColor="#FAFBFC"
-                                           TextColor="#1D2E35" />
+                                           BackgroundColor="{StaticResource Surface}"
+                                           TextColor="{StaticResource TextPrimary}" />
                                 </StackLayout>
 
                                 <Button Grid.Column="1"
@@ -109,8 +109,8 @@
                                         Text="Buscar"
                                         Clicked="OnBuscarClicked"
                                         VerticalOptions="End"
-                                        BackgroundColor="#EAF1F4"
-                                        TextColor="#1E4855"
+                                        BackgroundColor="{StaticResource SurfaceMuted}"
+                                        TextColor="{StaticResource Brand}"
                                         CornerRadius="10" />
 
                                 <Button Grid.Column="2"
@@ -118,8 +118,8 @@
                                         Text="Nuevo"
                                         Clicked="OnNuevoClicked"
                                         VerticalOptions="End"
-                                        BackgroundColor="#EAF1F4"
-                                        TextColor="#1E4855"
+                                        BackgroundColor="{StaticResource SurfaceMuted}"
+                                        TextColor="{StaticResource Brand}"
                                         CornerRadius="10" />
                             </Grid>
 
@@ -131,37 +131,37 @@
 
                                 <StackLayout Grid.Column="0" Spacing="4">
                                     <Label Text="Fecha"
-                                           FontSize="12"
-                                           TextColor="#5F7179" />
+                                           FontSize="{StaticResource FontCaption}"
+                                           TextColor="{StaticResource TextSecondary}" />
                                     <DatePicker x:Name="dpFecha"
-                                                BackgroundColor="#FAFBFC"
-                                                TextColor="#1D2E35" />
+                                                BackgroundColor="{StaticResource Surface}"
+                                                TextColor="{StaticResource TextPrimary}" />
                                 </StackLayout>
 
                                 <StackLayout Grid.Column="1" Spacing="4">
                                     <Label Text="Usuario"
-                                           FontSize="12"
-                                           TextColor="#5F7179" />
+                                           FontSize="{StaticResource FontCaption}"
+                                           TextColor="{StaticResource TextSecondary}" />
                                     <Entry Text="admi"
                                            IsReadOnly="True"
-                                           BackgroundColor="#FAFBFC"
-                                           TextColor="#1D2E35" />
+                                           BackgroundColor="{StaticResource Surface}"
+                                           TextColor="{StaticResource TextPrimary}" />
                                 </StackLayout>
                             </Grid>
 
                             <StackLayout Spacing="4">
-                                <Label Text="Observacion"
-                                       FontSize="12"
-                                       TextColor="#5F7179" />
+                                <Label Text="Observación"
+                                       FontSize="{StaticResource FontCaption}"
+                                       TextColor="{StaticResource TextSecondary}" />
                                 <Entry x:Name="txtObservacion"
-                                       Placeholder="Observacion"
-                                       BackgroundColor="#FAFBFC"
-                                       TextColor="#1D2E35" />
+                                       Placeholder="Observación"
+                                       BackgroundColor="{StaticResource Surface}"
+                                       TextColor="{StaticResource TextPrimary}" />
                             </StackLayout>
 
                             <Label x:Name="lblMode"
-                                   FontSize="12"
-                                   TextColor="#60727A"
+                                   FontSize="{StaticResource FontCaption}"
+                                   TextColor="{StaticResource TextSecondary}"
                                    LineBreakMode="WordWrap" />
                         </StackLayout>
                     </Frame>
@@ -169,45 +169,45 @@
                     <Frame Padding="12"
                            CornerRadius="12"
                            HasShadow="False"
-                           BorderColor="#D9E1E5"
-                           BackgroundColor="#FFFFFF">
+                           BorderColor="{StaticResource Outline}"
+                           BackgroundColor="{StaticResource Surface}">
                         <StackLayout Spacing="10">
                             <Label Text="Escaneo"
-                                   FontSize="16"
+                                   FontSize="{StaticResource FontSubtitle}"
                                    FontAttributes="Bold"
-                                   TextColor="#24343A" />
+                                   TextColor="{StaticResource TextPrimary}" />
 
                             <StackLayout Spacing="4">
-                                <Label Text="CodigoBarra"
-                                       FontSize="12"
-                                       TextColor="#5F7179" />
+                                <Label Text="Código de barra"
+                                       FontSize="{StaticResource FontCaption}"
+                                       TextColor="{StaticResource TextSecondary}" />
                                 <controls:RoundedEntry x:Name="txtCodigoBarra"
-                                                       Placeholder="Escanea o escribe aqui"
+                                                       Placeholder="Escanee o escriba aquí"
                                                        TextChanged="BarcodeTextChanged"
                                                        Completed="OnBarcodeCompleted"
                                                        ReturnType="Search"
                                                        HorizontalTextAlignment="Center"
-                                                       FontSize="Large"
+                                                       FontSize="{StaticResource FontHeadline}"
                                                        HeightRequest="56"
-                                                       BackgroundColor="#FAFBFC"
-                                                       TextColor="#1D2E35" />
+                                                       BackgroundColor="{StaticResource Surface}"
+                                                       TextColor="{StaticResource TextPrimary}" />
                             </StackLayout>
 
                             <StackLayout Spacing="4">
-                                <Label Text="NumeroCaja"
-                                       FontSize="12"
-                                       TextColor="#5F7179" />
+                                <Label Text="Caja"
+                                       FontSize="{StaticResource FontCaption}"
+                                       TextColor="{StaticResource TextSecondary}" />
                                 <Entry x:Name="txtNumeroCaja"
                                        Keyboard="Numeric"
                                        Text="1"
                                        Unfocused="OnNumeroCajaUnfocused"
-                                       BackgroundColor="#FAFBFC"
-                                       TextColor="#1D2E35" />
+                                       BackgroundColor="{StaticResource Surface}"
+                                       TextColor="{StaticResource TextPrimary}" />
                             </StackLayout>
 
-                            <Label Text="Tip: si repites codigo en la misma caja, el backend suma la cantidad automaticamente."
-                                   FontSize="12"
-                                   TextColor="#60727A"
+                            <Label Text="Si repite un código en la misma caja, se suma la cantidad."
+                                   FontSize="{StaticResource FontCaption}"
+                                   TextColor="{StaticResource TextSecondary}"
                                    LineBreakMode="WordWrap" />
                         </StackLayout>
                     </Frame>
@@ -225,24 +225,24 @@
                         x:Name="btnGuardar"
                         Text="Guardar"
                         Clicked="OnGuardarClicked"
-                        BackgroundColor="#0B8F72"
-                        TextColor="White"
+                        BackgroundColor="{StaticResource Primary}"
+                        TextColor="{StaticResource OnPrimary}"
                         CornerRadius="12" />
                 <Button Grid.Column="1"
                         x:Name="btnAprobar"
                         Text="Aprobar"
                         Clicked="OnAprobarClicked"
-                        BackgroundColor="#E9EFF3"
-                        TextColor="#1E4855"
+                        BackgroundColor="{StaticResource SurfaceMuted}"
+                        TextColor="{StaticResource Brand}"
                         CornerRadius="12" />
                 <Button Grid.Column="2"
                         x:Name="btnDetalle"
                         Text="Detalle"
                         Clicked="OnDetalleClicked"
-                        BackgroundColor="#FFFFFF"
-                        TextColor="#1E4855"
+                        BackgroundColor="{StaticResource Surface}"
+                        TextColor="{StaticResource Brand}"
                         CornerRadius="12"
-                        BorderColor="#C8D5DB"
+                        BorderColor="{StaticResource Outline}"
                         BorderWidth="1" />
             </Grid>
         </Grid>

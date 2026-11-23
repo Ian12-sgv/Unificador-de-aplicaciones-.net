@@ -63,7 +63,7 @@ namespace Appinventario.Views
         {
             if (string.IsNullOrWhiteSpace(lblUrl.Text))
             {
-                await DisplayAlert("Advertencia", "No se ha configurado el servidor en Parámetros.", "OK");
+                await DisplayAlert("Advertencia", "Configure el servidor en Parámetros.", "Aceptar");
                 return;
             }
 
@@ -96,7 +96,7 @@ namespace Appinventario.Views
             catch (Exception fail)
             {
                 Util.TryPlayAudioFile("no-valido.mp3");
-                await DisplayAlert("Error", Util.NormalizeHttpExceptionMessage(fail), "OK");
+                await DisplayAlert("Error", Util.NormalizeHttpExceptionMessage(fail), "Aceptar");
             }
         }
 
@@ -109,20 +109,20 @@ namespace Appinventario.Views
 
             if (string.IsNullOrWhiteSpace(lblUrl.Text))
             {
-                await DisplayAlert("Advertencia", "No hay servidor configurado.", "OK");
+                await DisplayAlert("Advertencia", "Configure el servidor en Parámetros.", "Aceptar");
                 return;
             }
 
             if (!int.TryParse(txtPagina.Text, out var numeroPagina) || numeroPagina <= 0 || numeroPagina > 50000)
             {
-                await DisplayAlert("Advertencia", "La página debe ser un número entre 1 y 50000.", "OK");
+                await FeedbackService.ShowAsync("La página debe ser un número entre 1 y 50000.");
                 txtPagina.Focus();
                 return;
             }
 
             if (string.IsNullOrWhiteSpace(txtObs.Text))
             {
-                await DisplayAlert("Advertencia", "Debe insertar observación.", "OK");
+                await FeedbackService.ShowAsync("Escriba una observación.");
                 txtObs.Focus();
                 return;
             }
@@ -130,7 +130,7 @@ namespace Appinventario.Views
             var codigoBarra = (txtCodigo.Text ?? string.Empty).Trim();
             if (string.IsNullOrWhiteSpace(codigoBarra))
             {
-                await DisplayAlert("Advertencia", "Debe insertar código de barra.", "OK");
+                await FeedbackService.ShowAsync("Escanee o escriba un código de barra.");
                 txtCodigo.Focus();
                 return;
             }
@@ -175,7 +175,7 @@ namespace Appinventario.Views
                 if (response.StatusCode == HttpStatusCode.Conflict)
                 {
                     Util.TryPlayAudioFile("no-valido.mp3");
-                    await DisplayAlert("Toma Física", "Este número de Toma Física ya pertenece a otro usuario.", "OK");
+                    await DisplayAlert("Toma Física", "Este número de Toma Física ya pertenece a otro usuario.", "Aceptar");
                     return;
                 }
 
@@ -183,7 +183,7 @@ namespace Appinventario.Views
                 if (!response.IsSuccessStatusCode || responseContent.Trim() == "-1")
                 {
                     Util.TryPlayAudioFile("no-valido.mp3");
-                    await DisplayAlert("Error", "No se pudo procesar la Toma Física 2.", "OK");
+                    await DisplayAlert("Error", "No se pudo procesar la Toma Física 2.", "Aceptar");
                     return;
                 }
 
@@ -194,7 +194,7 @@ namespace Appinventario.Views
             catch (Exception fail)
             {
                 Util.TryPlayAudioFile("no-valido.mp3");
-                await DisplayAlert("Error", Util.NormalizeHttpExceptionMessage(fail), "OK");
+                await DisplayAlert("Error", Util.NormalizeHttpExceptionMessage(fail), "Aceptar");
                 txtCodigo.Text = string.Empty;
                 txtCodigo.Focus();
             }
@@ -243,13 +243,13 @@ namespace Appinventario.Views
         {
             if (!int.TryParse(txtPagina.Text, out var numeroPagina) || numeroPagina <= 0)
             {
-                await DisplayAlert("Advertencia", "Debe indicar una página válida.", "OK");
+                await FeedbackService.ShowAsync("Indique una página válida.");
                 return;
             }
 
             if (string.IsNullOrWhiteSpace(lblUrl.Text))
             {
-                await DisplayAlert("Advertencia", "No hay servidor configurado.", "OK");
+                await DisplayAlert("Advertencia", "Configure el servidor en Parámetros.", "Aceptar");
                 return;
             }
 
@@ -259,7 +259,7 @@ namespace Appinventario.Views
         private async Task VolverAlLoginAsync(string mensaje)
         {
             TomaFisicaAuthService.Clear();
-            await DisplayAlert("Sesión", mensaje, "OK");
+            await DisplayAlert("Sesión", mensaje, "Aceptar");
             await Navigation.PopToRootAsync();
         }
 

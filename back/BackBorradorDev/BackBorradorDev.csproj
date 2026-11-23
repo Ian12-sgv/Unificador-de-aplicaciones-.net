@@ -4,6 +4,10 @@
     <TargetFramework>net8.0</TargetFramework>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
+    <ApplicationIcon>Assets\backborradordev-icon.ico</ApplicationIcon>
+    <Version>1.0.1</Version>
+    <AssemblyVersion>1.0.1.0</AssemblyVersion>
+    <FileVersion>1.0.1.0</FileVersion>
   </PropertyGroup>
 
   <ItemGroup>
@@ -13,8 +17,14 @@
 
   <!-- Las publicaciones se guardan dentro de este repositorio; no son contenido de la API. -->
   <ItemGroup>
+    <Compile Remove="publish-*\**\*.cs" />
+    <EmbeddedResource Remove="publish-*\**\*" />
     <Content Remove="publish-*\**" />
     <None Remove="publish-*\**" />
+    <Compile Remove="apk unificada\**;app unificada\**" />
+    <EmbeddedResource Remove="apk unificada\**;app unificada\**" />
+    <Content Remove="apk unificada\**;app unificada\**" />
+    <None Remove="apk unificada\**;app unificada\**" />
   </ItemGroup>
 
 </Project>

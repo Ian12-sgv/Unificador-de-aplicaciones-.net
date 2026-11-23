@@ -10,12 +10,12 @@
 		<ImplicitUsings>enable</ImplicitUsings>
 		<Nullable>disable</Nullable>
 
-		<ApplicationTitle>Precios/Borrador</ApplicationTitle>
+		<ApplicationTitle>Gestión</ApplicationTitle>
 
 		<ApplicationId>AppPreciosPDB_.AppPreciosPDB_.maui</ApplicationId>
 
-		<ApplicationDisplayVersion>1.0.7</ApplicationDisplayVersion>
-		<ApplicationVersion>8</ApplicationVersion>
+		<ApplicationDisplayVersion>1.0.10</ApplicationDisplayVersion>
+		<ApplicationVersion>13</ApplicationVersion>
 		<RuntimeIdentifiers>android-arm64;android-x64</RuntimeIdentifiers>
 		<SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'android'">21.0</SupportedOSPlatformVersion>
 	</PropertyGroup>
@@ -29,6 +29,13 @@
 		<DebugSymbols>false</DebugSymbols>
 		<DebugType>none</DebugType>
 		<AndroidLinkMode>SdkOnly</AndroidLinkMode>
+		<!-- Release solo para telefonos ARM reales (sin x86_64 de emulador) -->
+		<RuntimeIdentifiers>android-arm;android-arm64</RuntimeIdentifiers>
+		<AndroidPackageFormat>apk</AndroidPackageFormat>
+		<AndroidUseAapt2>true</AndroidUseAapt2>
+		<!-- Sin AOT: APK ~44% mas liviana (61 MB -> 35 MB) a cambio de un arranque algo mas lento -->
+		<RunAOTCompilation>false</RunAOTCompilation>
+		<AndroidEnableProfiledAot>false</AndroidEnableProfiledAot>
 	</PropertyGroup>
 
 	<ItemGroup>

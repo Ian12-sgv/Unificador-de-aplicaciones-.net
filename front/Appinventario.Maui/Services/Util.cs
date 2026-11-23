@@ -97,7 +97,7 @@ namespace Appinventario.Services
                  exception.Message.IndexOf("HttpClient.Timeout", StringComparison.OrdinalIgnoreCase) >= 0))
             {
                 return string.IsNullOrWhiteSpace(timeoutMessage)
-                    ? "El escucha tardó demasiado en responder. Intenta nuevamente."
+                    ? "El servidor tardó demasiado en responder. Intente de nuevo."
                     : timeoutMessage;
             }
 

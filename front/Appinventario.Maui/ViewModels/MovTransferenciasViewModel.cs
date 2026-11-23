@@ -40,7 +40,7 @@ namespace Appinventario.ViewModel
             // var resultado = await servicioApi.GuardarTransferencia(Transferencia);
 
             // Simulación de guardado exitoso
-            await Application.Current.MainPage.DisplayAlert("Éxito", "Transferencia guardada correctamente", "OK");
+            await FeedbackService.ShowAsync("Transferencia guardada.");
         }
 
         protected void OnPropertyChanged(string name)

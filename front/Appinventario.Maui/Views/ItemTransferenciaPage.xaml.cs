@@ -47,7 +47,7 @@ namespace Appinventario.Views
             {
                 if (String.IsNullOrWhiteSpace(this.url) == true)
                 {
-                    await DisplayAlert("Advertencia" + this.url, "No se ha configurado url del servicio en parámetros.", "ok");
+                    await DisplayAlert("Advertencia" + this.url, "Configure el servidor en Parámetros.", "Aceptar");
                     return;
                 }
 
@@ -72,7 +72,7 @@ namespace Appinventario.Views
             catch (Exception fail)
             {
                 DependencyService.Get<IAudio>().PlayAudioFile("no-valido.mp3");
-                await DisplayAlert("Error", "Error: " + fail.Message, "ok");
+                await DisplayAlert("Error", fail.Message, "Aceptar");
             }
         }
 

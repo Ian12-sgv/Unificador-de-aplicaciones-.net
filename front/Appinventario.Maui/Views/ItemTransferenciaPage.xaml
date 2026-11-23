@@ -2,13 +2,13 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="Appinventario.Views.ItemTransferenciaPage"
-             Title="Transferencias Nro:">
+             Title="Transferencia">
     <ContentPage.Content>
         <StackLayout>
-            <Label Text="Item Details" FontSize="Large" HorizontalOptions="Center" />
-            <Label Text="Numero:" FontAttributes="Bold"/>
+            <Label Text="Item Details" FontSize="{StaticResource FontHeadline}" HorizontalOptions="Center" />
+            <Label Text="Número:" FontAttributes="Bold"/>
             <Label Text="{Binding SelectedItem.Numero}" />
-            <Label Text="Observacion:" FontAttributes="Bold"/>
+            <Label Text="Observación:" FontAttributes="Bold"/>
             <Label Text="{Binding SelectedItem.Observacion}" />
         </StackLayout>
     </ContentPage.Content>

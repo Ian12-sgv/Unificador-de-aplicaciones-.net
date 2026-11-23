@@ -2,25 +2,25 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="Appinventario.Views.LoginPage"
-             Title="Login"
-             BackgroundColor="#F4F6F8">
+             Title="Acceso"
+             BackgroundColor="{StaticResource Canvas}">
     <ContentPage.Content>
         <Grid Padding="24">
             <Frame VerticalOptions="Center"
                    Padding="18"
                    CornerRadius="14"
                    HasShadow="False"
-                   BorderColor="#D9E1E5"
-                   BackgroundColor="White">
+                   BorderColor="{StaticResource Outline}"
+                   BackgroundColor="{StaticResource Surface}">
                 <VerticalStackLayout Spacing="14">
                     <Label Text="Acceso"
-                           FontSize="26"
+                           FontSize="{StaticResource FontHeadline}"
                            FontAttributes="Bold"
-                           TextColor="#24343A"
+                           TextColor="{StaticResource TextPrimary}"
                            HorizontalTextAlignment="Center" />
                     <Label Text="Ingrese usuario y contraseña"
-                           FontSize="13"
-                           TextColor="#60727A"
+                           FontSize="{StaticResource FontBody}"
+                           TextColor="{StaticResource TextSecondary}"
                            HorizontalTextAlignment="Center" />
                     <Entry x:Name="txtUser"
                            Placeholder="Usuario"
@@ -32,13 +32,13 @@
                            Completed="OnLoginClicked" />
                     <Button Text="Entrar"
                             Clicked="OnLoginClicked"
-                            BackgroundColor="#0B8F72"
-                            TextColor="White"
+                            BackgroundColor="{StaticResource Primary}"
+                            TextColor="{StaticResource OnPrimary}"
                             CornerRadius="10" />
                     <Label x:Name="lblMessage"
                            IsVisible="False"
-                           TextColor="#9C2F27"
-                           FontSize="13"
+                           TextColor="{StaticResource Error}"
+                           FontSize="{StaticResource FontBody}"
                            HorizontalTextAlignment="Center" />
                 </VerticalStackLayout>
             </Frame>

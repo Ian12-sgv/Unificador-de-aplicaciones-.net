@@ -5,16 +5,16 @@
              x:Class="Appinventario.Views.NuevaTransferenciaPage"
              Visual="Material"
              Title="Transferencia"
-             BackgroundColor="#F3F4F6">
+             BackgroundColor="{StaticResource Canvas}">
     <ContentPage.Resources>
         <Style x:Key="FieldLabel" TargetType="Label">
-            <Setter Property="FontSize" Value="12"/>
-            <Setter Property="TextColor" Value="#111827"/>
+            <Setter Property="FontSize" Value="{StaticResource FontCaption}"/>
+            <Setter Property="TextColor" Value="{StaticResource TextPrimary}"/>
         </Style>
         <Style x:Key="InputField" TargetType="Entry">
-            <Setter Property="FontSize" Value="12"/>
-            <Setter Property="HeightRequest" Value="38"/>
-            <Setter Property="BackgroundColor" Value="#F8FAFC"/>
+            <Setter Property="FontSize" Value="{StaticResource FontBody}"/>
+            <Setter Property="HeightRequest" Value="48"/>
+            <Setter Property="BackgroundColor" Value="{StaticResource Surface}"/>
         </Style>
     </ContentPage.Resources>
 
@@ -25,50 +25,42 @@
                     <HorizontalStackLayout Grid.Row="0" Spacing="6">
                         <Label x:Name="tituloTransferencia"
                                Text="Transferencia"
-                               FontSize="18"
+                               FontSize="{StaticResource FontTitle}"
                                FontAttributes="Bold"
-                               TextColor="#111827"/>
+                               TextColor="{StaticResource TextPrimary}"/>
                     </HorizontalStackLayout>
                     <Label x:Name="subtituloSucursal"
                            Grid.Row="1"
                            Text="Sucursal: "
-                           FontSize="12"
-                           TextColor="#111827"/>
+                           FontSize="{StaticResource FontCaption}"
+                           TextColor="{StaticResource TextPrimary}"/>
                 </Grid>
 
                 <Label x:Name="estadoConexion"
                        IsVisible="False"
                        Padding="8"
-                       FontSize="12"
-                       TextColor="#7A3B00"
-                       BackgroundColor="#FFF0D6"/>
+                       FontSize="{StaticResource FontCaption}"
+                       TextColor="{StaticResource Warning}"
+                       BackgroundColor="{StaticResource WarningContainer}"/>
 
-                <Border BackgroundColor="White" Padding="10">
+                <Border BackgroundColor="{StaticResource Surface}" Padding="10">
                     <Border.StrokeShape>
                         <shapes:RoundRectangle CornerRadius="8"/>
                     </Border.StrokeShape>
                     <VerticalStackLayout Spacing="10">
                         <Grid ColumnDefinitions="*,Auto">
                             <HorizontalStackLayout Spacing="6">
-                                <Label Text="i"
-                                       WidthRequest="16"
-                                       HeightRequest="16"
-                                       FontSize="11"
-                                       FontAttributes="Bold"
-                                       HorizontalTextAlignment="Center"
-                                       VerticalTextAlignment="Center"
-                                       TextColor="#1D4ED8"/>
                                 <Label x:Name="toggleCabeceraText"
                                        Text="Ocultar datos de cabecera"
-                                       FontSize="13"
-                                       TextColor="#111827"
+                                       FontSize="{StaticResource FontBody}"
+                                       TextColor="{StaticResource TextPrimary}"
                                        VerticalOptions="Center"/>
                             </HorizontalStackLayout>
                             <Label x:Name="toggleCabeceraIcon"
                                    Grid.Column="1"
                                    Text="^"
-                                   FontSize="14"
-                                   TextColor="#64748B"/>
+                                   FontSize="{StaticResource FontBody}"
+                                   TextColor="{StaticResource TextSecondary}"/>
                             <Grid.GestureRecognizers>
                                 <TapGestureRecognizer Tapped="ToggleCabecera_Tapped"/>
                             </Grid.GestureRecognizers>
@@ -81,12 +73,12 @@
                                   RowDefinitions="Auto,Auto"
                                   ColumnSpacing="8"
                                   RowSpacing="4">
-                                <Label Text="Numero" Grid.Row="0" Grid.Column="0" Style="{StaticResource FieldLabel}"/>
+                                <Label Text="Número" Grid.Row="0" Grid.Column="0" Style="{StaticResource FieldLabel}"/>
                                 <Label Text="Documento origen" Grid.Row="0" Grid.Column="1" Style="{StaticResource FieldLabel}"/>
                                 <Entry x:Name="numero"
                                        Grid.Row="1"
                                        Grid.Column="0"
-                                       Text="Automatico"
+                                       Text="Automático"
                                        IsReadOnly="True"
                                        Style="{StaticResource InputField}"/>
                                 <Entry x:Name="documentoOrigen"
@@ -101,15 +93,15 @@
                                   ColumnSpacing="8"
                                   RowSpacing="4">
                                 <Label Text="Fecha" Grid.Row="0" Grid.Column="0" Style="{StaticResource FieldLabel}"/>
-                                <Label Text="Fecha Emision" Grid.Row="0" Grid.Column="1" Style="{StaticResource FieldLabel}"/>
-                                <DatePicker x:Name="fecha" Grid.Row="1" Grid.Column="0" FontSize="12"/>
-                                <DatePicker x:Name="fechaEmision" Grid.Row="1" Grid.Column="1" FontSize="12"/>
+                                <Label Text="Fecha de emisión" Grid.Row="0" Grid.Column="1" Style="{StaticResource FieldLabel}"/>
+                                <DatePicker x:Name="fecha" Grid.Row="1" Grid.Column="0" FontSize="{StaticResource FontCaption}"/>
+                                <DatePicker x:Name="fechaEmision" Grid.Row="1" Grid.Column="1" FontSize="{StaticResource FontCaption}"/>
                             </Grid>
 
                             <Label Text="Sucursal" Style="{StaticResource FieldLabel}"/>
                             <Picker x:Name="listaSucursal"
                                     ItemDisplayBinding="{Binding Nombre}"
-                                    FontSize="12"
+                                    FontSize="{StaticResource FontCaption}"
                                     SelectedIndexChanged="Sucursal_SelectedIndexChanged"/>
 
                             <Grid ColumnDefinitions="*,*"
@@ -122,36 +114,36 @@
                                         Grid.Row="1"
                                         Grid.Column="0"
                                         ItemDisplayBinding="{Binding Descripcion}"
-                                        FontSize="12"/>
+                                        FontSize="{StaticResource FontCaption}"/>
                                 <Picker x:Name="lote"
                                         Grid.Row="1"
                                         Grid.Column="1"
                                         ItemDisplayBinding="{Binding Lote}"
-                                        FontSize="12"/>
+                                        FontSize="{StaticResource FontCaption}"/>
                             </Grid>
 
-                            <Label Text="Observacion" Style="{StaticResource FieldLabel}"/>
+                            <Label Text="Observación" Style="{StaticResource FieldLabel}"/>
                             <Entry x:Name="observacion" Style="{StaticResource InputField}"/>
 
                             <Grid ColumnDefinitions="*,Auto">
-                                <Label Text="Correccion" Grid.Column="0" FontSize="12" TextColor="#111827"/>
+                                <Label Text="Corrección" Grid.Column="0" FontSize="{StaticResource FontCaption}" TextColor="{StaticResource TextPrimary}"/>
                                 <Switch x:Name="transferenciaCorreccion" Grid.Column="1"/>
                             </Grid>
                         </VerticalStackLayout>
                     </VerticalStackLayout>
                 </Border>
 
-                <Border Stroke="#2563EB"
+                <Border Stroke="{StaticResource Primary}"
                         StrokeDashArray="2,2"
-                        BackgroundColor="#F8FBFF"
+                        BackgroundColor="{StaticResource Surface}"
                         Padding="10,9">
                     <Border.StrokeShape>
                         <shapes:RoundRectangle CornerRadius="7"/>
                     </Border.StrokeShape>
-                    <Label Text="|||| Simular Escaneo / Agregar Item"
-                           FontSize="13"
+                    <Label Text="Agregar artículo manualmente"
+                           FontSize="{StaticResource FontBody}"
                            FontAttributes="Bold"
-                           TextColor="#1D4ED8"
+                           TextColor="{StaticResource Primary}"
                            HorizontalTextAlignment="Center"/>
                     <Border.GestureRecognizers>
                         <TapGestureRecognizer Tapped="ToggleEscaneo_Tapped"/>
@@ -160,15 +152,15 @@
 
                 <Border x:Name="escaneoPanel"
                         IsVisible="False"
-                        BackgroundColor="White"
+                        BackgroundColor="{StaticResource Surface}"
                         Padding="10">
                     <Border.StrokeShape>
                         <shapes:RoundRectangle CornerRadius="8"/>
                     </Border.StrokeShape>
                     <VerticalStackLayout Spacing="8">
-                        <Label Text="Codigo Barra" Style="{StaticResource FieldLabel}"/>
+                        <Label Text="Código de barra" Style="{StaticResource FieldLabel}"/>
                         <Entry x:Name="codigoBarra"
-                               Placeholder="Codigo Barra"
+                               Placeholder="Código de barra"
                                TextChanged="CodigoBarra_TextChanged"
                                Completed="CodigoBarra_Completed"
                                Style="{StaticResource InputField}"/>
@@ -181,51 +173,57 @@
                             <Entry x:Name="cantidadDetalle" Grid.Row="1" Grid.Column="1" Text="1" Keyboard="Numeric" Style="{StaticResource InputField}"/>
                         </Grid>
                         <Button Text="Agregar"
-                                BackgroundColor="#1D4ED8"
-                                TextColor="White"
+                                BackgroundColor="{StaticResource Primary}"
+                                TextColor="{StaticResource OnPrimary}"
                                 Clicked="AgregarDetalle_Clicked"/>
                     </VerticalStackLayout>
                 </Border>
 
                 <Grid ColumnDefinitions="*,Auto" RowDefinitions="Auto,Auto" Padding="2,8,2,0">
-                    <Label Text="Productos Escaneados"
-                           FontSize="14"
+                    <Label Text="Productos escaneados"
+                           FontSize="{StaticResource FontBody}"
                            FontAttributes="Bold"
-                           TextColor="#111827"
+                           TextColor="{StaticResource TextPrimary}"
                            LineBreakMode="NoWrap"/>
                     <Label x:Name="resumenReferencias"
                            Grid.Row="1"
-                           Text="0 Referencias en lista"
-                           FontSize="12"
-                           TextColor="#111827"/>
-                        <HorizontalStackLayout Grid.Column="1" Spacing="8" VerticalOptions="Center">
-                            <Label Text="Ver Caja:" FontSize="12" TextColor="#111827" VerticalOptions="Center"/>
+                           Text="0 referencias en lista"
+                           FontSize="{StaticResource FontCaption}"
+                           TextColor="{StaticResource TextSecondary}"/>
+                        <HorizontalStackLayout Grid.Column="1" Grid.RowSpan="2" Spacing="8" VerticalOptions="Center">
+                            <Label Text="Caja" FontSize="{StaticResource FontCaption}" TextColor="{StaticResource TextSecondary}" VerticalOptions="Center"/>
                             <Button x:Name="box1Button"
                                     Text="1"
-                                    WidthRequest="28"
-                                    HeightRequest="28"
-                                    CornerRadius="14"
-                                    BackgroundColor="#1D4ED8"
-                                    TextColor="White"
-                                    FontSize="12"
+                                    WidthRequest="48"
+                                    HeightRequest="48"
+                                    Padding="0"
+                                    CornerRadius="24"
+                                    BackgroundColor="{StaticResource Primary}"
+                                    TextColor="{StaticResource OnPrimary}"
+                                    FontSize="{StaticResource FontSubtitle}"
+                                    FontAttributes="Bold"
                                     Clicked="BoxButton_Clicked"/>
                             <Button x:Name="box2Button"
                                     Text="2"
-                                    WidthRequest="28"
-                                    HeightRequest="28"
-                                    CornerRadius="14"
-                                    BackgroundColor="#E2E8F0"
-                                    TextColor="#475569"
-                                    FontSize="12"
+                                    WidthRequest="48"
+                                    HeightRequest="48"
+                                    Padding="0"
+                                    CornerRadius="24"
+                                    BackgroundColor="{StaticResource SurfaceMuted}"
+                                    TextColor="{StaticResource TextSecondary}"
+                                    FontSize="{StaticResource FontSubtitle}"
+                                    FontAttributes="Bold"
                                     Clicked="BoxButton_Clicked"/>
                             <Button x:Name="box3Button"
                                     Text="3"
-                                    WidthRequest="28"
-                                    HeightRequest="28"
-                                    CornerRadius="14"
-                                    BackgroundColor="#E2E8F0"
-                                    TextColor="#475569"
-                                    FontSize="12"
+                                    WidthRequest="48"
+                                    HeightRequest="48"
+                                    Padding="0"
+                                    CornerRadius="24"
+                                    BackgroundColor="{StaticResource SurfaceMuted}"
+                                    TextColor="{StaticResource TextSecondary}"
+                                    FontSize="{StaticResource FontSubtitle}"
+                                    FontAttributes="Bold"
                                     Clicked="BoxButton_Clicked"/>
                         </HorizontalStackLayout>
                 </Grid>
@@ -235,89 +233,98 @@
                     <CollectionView.EmptyView>
                         <Label Text="Sin productos escaneados"
                                Margin="8,25"
-                               FontSize="13"
-                               TextColor="#64748B"
+                               FontSize="{StaticResource FontBody}"
+                               TextColor="{StaticResource TextSecondary}"
                                HorizontalTextAlignment="Center"/>
                     </CollectionView.EmptyView>
                     <CollectionView.ItemTemplate>
                         <DataTemplate>
                             <Border Margin="2,5"
                                     Padding="10"
-                                    BackgroundColor="White">
+                                    BackgroundColor="{StaticResource Surface}">
                                 <Border.StrokeShape>
                                     <shapes:RoundRectangle CornerRadius="8"/>
                                 </Border.StrokeShape>
                                 <VerticalStackLayout Spacing="8">
-                                    <Grid ColumnDefinitions="18,*">
-                                        <Border BackgroundColor="#334155"
-                                                WidthRequest="16"
-                                                HeightRequest="16">
+                                    <Grid ColumnDefinitions="32,*">
+                                        <Border BackgroundColor="{StaticResource Brand}"
+                                                WidthRequest="24"
+                                                HeightRequest="24"
+                                                VerticalOptions="Start">
                                             <Border.StrokeShape>
                                                 <shapes:RoundRectangle CornerRadius="3"/>
                                             </Border.StrokeShape>
-                                            <Label Text="{Binding Item}" FontSize="10" TextColor="White" HorizontalTextAlignment="Center" VerticalTextAlignment="Center"/>
+                                            <Label Text="{Binding Item}" FontSize="{StaticResource FontCaption}" TextColor="{StaticResource OnPrimary}" HorizontalTextAlignment="Center" VerticalTextAlignment="Center"/>
                                         </Border>
                                         <VerticalStackLayout Grid.Column="1" Spacing="2">
-                                            <Label Text="{Binding Nombre}" FontSize="12" FontAttributes="Bold" TextColor="#111827"/>
-                                            <Label Text="{Binding Referencia}" FontSize="12" FontAttributes="Bold" TextColor="#111827"/>
+                                            <Label Text="{Binding Nombre}" FontSize="{StaticResource FontCaption}" FontAttributes="Bold" TextColor="{StaticResource TextPrimary}"/>
+                                            <Label Text="{Binding Referencia}" FontSize="{StaticResource FontCaption}" FontAttributes="Bold" TextColor="{StaticResource TextPrimary}"/>
                                         </VerticalStackLayout>
                                     </Grid>
 
                                     <Grid ColumnDefinitions="*,*">
                                         <VerticalStackLayout>
-                                            <Label Text="Codigo Barra" FontSize="12" TextColor="#111827"/>
-                                            <HorizontalStackLayout Spacing="3">
-                                                <Label Text="||||" FontSize="10" TextColor="#64748B"/>
-                                                <Label Text="{Binding CodigoBarra}" FontSize="12" TextColor="#111827"/>
-                                            </HorizontalStackLayout>
+                                            <Label Text="Código de barra" FontSize="{StaticResource FontCaption}" TextColor="{StaticResource TextSecondary}"/>
+                                            <Label Text="{Binding CodigoBarra}" FontSize="{StaticResource FontBody}" TextColor="{StaticResource TextPrimary}"/>
                                         </VerticalStackLayout>
                                         <VerticalStackLayout Grid.Column="1">
-                                            <Label Text="Referencia" FontSize="12" TextColor="#111827"/>
-                                            <Label Text="{Binding Referencia}" FontSize="12" TextColor="#111827"/>
+                                            <Label Text="Referencia" FontSize="{StaticResource FontCaption}" TextColor="{StaticResource TextSecondary}"/>
+                                            <Label Text="{Binding Referencia}" FontSize="{StaticResource FontBody}" TextColor="{StaticResource TextPrimary}"/>
                                         </VerticalStackLayout>
                                     </Grid>
 
-                                    <Grid ColumnDefinitions="*,Auto,Auto">
-                                        <Border Padding="8,4" Stroke="#2563EB" BackgroundColor="#F8FBFF">
+                                    <Grid ColumnDefinitions="*,Auto,Auto" ColumnSpacing="16">
+                                        <Border Padding="8,4" Stroke="{StaticResource Primary}" BackgroundColor="{StaticResource Surface}" VerticalOptions="Center" HorizontalOptions="Start">
                                             <Border.StrokeShape>
                                                 <shapes:RoundRectangle CornerRadius="5"/>
                                             </Border.StrokeShape>
-                                            <Label Text="{Binding NumeroCaja, StringFormat='Caja N: {0}'}" FontSize="12" FontAttributes="Bold" TextColor="#1D4ED8"/>
+                                            <Label Text="{Binding NumeroCaja, StringFormat='Caja N: {0}'}" FontSize="{StaticResource FontCaption}" FontAttributes="Bold" TextColor="{StaticResource Primary}"/>
                                         </Border>
-                                        <HorizontalStackLayout Grid.Column="1" Spacing="0">
-                                            <Button Text="-"
-                                                    WidthRequest="32"
-                                                    HeightRequest="28"
-                                                    Padding="0"
-                                                    BackgroundColor="#F8FAFC"
-                                                    TextColor="#111827"
-                                                    CommandParameter="{Binding .}"
-                                                    Clicked="RestarCantidad_Clicked"/>
-                                            <Label Text="{Binding Cantidad}"
-                                                   WidthRequest="28"
-                                                   FontSize="13"
-                                                   FontAttributes="Bold"
-                                                   HorizontalTextAlignment="Center"
-                                                   VerticalTextAlignment="Center"
-                                                   BackgroundColor="#F8FAFC"/>
-                                            <Button Text="+"
-                                                    WidthRequest="32"
-                                                    HeightRequest="28"
-                                                    Padding="0"
-                                                    BackgroundColor="#F8FAFC"
-                                                    TextColor="#111827"
-                                                    CommandParameter="{Binding .}"
-                                                    Clicked="SumarCantidad_Clicked"/>
-                                        </HorizontalStackLayout>
-                                        <Button Grid.Column="2"
-                                                Text="x"
-                                                WidthRequest="32"
-                                                HeightRequest="28"
+                                        <Border Grid.Column="1"
+                                                Stroke="{StaticResource OutlineStrong}"
+                                                StrokeThickness="1"
                                                 Padding="0"
-                                                Margin="8,0,0,0"
+                                                BackgroundColor="{StaticResource Surface}">
+                                            <Border.StrokeShape>
+                                                <shapes:RoundRectangle CornerRadius="8"/>
+                                            </Border.StrokeShape>
+                                            <HorizontalStackLayout Spacing="0">
+                                                <Button Text="−"
+                                                        WidthRequest="48"
+                                                        HeightRequest="48"
+                                                        Padding="0"
+                                                        CornerRadius="0"
+                                                        FontSize="{StaticResource FontTitle}"
+                                                        BackgroundColor="{StaticResource SurfaceMuted}"
+                                                        TextColor="{StaticResource TextPrimary}"
+                                                        CommandParameter="{Binding .}"
+                                                        Clicked="RestarCantidad_Clicked"/>
+                                                <Label Text="{Binding Cantidad}"
+                                                       WidthRequest="44"
+                                                       FontSize="{StaticResource FontSubtitle}"
+                                                       FontAttributes="Bold"
+                                                       TextColor="{StaticResource TextPrimary}"
+                                                       HorizontalTextAlignment="Center"
+                                                       VerticalTextAlignment="Center"/>
+                                                <Button Text="+"
+                                                        WidthRequest="48"
+                                                        HeightRequest="48"
+                                                        Padding="0"
+                                                        CornerRadius="0"
+                                                        FontSize="{StaticResource FontTitle}"
+                                                        BackgroundColor="{StaticResource SurfaceMuted}"
+                                                        TextColor="{StaticResource TextPrimary}"
+                                                        CommandParameter="{Binding .}"
+                                                        Clicked="SumarCantidad_Clicked"/>
+                                            </HorizontalStackLayout>
+                                        </Border>
+                                        <Button Grid.Column="2"
+                                                Text="Quitar"
+                                                HeightRequest="48"
+                                                Padding="8,0"
                                                 BackgroundColor="Transparent"
-                                                TextColor="#EF4444"
-                                                FontSize="16"
+                                                TextColor="{StaticResource Error}"
+                                                FontSize="{StaticResource FontBody}"
                                                 CommandParameter="{Binding .}"
                                                 Clicked="EliminarDetalle_Clicked"/>
                                     </Grid>
@@ -330,32 +337,32 @@
         </ScrollView>
 
         <Border Grid.Row="1"
-                BackgroundColor="White"
+                BackgroundColor="{StaticResource Surface}"
                 Padding="10,8"
-                Stroke="#E5E7EB">
+                Stroke="{StaticResource Outline}">
             <VerticalStackLayout Spacing="7">
                 <Grid ColumnDefinitions="*,*"
                       RowDefinitions="Auto,Auto"
                       ColumnSpacing="8">
-                    <Label Text="Total Caja N 1" Grid.Row="0" Grid.Column="0" FontSize="12" TextColor="#111827"/>
-                    <Label Text="Cantidad Total" Grid.Row="0" Grid.Column="1" FontSize="12" TextColor="#111827"/>
+                    <Label Text="Total caja 1" Grid.Row="0" Grid.Column="0" FontSize="{StaticResource FontCaption}" TextColor="{StaticResource TextPrimary}"/>
+                    <Label Text="Cantidad total" Grid.Row="0" Grid.Column="1" FontSize="{StaticResource FontCaption}" TextColor="{StaticResource TextPrimary}"/>
                     <Entry x:Name="totalCaja" Grid.Row="1" Grid.Column="0" IsReadOnly="True" HorizontalTextAlignment="Center" FontAttributes="Bold" Style="{StaticResource InputField}"/>
                     <Entry x:Name="cantidadTotal" Grid.Row="1" Grid.Column="1" IsReadOnly="True" HorizontalTextAlignment="Center" FontAttributes="Bold" Style="{StaticResource InputField}"/>
                 </Grid>
                 <Grid ColumnDefinitions="2*,*" ColumnSpacing="8">
                     <Button x:Name="Guardar"
                             Text="Guardar"
-                            BackgroundColor="#10B981"
-                            TextColor="White"
-                            FontSize="13"
+                            BackgroundColor="{StaticResource Primary}"
+                            TextColor="{StaticResource OnPrimary}"
+                            FontSize="{StaticResource FontBody}"
                             FontAttributes="Bold"
                             Clicked="Guardar_Clicked"/>
                     <Button x:Name="Cancelar"
                             Grid.Column="1"
                             Text="Borrador"
-                            BackgroundColor="#F8FAFC"
-                            TextColor="#111827"
-                            FontSize="13"
+                            BackgroundColor="{StaticResource Surface}"
+                            TextColor="{StaticResource TextPrimary}"
+                            FontSize="{StaticResource FontBody}"
                             Clicked="Cancelar_Clicked"/>
                 </Grid>
             </VerticalStackLayout>

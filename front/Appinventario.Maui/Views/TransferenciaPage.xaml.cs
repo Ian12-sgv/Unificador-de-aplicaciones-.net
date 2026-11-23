@@ -157,7 +157,6 @@ namespace Appinventario.Views
                     return;
 
                 abiertasNumero.Text = resumen.GuardadasCount.ToString();
-                abiertasItems.Text = "Guardada";
                 procesadasNumero.Text = resumen.AprobadasCount.ToString();
                 exportadasNumero.Text = resumen.Exportadas.ToString();
             }

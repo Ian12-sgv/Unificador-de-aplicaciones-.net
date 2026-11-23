@@ -58,7 +58,7 @@ namespace Appinventario.Views
             }
             catch (Exception fail)
             {
-                await DisplayAlert("Error", "Error: " + fail.Message, "ok");
+                await DisplayAlert("Error", fail.Message, "Aceptar");
             }
         }
         private void Search_TextChanged(object sender, TextChangedEventArgs e)
@@ -91,7 +91,7 @@ namespace Appinventario.Views
                 var baseUrl = Util.NormalizeServiceUrl(this.urlL);
                 if (string.IsNullOrWhiteSpace(baseUrl))
                 {
-                    await DisplayAlert("Advertencia", "No se ha configurado el servidor.", "OK");
+                    await DisplayAlert("Advertencia", "Configure el servidor en Parámetros.", "Aceptar");
                     return;
                 }
                 var route = esToma2 ? "/api/TomaFisica2/" : "/api/TomaFisica/";
@@ -120,7 +120,7 @@ namespace Appinventario.Views
             }
             catch (Exception fail)
             {
-                await DisplayAlert("Error", "Error: " + fail.Message, "ok");
+                await DisplayAlert("Error", fail.Message, "Aceptar");
 
             }
         }

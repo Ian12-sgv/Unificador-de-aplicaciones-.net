@@ -240,67 +240,25 @@ VALUES (@Numero, @CodigoBarra, @Cantidad, @NumeroCaja, @Item, @Costo);", conn, t
     [HttpGet("health")]
     public async Task<IActionResult> Health()
     {
-        var response = new
+        var cs = _config.GetConnectionString("SqlServer");
+        var timeout = _config.GetValue<int?>("DatabaseDiagnostics:ConnectTimeoutSeconds") ?? 3;
+        var diagnostic = await SqlConnectionDiagnostics.CheckAsync(cs, timeout, HttpContext.RequestAborted);
+
+        return Ok(new
         {
             Ok = true,
             Service = "Borrador Dev",
             ListenerOk = true,
-            DatabaseOk = false,
-            DatabaseMessage = "No se pudo validar la base de datos.",
+            diagnostic.DatabaseOk,
+            DatabaseMessage = diagnostic.Message,
+            DatabaseErrorType = diagnostic.ErrorType,
+            DatabaseServer = diagnostic.Server,
+            DatabaseName = diagnostic.Database,
+            DatabaseAuthentication = diagnostic.Authentication,
+            diagnostic.SqlErrorNumber,
             ServerTime = DateTime.Now
-        };
-
-        var cs = _config.GetConnectionString("SqlServer");
-        if (string.IsNullOrWhiteSpace(cs))
-        {
-            return Ok(new
-            {
-                response.Ok,
-                response.Service,
-                response.ListenerOk,
-                response.DatabaseOk,
-                DatabaseMessage = "La cadena de conexión no está configurada.",
-                response.ServerTime
-            });
-        }
-
-        try
-        {
-            var builder = new SqlConnectionStringBuilder(cs)
-            {
-                ConnectTimeout = 3
-            };
-
-            await using var conn = new SqlConnection(builder.ConnectionString);
-            await conn.OpenAsync();
-
-            await using var cmd = new SqlCommand("SELECT 1", conn);
-            await cmd.ExecuteScalarAsync();
-
-            return Ok(new
-            {
-                response.Ok,
-                response.Service,
-                response.ListenerOk,
-                DatabaseOk = true,
-                DatabaseMessage = "SQL OK",
-                response.ServerTime
-            });
-        }
-        catch (Exception ex)
-        {
-            return Ok(new
-            {
-                response.Ok,
-                response.Service,
-                response.ListenerOk,
-                response.DatabaseOk,
-                DatabaseMessage = ex.Message,
-                response.ServerTime
-            });
-        }
+        });
     }
-
     [HttpGet("/api/Articulo/{codigoBarra}")]
     public async Task<IActionResult> GetArticulo(string codigoBarra)
     {

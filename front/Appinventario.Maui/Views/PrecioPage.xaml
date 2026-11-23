@@ -15,13 +15,13 @@
 
                     <Label x:Name="lblUrl"
                            Text="{Binding IP, Mode=TwoWay}"
-                           FontSize="Small"
-                           TextColor="Orange"
+                           FontSize="{StaticResource FontBody}"
+                           TextColor="{StaticResource TextSecondary}"
                            IsVisible="false"/>
 
                     <Label x:Name="lblInserte"
                            Text="Inserte código"
-                           FontSize="Header"
+                           FontSize="{StaticResource FontTitle}"
                            FontAttributes="Italic"
                            HorizontalTextAlignment="Center"
                            IsVisible="True"/>
@@ -30,13 +30,13 @@
                     <StackLayout Spacing="2">
                         <Label x:Name="lblArt"
                                Text="Artículo:"
-                               FontSize="Medium"
+                               FontSize="{StaticResource FontSubtitle}"
                                FontAttributes="Italic"
                                IsVisible="False"/>
                         <Label x:Name="lblArticulo"
                                Text=""
-                               FontSize="Large"
-                               TextColor="#f35e20"
+                               FontSize="{StaticResource FontHeadline}"
+                               TextColor="{StaticResource Price}"
                                LineBreakMode="TailTruncation"
                                MaxLines="2"
                                IsVisible="False"/>
@@ -48,49 +48,49 @@
 
                     <Label x:Name="lblExistencia"
                            Text="Existencia: Cantidad: "
-                           FontSize="Large"
-                           TextColor="#f35e20"
+                           FontSize="{StaticResource FontHeadline}"
+                           TextColor="{StaticResource Price}"
                            IsVisible="False"/>
 
                     <!-- Precio Detal -->
                     <StackLayout Spacing="2">
                         <Label x:Name="lblPrec"
-                               Text="Precio Detal:"
-                               FontSize="Medium"
+                               Text="Precio detal:"
+                               FontSize="{StaticResource FontSubtitle}"
                                FontAttributes="Italic"
                                IsVisible="False"/>
                         <Label x:Name="lblPrecio"
                                Text=""
-                               FontSize="Large"
-                               TextColor="#f35e20"
+                               FontSize="{StaticResource FontHeadline}"
+                               TextColor="{StaticResource Price}"
                                IsVisible="False"/>
                     </StackLayout>
 
                     <!-- Precio Mayor -->
                     <StackLayout Spacing="2">
                         <Label x:Name="lblPrecMayor"
-                               Text="Precio Mayor:"
-                               FontSize="Medium"
+                               Text="Precio mayor:"
+                               FontSize="{StaticResource FontSubtitle}"
                                FontAttributes="Italic"
                                IsVisible="False"/>
                         <Label x:Name="lblPrecioMayor"
                                Text=""
-                               FontSize="Large"
-                               TextColor="#f35e20"
+                               FontSize="{StaticResource FontHeadline}"
+                               TextColor="{StaticResource Price}"
                                IsVisible="False"/>
                     </StackLayout>
 
                     <!-- Costo Inicial -->
                     <StackLayout Spacing="2">
                         <Label x:Name="lblCosto"
-                               Text="Costo Inicial:"
-                               FontSize="Medium"
+                               Text="Costo inicial:"
+                               FontSize="{StaticResource FontSubtitle}"
                                FontAttributes="Italic"
                                IsVisible="False"/>
                         <Label x:Name="lblCostoInicial"
                                Text=""
-                               FontSize="Large"
-                               TextColor="#f35e20"
+                               FontSize="{StaticResource FontHeadline}"
+                               TextColor="{StaticResource Price}"
                                IsVisible="False"/>
                     </StackLayout>
 
@@ -98,15 +98,15 @@
                     <StackLayout Spacing="2">
                         <Label x:Name="lblDol"
                                Text="Precios en $:"
-                               FontSize="Medium"
+                               FontSize="{StaticResource FontSubtitle}"
                                FontAttributes="Italic"
                                IsVisible="False"/>
                         <Label x:Name="lblDolar"
                                Text=""
-                               FontSize="Medium"
+                               FontSize="{StaticResource FontSubtitle}"
                                LineBreakMode="WordWrap"
                                MaxLines="2"
-                               TextColor="#f35e20"
+                               TextColor="{StaticResource Price}"
                                IsVisible="False"/>
                     </StackLayout>
 
@@ -114,7 +114,7 @@
                     <StackLayout Spacing="2">
                         <Label x:Name="lblPromo"
                                Text="Promoción"
-                               FontSize="Medium"
+                               FontSize="{StaticResource FontSubtitle}"
                                FontAttributes="Italic"
                                IsVisible="False"/>
 
@@ -127,14 +127,14 @@
                             <Label x:Name="lblPromocion"
                                    Grid.Column="0"
                                    Text=""
-                                   FontSize="40"
+                                   FontSize="{StaticResource FontDisplay}"
                                    TextColor="DarkRed"
                                    IsVisible="False"/>
 
                             <Label x:Name="lblPorcentaje"
                                    Grid.Column="1"
                                    Text=""
-                                   FontSize="40"
+                                   FontSize="{StaticResource FontDisplay}"
                                    TextColor="DarkRed"
                                    IsVisible="False"/>
                         </Grid>
@@ -152,7 +152,7 @@
                                     TextChanged="BarcodeEntry_TextChanged"
                                     Completed="LoadInventario"
                                     ReturnType="Search"
-                                    FontSize="Large"
+                                    FontSize="{StaticResource FontHeadline}"
                                     CursorPosition="0"
                                     HorizontalTextAlignment="Center"
                                     HeightRequest="55"/>

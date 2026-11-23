@@ -57,7 +57,7 @@ namespace Appinventario.Views
                 var baseUrl = Util.NormalizeServiceUrl(this.urlL);
                 if (string.IsNullOrWhiteSpace(baseUrl))
                 {
-                    await DisplayAlert("Advertencia", "No se ha configurado el servidor.", "OK");
+                    await DisplayAlert("Advertencia", "Configure el servidor en Parámetros.", "Aceptar");
                     return;
                 }
                 var detailRoute = esToma2 ? "/api/TomaFisicaDet2/byParameters" : "/api/TomaFisicaDet/byParameters";
@@ -80,7 +80,7 @@ namespace Appinventario.Views
             }
             catch (Exception fail)
             {
-                await DisplayAlert("Error", "Error: " + fail.Message, "ok");
+                await DisplayAlert("Error", fail.Message, "Aceptar");
             }
         }
         private async void LoadVariables()
@@ -158,7 +158,7 @@ namespace Appinventario.Views
             }
             catch (Exception fail)
             {
-                await DisplayAlert("Error", "Error: " + fail.Message, "ok");
+                await DisplayAlert("Error", fail.Message, "Aceptar");
                 return;
             }
         }
@@ -191,17 +191,17 @@ namespace Appinventario.Views
             {
                 if (String.IsNullOrWhiteSpace(this.urlL))
                 {
-                    await DisplayAlert("Advertencia", "No hay servidor configurado.", "ok");
+                    await DisplayAlert("Advertencia", "Configure el servidor en Parámetros.", "Aceptar");
                     return;
                 }
                 if (String.IsNullOrWhiteSpace(this.cantidadN))
                 {
-                    await DisplayAlert("Advertencia", "Debe insertar cantidad.", "ok");
+                    await FeedbackService.ShowAsync("Indique la cantidad.");
                     return;
                 }
                 if (Convert.ToInt32(this.cantidadN) > 50000)
                 {
-                    await DisplayAlert("Advertencia", "No puede insertar cantidad mayor a 50000.", "ok");
+                    await FeedbackService.ShowAsync("La cantidad no puede superar 50000.");
                     return;
                 }
 
@@ -226,7 +226,7 @@ namespace Appinventario.Views
                 var baseUrl = Util.NormalizeServiceUrl(this.urlL);
                 if (string.IsNullOrWhiteSpace(baseUrl))
                 {
-                    await DisplayAlert("Advertencia", "No se ha configurado el servidor.", "OK");
+                    await DisplayAlert("Advertencia", "Configure el servidor en Parámetros.", "Aceptar");
                     return;
                 }
                 var postRoute = esToma2 ? "/api/TomaFisica2" : "/api/TomaFisica";
@@ -254,20 +254,20 @@ namespace Appinventario.Views
                 }
                 else
                 {
-                   await DisplayAlert("Error", response.StatusCode.ToString(), "ok");
+                   await DisplayAlert("Error", "No se pudo guardar la cantidad. Intente de nuevo (código " + (int)response.StatusCode + ").", "Aceptar");
                    return;
                 }
             }
             catch (Exception fail)
             {
-                await DisplayAlert("Error", "Error: " + fail.Message, "ok");
+                await DisplayAlert("Error", fail.Message, "Aceptar");
             }
         }
 
         private async System.Threading.Tasks.Task VolverAlLoginAsync(string mensaje)
         {
             TomaFisicaAuthService.Clear();
-            await DisplayAlert("Sesión", mensaje, "OK");
+            await DisplayAlert("Sesión", mensaje, "Aceptar");
             await Navigation.PopToRootAsync();
         }
 

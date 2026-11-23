@@ -1,0 +1,17 @@
+﻿<?xml version="1.0" encoding="UTF-8" ?>
+<?xaml-comp compile="true" ?>
+<ResourceDictionary
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml">
+
+    <!--
+        Escala tipográfica (sp). Ningún texto baja de FontCaption.
+        FontDisplay se reserva para el precio en Lector de Precios.
+    -->
+    <x:Double x:Key="FontDisplay">40</x:Double>
+    <x:Double x:Key="FontHeadline">22</x:Double>
+    <x:Double x:Key="FontTitle">18</x:Double>
+    <x:Double x:Key="FontSubtitle">16</x:Double>
+    <x:Double x:Key="FontBody">14</x:Double>
+    <x:Double x:Key="FontCaption">12</x:Double>
+</ResourceDictionary>

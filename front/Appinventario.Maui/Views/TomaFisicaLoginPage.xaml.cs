@@ -21,8 +21,8 @@ namespace Appinventario.Views
             var parameter = await App.Database.GetParameterAsync();
             var listener = BorradorDevSettings.BuildBaseUrlFromPrecioEndpoint(parameter?.IP);
             lblServidor.Text = string.IsNullOrWhiteSpace(listener)
-                ? "Escucha sin configurar"
-                : "Escucha: " + listener;
+                ? "Servidor sin configurar"
+                : "Servidor: " + listener;
 
             txtPassword.Text = string.Empty;
             txtUsuario.Focus();

@@ -94,7 +94,7 @@ try
             {
                 if (string.IsNullOrWhiteSpace(lblUrl.Text))
                 {
-                    await DisplayAlert("Advertencia", "No se ha configurado url del servicio en parametros.", "ok");
+                    await DisplayAlert("Advertencia", "Configure el servidor en Parámetros.", "Aceptar");
                     return;
                 }
 
@@ -128,7 +128,7 @@ try
                     else
                     {
                         DependencyService.Get<IAudio>().PlayAudioFile("no-valido.mp3");
-                        await DisplayAlert("Error", "Error de codigo de barra.", "ok");
+                        await DisplayAlert("Error", "No se encontró ningún artículo con ese código.", "Aceptar");
                         EtiquetaInVisible();
                     }
 
@@ -141,7 +141,7 @@ try
                 BarcodeEntry.Text = string.Empty;
                 BarcodeEntry.Focus();
                 DependencyService.Get<IAudio>().PlayAudioFile("no-valido.mp3");
-                await DisplayAlert("Error", "Error: " + fail.Message, "ok");
+                await DisplayAlert("Error", fail.Message, "Aceptar");
             }            finally
             {
                 _loadingBarcode = false;
@@ -154,32 +154,32 @@ try
             {
                 if (numeroTransferencia <= 0)
                 {
-                    await DisplayAlert("Advertencia", "Primero debe crear la transferencia.", "ok");
+                    await FeedbackService.ShowAsync("Cree la transferencia antes de agregar artículos.");
                     return;
                 }
 
                 var serviceUrl = Util.NormalizeServiceUrl(lblUrl.Text);
                 if (string.IsNullOrWhiteSpace(serviceUrl))
                 {
-                    await DisplayAlert("Advertencia", "No se ha configurado url del servicio en parametros.", "ok");
+                    await DisplayAlert("Advertencia", "Configure el servidor en Parámetros.", "Aceptar");
                     return;
                 }
 
                 if (string.IsNullOrWhiteSpace(codigoBarraActual))
                 {
-                    await DisplayAlert("Advertencia", "Debe leer un código de barra válido.", "ok");
+                    await FeedbackService.ShowAsync("Escanee un código de barra válido.");
                     return;
                 }
 
                 if (!int.TryParse(txtCantidad.Text, out var cantidad) || cantidad <= 0)
                 {
-                    await DisplayAlert("Advertencia", "Debe indicar una cantidad válida.", "ok");
+                    await FeedbackService.ShowAsync("Indique una cantidad válida.");
                     return;
                 }
 
                 if (!int.TryParse(txtCaja.Text, out var numeroCaja))
                 {
-                    await DisplayAlert("Advertencia", "Debe indicar un número de caja válido.", "ok");
+                    await FeedbackService.ShowAsync("Indique un número de caja válido.");
                     return;
                 }
 
@@ -201,14 +201,14 @@ try
 
                 if (response.StatusCode != HttpStatusCode.OK)
                 {
-                    await DisplayAlert("Error", "No se pudo guardar el artículo.", "ok");
+                    await DisplayAlert("Error", "No se pudo guardar el artículo.", "Aceptar");
                     return;
                 }
 
                 var resultText = await response.Content.ReadAsStringAsync();
                 if (!int.TryParse(resultText, out var result) || result < 1)
                 {
-                    await DisplayAlert("Error", "El escucha no insertó el artículo.", "ok");
+                    await DisplayAlert("Error", "El servidor no guardó el artículo.", "Aceptar");
                     return;
                 }
 
@@ -223,7 +223,7 @@ try
             catch (Exception fail)
             {
                 BarcodeEntry.Focus();
-                await DisplayAlert("Error", "Error: " + Util.NormalizeHttpExceptionMessage(fail), "ok");
+                await DisplayAlert("Error", Util.NormalizeHttpExceptionMessage(fail), "Aceptar");
             }            finally
             {
                 _loadingBarcode = false;

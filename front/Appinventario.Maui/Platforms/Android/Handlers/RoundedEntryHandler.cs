@@ -1,4 +1,3 @@
-using Android.Graphics.Drawables;
 using Appinventario.Controls;
 using Microsoft.Maui.Handlers;
 
@@ -10,12 +9,7 @@ public class RoundedEntryHandler : EntryHandler
     {
         base.ConnectHandler(platformView);
 
-        var gradientDrawable = new GradientDrawable();
-        gradientDrawable.SetCornerRadius(60f);
-        gradientDrawable.SetStroke(5, global::Android.Graphics.Color.Orange);
-        gradientDrawable.SetColor(global::Android.Graphics.Color.LightGray);
-
-        platformView.Background = gradientDrawable;
+        platformView.Background = EntryBackground.Create(platformView.Context, "Primary", 2, 24);
         platformView.SetPadding(50, platformView.PaddingTop, platformView.PaddingRight, platformView.PaddingBottom);
     }
 }

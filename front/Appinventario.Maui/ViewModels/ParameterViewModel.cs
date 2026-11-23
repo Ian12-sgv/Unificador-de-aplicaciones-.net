@@ -114,7 +114,7 @@ namespace Appinventario.ViewModels
             {
                 Util.TestGuardar = false;
                 Message = "No se pudo guardar la configuración.";
-                await Application.Current.MainPage.DisplayAlert("Error", "No se pudo guardar Parámetros: " + ex.Message, "OK");
+                await Application.Current.MainPage.DisplayAlert("Error", "No se pudo guardar Parámetros: " + ex.Message, "Aceptar");
             }
         }
         public async void OnSelect()

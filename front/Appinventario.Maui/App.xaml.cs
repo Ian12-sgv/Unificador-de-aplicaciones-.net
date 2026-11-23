@@ -45,13 +45,13 @@ public partial class App : Application
     {
         if (e.ExceptionObject is Exception ex)
         {
-            _ = CrashReportService.LogExceptionAsync(ex, "AppDomain.CurrentDomain.UnhandledException");
+            CrashReportService.LogException(ex, "AppDomain.CurrentDomain.UnhandledException");
         }
     }
 
     private void TaskScheduler_UnobservedTaskException(object sender, UnobservedTaskExceptionEventArgs e)
     {
-        _ = CrashReportService.LogExceptionAsync(e.Exception, "TaskScheduler.UnobservedTaskException");
+        CrashReportService.LogException(e.Exception, "TaskScheduler.UnobservedTaskException");
         e.SetObserved();
     }
 }

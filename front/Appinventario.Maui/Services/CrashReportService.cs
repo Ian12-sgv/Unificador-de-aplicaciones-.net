@@ -13,19 +13,35 @@ namespace Appinventario.Services
 
         public static string GetLogFilePath() => LogFilePath;
 
-        public static async Task LogExceptionAsync(Exception exception, string source = null)
+        private static readonly object FileLock = new object();
+
+        /// <summary>
+        /// Escribe el error de forma sincrona. Es la que debe usarse en los manejadores de
+        /// excepciones no controladas: el proceso muere al salir del manejador, asi que una
+        /// escritura asincrona sin esperar casi nunca llega a disco.
+        /// </summary>
+        public static void LogException(Exception exception, string source = null)
         {
             try
             {
-                Directory.CreateDirectory(LogDirectory);
-
                 var message = BuildLogMessage(exception, source);
-                await File.AppendAllTextAsync(LogFilePath, message, Encoding.UTF8);
+                lock (FileLock)
+                {
+                    Directory.CreateDirectory(LogDirectory);
+                    File.AppendAllText(LogFilePath, message, Encoding.UTF8);
+                }
             }
             catch
             {
                 // If logging fails, do not crash the app.
             }
+        }
+
+        public static Task LogExceptionAsync(Exception exception, string source = null)
+        {
+            // Mismo camino sincrono (y el mismo lock) para que no compitan por el archivo.
+            LogException(exception, source);
+            return Task.CompletedTask;
         }
 
         private static string BuildLogMessage(Exception exception, string source)

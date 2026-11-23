@@ -18,18 +18,18 @@
             <!--<Entry x:Name="txtPagina" 
                    Placeholder="Página" 
                    Text="{Binding NumeroPagina, Mode=TwoWay}" 
-                   FontSize="Small" 
+                   FontSize="{StaticResource FontBody}" 
                    Keyboard="Numeric"/>
             <Editor x:Name="txtObs" 
                     Placeholder="Observación" 
                     Text="{Binding Observacion, Mode=TwoWay}" 
-                    FontSize="Small" 
+                    FontSize="{StaticResource FontBody}" 
                     HeightRequest="100"/>-->
             <local:RoundedEntry2 x:Name="txtPagina"
                    Completed ="OnButtonClicked" 
                    Placeholder="Página" 
                    Text="{Binding NumeroPagina, Mode=TwoWay}" 
-                   FontSize="Small" 
+                   FontSize="{StaticResource FontBody}" 
                    HorizontalTextAlignment="Start"
                    CursorPosition="0"
                    AbsoluteLayout.LayoutBounds="0.5,1,400,100"
@@ -38,18 +38,18 @@
                    Completed ="OnButtonClicked" 
                    Placeholder="Observación" 
                    Text="{Binding Observacion, Mode=TwoWay}" 
-                   FontSize="Small" 
+                   FontSize="{StaticResource FontBody}" 
                    HorizontalTextAlignment="Start"
                    CursorPosition="0"
                    AbsoluteLayout.LayoutBounds="0.5,1,400,100"
                    AbsoluteLayout.LayoutFlags="YProportional,XProportional"/>           
-            <!--<Entry x:Name="txtCodigo" Placeholder="Código de barra" Text="{Binding CodigoBarra, Mode=TwoWay}" FontSize="Small" /> -->
+            <!--<Entry x:Name="txtCodigo" Placeholder="Código de barra" Text="{Binding CodigoBarra, Mode=TwoWay}" FontSize="{StaticResource FontBody}" /> -->
             <local:SoftkeyboardDisabledEntry x:Name="txtCodigo"
                    TextChanged="CodigoTextChanged"
                    Completed ="OnButtonClicked" 
                    Placeholder="Código de barra" 
                    Text="{Binding CodigoBarra, Mode=TwoWay}" 
-                   FontSize="Large" 
+                   FontSize="{StaticResource FontHeadline}" 
                    HorizontalTextAlignment="Center"
                    CursorPosition="0"
                    AbsoluteLayout.LayoutBounds="0.5,1,400,100"
@@ -57,25 +57,25 @@
             <Label x:Name="lblArt" 
                    Text="Artículo" 
                    HorizontalOptions="StartAndExpand" 
-                   FontSize="Small"
+                   FontSize="{StaticResource FontBody}"
                    FontAttributes="Italic"/>
             <Label x:Name="lblArticulo"
                    Text=""
                    HorizontalOptions="StartAndExpand" 
-                   FontSize="{OnIdiom Phone=14, Tablet=16, Desktop=18}"
+                   FontSize="{StaticResource FontBody}"
                    LineBreakMode="WordWrap"
-                   TextColor="#f35e20"/>
+                   TextColor="{StaticResource Price}"/>
             <Label x:Name="lblExis" 
                    Text="Cantidad:"
-                   FontSize="Small"
+                   FontSize="{StaticResource FontBody}"
                    FontAttributes="Italic" />
             <Label x:Name="lblExistencia" 
-                   TextColor="#f35e20"
-                   FontSize="Large" />
+                   TextColor="{StaticResource Price}"
+                   FontSize="{StaticResource FontHeadline}" />
             <Button Text="Ver detalle"
                     VerticalOptions="Center"
                     HorizontalOptions="Center"
-                    HeightRequest="42"
+                    HeightRequest="48"
                     MinimumWidthRequest="130"
                     Padding="16,6"
                     Clicked="LoadDetalle" />

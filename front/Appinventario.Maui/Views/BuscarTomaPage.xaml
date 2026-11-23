@@ -6,9 +6,9 @@
     <Grid RowDefinitions="Auto,*">
         <SearchBar x:Name="Search"
                    Grid.Row="0"
-                   CancelButtonColor="Blue"
+                   CancelButtonColor="{StaticResource TextSecondary}"
                    Placeholder="Buscar"
-                   PlaceholderColor="Orange"
+                   PlaceholderColor="{StaticResource TextSecondary}"
                    HorizontalTextAlignment="Start"
                    TextChanged="Search_TextChanged"
                    Keyboard="Numeric" />
@@ -20,8 +20,8 @@
                 <DataTemplate>
                     <Label Text="{Binding NumeroPagina}"
                            Padding="14,10"
-                           FontSize="{OnIdiom Phone=18, Tablet=20, Desktop=22}"
-                           TextColor="#503026" />
+                           FontSize="{StaticResource FontTitle}"
+                           TextColor="{StaticResource TextPrimary}" />
                 </DataTemplate>
             </CollectionView.ItemTemplate>
         </CollectionView>

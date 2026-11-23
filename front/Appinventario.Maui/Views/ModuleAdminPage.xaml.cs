@@ -54,7 +54,7 @@ namespace Appinventario.Views
 
         private async void OnApplyClicked(object sender, EventArgs e)
         {
-            await DisplayAlert("Información", "Cambios aplicados.", "ok");
+            await FeedbackService.ShowAsync("Cambios aplicados.");
             Application.Current.MainPage = new AppShell();
         }
 

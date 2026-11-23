@@ -2,8 +2,8 @@
 
   <PropertyGroup>
     <TargetFramework>netcoreapp2.1</TargetFramework>
-    <AssemblyVersion>1.0.284.0</AssemblyVersion>
-    <FileVersion>1.0.284.0</FileVersion>
+    <AssemblyVersion>1.0.285.0</AssemblyVersion>
+    <FileVersion>1.0.285.0</FileVersion>
     <UserSecretsId>21e48219-600c-408b-8a22-b87d830b32ad</UserSecretsId>
     <AssemblyName>ServicioInventario</AssemblyName>
     <ApplicationIcon>1024.ico</ApplicationIcon>

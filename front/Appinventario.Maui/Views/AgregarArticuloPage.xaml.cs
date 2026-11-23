@@ -55,7 +55,7 @@ namespace Appinventario.Views
             {
                 if (string.IsNullOrWhiteSpace(lblUrl.Text))
                 {
-                    await DisplayAlert("Advertencia", "No se ha configurado url del servicio en parametros.", "ok");
+                    await DisplayAlert("Advertencia", "Configure el servidor en Parámetros.", "Aceptar");
                     return;
                 }
 
@@ -91,7 +91,7 @@ namespace Appinventario.Views
                     else
                     {
                         DependencyService.Get<IAudio>().PlayAudioFile("no-valido.mp3");
-                        await DisplayAlert("Error", "Error de codigo de barra.", "ok");
+                        await DisplayAlert("Error", "No se encontró ningún artículo con ese código.", "Aceptar");
                         EtiquetaInVisible();
                     }
 
@@ -103,7 +103,7 @@ namespace Appinventario.Views
             {
                 BarcodeEntry.Text = string.Empty;
                 DependencyService.Get<IAudio>().PlayAudioFile("no-valido.mp3");
-                await DisplayAlert("Error", "Error: " + fail.Message, "ok");
+                await DisplayAlert("Error", fail.Message, "Aceptar");
                 BarcodeEntry.Focus();
             }
         }

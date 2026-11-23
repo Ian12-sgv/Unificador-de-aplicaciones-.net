@@ -36,7 +36,7 @@ namespace Appinventario.Views
             {
                 string borradorBaseUrl = BorradorDevSettings.BuildBaseUrlFromPrecioEndpoint(viewModel.IP);
 
-                lblMessage.Text = "Probando escucha de Borrador Dev...";
+                lblMessage.Text = "Probando conexión con el servidor…";
                 var borradorService = new BorradorDevApiService(borradorBaseUrl);
                 var borradorPing = await borradorService.GetPingAsync();
 
@@ -46,15 +46,14 @@ namespace Appinventario.Views
 
                 await DisplayAlert(
                     "Informacion",
-                    BuildDetail(borradorPing),
-                    "ok");
+                    BuildDetail(borradorPing), "Aceptar");
             }
             catch (Exception fail)
             {
                 Util.TestGuardar = false;
                 viewModel.Sucursal = "";
-                viewModel.Message = "No se pudo conectar al escucha compartido.";
-                await DisplayAlert("Error", "Error: " + NormalizeExceptionMessage(fail), "ok");
+                viewModel.Message = "No se pudo conectar con el servidor.";
+                await DisplayAlert("Error", NormalizeExceptionMessage(fail), "Aceptar");
             }
         }
 
@@ -91,9 +90,9 @@ namespace Appinventario.Views
                 return "Error desconocido.";
 
             if (exception.Message == "Socket closed")
-                return "El listener cerro la conexion antes de responder.";
+                return "El servidor cerró la conexión antes de responder.";
 
-            return Util.NormalizeHttpExceptionMessage(exception, "El escucha tardó demasiado en responder durante la prueba.");
+            return Util.NormalizeHttpExceptionMessage(exception, "El servidor tardó demasiado en responder durante la prueba.");
         }
     }
 }

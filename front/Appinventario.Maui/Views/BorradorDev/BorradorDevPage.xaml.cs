@@ -53,13 +53,13 @@ namespace Appinventario.Views.BorradorDev
                 }
             }
 
-            lblBaseUrl.Text = "Configuracion compartida: " + baseUrl + " | Usuario: " + UsuarioFijo;
+            lblBaseUrl.Text = "Servidor: " + baseUrl + " | Usuario: " + UsuarioFijo;
         }
 
         private void OnNuevoClicked(object sender, EventArgs e)
         {
             ResetForNew();
-            SetStatus("Nuevo borrador listo. Escanea y guarda para crear el numero.", false);
+            SetStatus("Nuevo borrador listo. Escanee y guarde para crear el número.", false);
             _ = FocusBarcodeAsync();
         }
 
@@ -79,7 +79,7 @@ namespace Appinventario.Views.BorradorDev
                 {
                     txtNumero.Text = numero.ToString();
                     UpdateModeText();
-                    SetStatus("Numero seleccionado: " + numero, false);
+                    SetStatus("Número seleccionado: " + numero, false);
                     _ = FocusBarcodeAsync();
                 };
 
@@ -88,7 +88,7 @@ namespace Appinventario.Views.BorradorDev
             catch (Exception ex)
             {
                 await CrashReportService.LogExceptionAsync(ex, "BorradorDevPage.OnBuscarClicked");
-                SetStatus("No se pudo abrir la búsqueda. Intenta de nuevo.", true);
+                SetStatus("No se pudo abrir la búsqueda. Intente de nuevo.", true);
             }
         }
 
@@ -126,7 +126,7 @@ namespace Appinventario.Views.BorradorDev
             var numero = GetCurrentNumero();
             if (!numero.HasValue)
             {
-                SetStatus("Primero crea un numero o usa Buscar.", true);
+                SetStatus("Cree un borrador o use Buscar.", true);
                 return;
             }
 
@@ -138,15 +138,15 @@ namespace Appinventario.Views.BorradorDev
             {
                 isBusy = true;
                 UpdateActionState();
-                SetStatus("Aprobando numero...", false);
+                SetStatus("Aprobando borrador…", false);
                 var result = await service.RunAsync(numero.Value, true);
                 var procesados = result != null && result.Info != null ? result.Info.NumerosProcesados : 0;
-                SetStatus(procesados > 0 ? "Aprobado con exito." : "No se encontro el numero o no habia registros.", false);
+                SetStatus(procesados > 0 ? "Aprobado con exito." : "No se encontró el borrador o no tiene registros.", false);
             }
             catch (Exception ex)
             {
                 await CrashReportService.LogExceptionAsync(ex, "BorradorDevPage.OnAprobarClicked");
-                SetStatus("Error al aprobar. Revisa tu conexión o intenta nuevamente.", true);
+                SetStatus("Error al aprobar. Revise la conexión e intente de nuevo.", true);
             }
             finally
             {
@@ -160,7 +160,7 @@ namespace Appinventario.Views.BorradorDev
             var numero = GetCurrentNumero();
             if (!numero.HasValue)
             {
-                SetStatus("Primero crea un numero o usa Buscar.", true);
+                SetStatus("Cree un borrador o use Buscar.", true);
                 return;
             }
 
@@ -175,7 +175,7 @@ namespace Appinventario.Views.BorradorDev
             catch (Exception ex)
             {
                 await CrashReportService.LogExceptionAsync(ex, "BorradorDevPage.OnDetalleClicked");
-                SetStatus("No se pudo abrir el detalle. Intenta de nuevo.", true);
+                SetStatus("No se pudo abrir el detalle. Intente de nuevo.", true);
             }
         }
 
@@ -259,7 +259,7 @@ namespace Appinventario.Views.BorradorDev
 
             if (string.IsNullOrWhiteSpace(baseUrl))
             {
-                SetStatus("Configura primero la ruta compartida en Parametros.", true);
+                SetStatus("Configure el servidor en Parámetros.", true);
                 return null;
             }
 
@@ -285,7 +285,7 @@ namespace Appinventario.Views.BorradorDev
             var numero = GetCurrentNumero();
 
             if (!numero.HasValue)
-                lblMode.Text = "Modo: NUEVO. El numero se crea al guardar el primer escaneo.";
+                lblMode.Text = "Borrador nuevo: el número se crea al guardar el primer escaneo.";
             else
                 lblMode.Text = "Modo: ESCANEAR a #" + numero.Value + ". Si repites codigo y caja, el backend suma cantidad.";
 
@@ -295,10 +295,10 @@ namespace Appinventario.Views.BorradorDev
         private void SetStatus(string message, bool isError)
         {
             lblStatus.Text = message;
-            lblStatus.TextColor = isError ? Color.FromHex("#9C2F27") : Color.FromHex("#166534");
+            lblStatus.TextColor = isError ? AppColors.Error : AppColors.Primary;
             frameStatus.IsVisible = !string.IsNullOrWhiteSpace(message);
-            frameStatus.BackgroundColor = isError ? Color.FromHex("#FDECEA") : Color.FromHex("#E8F5EE");
-            frameStatus.BorderColor = isError ? Color.FromHex("#F4C7C3") : Color.FromHex("#B7E1C3");
+            frameStatus.BackgroundColor = isError ? AppColors.ErrorContainer : AppColors.PrimaryContainer;
+            frameStatus.BorderColor = isError ? AppColors.ErrorOutline : AppColors.PrimaryOutline;
         }
 
         private async System.Threading.Tasks.Task FocusBarcodeAsync()

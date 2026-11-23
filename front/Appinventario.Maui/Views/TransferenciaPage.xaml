@@ -5,10 +5,10 @@
              x:Class="Appinventario.Views.TransferenciaPage"
              Visual="Material"
              Title="Transferencias"
-             BackgroundColor="#F3F4F6">
+             BackgroundColor="{StaticResource Canvas}">
     <ContentPage.Resources>
         <Style x:Key="Card" TargetType="Border">
-            <Setter Property="BackgroundColor" Value="White"/>
+            <Setter Property="BackgroundColor" Value="{StaticResource Surface}"/>
             <Setter Property="Padding" Value="12"/>
             <Setter Property="StrokeThickness" Value="0"/>
             <Setter Property="StrokeShape">
@@ -24,12 +24,12 @@
             <Grid>
                 <VerticalStackLayout Spacing="2">
                     <Label Text="Bienvenido,"
-                           FontSize="12"
-                           TextColor="#111827"/>
+                           FontSize="{StaticResource FontCaption}"
+                           TextColor="{StaticResource TextPrimary}"/>
                     <Label Text="Portal de Transferencias"
-                           FontSize="18"
+                           FontSize="{StaticResource FontTitle}"
                            FontAttributes="Bold"
-                           TextColor="#111827"/>
+                           TextColor="{StaticResource TextPrimary}"/>
                 </VerticalStackLayout>
             </Grid>
 
@@ -39,25 +39,18 @@
                         Padding="8">
                     <VerticalStackLayout Spacing="4">
                         <HorizontalStackLayout Spacing="3">
-                            <Label Text="o"
-                                   FontSize="14"
-                                   TextColor="#F59E0B"
-                                   VerticalOptions="Center"/>
+                            <Ellipse WidthRequest="10" HeightRequest="10" Fill="{StaticResource Warning}" VerticalOptions="Center"/>
                             <Label Text="Guardadas"
-                                   FontSize="11"
+                                   FontSize="{StaticResource FontCaption}"
                                    FontAttributes="Bold"
-                                   TextColor="#111827"
+                                   TextColor="{StaticResource TextPrimary}"
                                    VerticalOptions="Center"/>
                         </HorizontalStackLayout>
                         <Label x:Name="abiertasNumero"
                                Text="0"
-                               FontSize="13"
+                               FontSize="{StaticResource FontHeadline}"
                                FontAttributes="Bold"
-                               TextColor="#111827"/>
-                        <Label x:Name="abiertasItems"
-                               Text="Guardada"
-                               FontSize="10"
-                               TextColor="#111827"/>
+                               TextColor="{StaticResource TextPrimary}"/>
                     </VerticalStackLayout>
                 </Border>
 
@@ -66,24 +59,18 @@
                         Padding="8">
                     <VerticalStackLayout Spacing="4">
                         <HorizontalStackLayout Spacing="3">
-                            <Label Text="o"
-                                   FontSize="14"
-                                   TextColor="#10B981"
-                                   VerticalOptions="Center"/>
+                            <Ellipse WidthRequest="10" HeightRequest="10" Fill="{StaticResource Primary}" VerticalOptions="Center"/>
                             <Label Text="Aprobadas"
-                                   FontSize="11"
+                                   FontSize="{StaticResource FontCaption}"
                                    FontAttributes="Bold"
-                                   TextColor="#111827"
+                                   TextColor="{StaticResource TextPrimary}"
                                    VerticalOptions="Center"/>
                         </HorizontalStackLayout>
                         <Label x:Name="procesadasNumero"
                                Text="0"
-                               FontSize="13"
+                               FontSize="{StaticResource FontHeadline}"
                                FontAttributes="Bold"
-                               TextColor="#111827"/>
-                        <Label Text="Aprobada"
-                               FontSize="10"
-                               TextColor="#111827"/>
+                               TextColor="{StaticResource TextPrimary}"/>
                     </VerticalStackLayout>
                 </Border>
 
@@ -92,50 +79,41 @@
                         Padding="8">
                     <VerticalStackLayout Spacing="4">
                         <HorizontalStackLayout Spacing="3">
-                            <Label Text="o"
-                                   FontSize="14"
-                                   TextColor="#2563EB"
-                                   VerticalOptions="Center"/>
+                            <Ellipse WidthRequest="10" HeightRequest="10" Fill="{StaticResource Info}" VerticalOptions="Center"/>
                             <Label Text="Exportadas"
-                                   FontSize="11"
+                                   FontSize="{StaticResource FontCaption}"
                                    FontAttributes="Bold"
-                                   TextColor="#111827"
+                                   TextColor="{StaticResource TextPrimary}"
                                    VerticalOptions="Center"/>
                         </HorizontalStackLayout>
                         <Label x:Name="exportadasNumero"
                                Text="0"
-                               FontSize="13"
+                               FontSize="{StaticResource FontHeadline}"
                                FontAttributes="Bold"
-                               TextColor="#111827"/>
-                        <Label Text="Exportada"
-                               FontSize="10"
-                               TextColor="#111827"/>
+                               TextColor="{StaticResource TextPrimary}"/>
                     </VerticalStackLayout>
                 </Border>
             </Grid>
 
             <VerticalStackLayout Spacing="10">
-                <Label Text="Acciones Rapidas"
-                       FontSize="15"
+                <Label Text="Acciones rápidas"
+                       FontSize="{StaticResource FontSubtitle}"
                        FontAttributes="Bold"
-                       TextColor="#111827"/>
+                       TextColor="{StaticResource TextPrimary}"/>
 
                 <Grid ColumnDefinitions="*,*"
                       ColumnSpacing="10">
                     <Border Style="{StaticResource Card}">
                         <VerticalStackLayout Spacing="6"
                                              HorizontalOptions="Center">
-                            <Label Text="+"
-                                   FontSize="18"
-                                   TextColor="#1D4ED8"
-                                   HorizontalTextAlignment="Center"/>
                             <Label Text="Nueva"
-                                   FontSize="12"
-                                   TextColor="#111827"
+                                   FontSize="{StaticResource FontSubtitle}"
+                                   FontAttributes="Bold"
+                                   TextColor="{StaticResource Primary}"
                                    HorizontalTextAlignment="Center"/>
-                            <Label Text="Adaptacion Desktop"
-                                   FontSize="12"
-                                   TextColor="#111827"
+                            <Label Text="Crear transferencia"
+                                   FontSize="{StaticResource FontCaption}"
+                                   TextColor="{StaticResource TextSecondary}"
                                    HorizontalTextAlignment="Center"/>
                         </VerticalStackLayout>
                         <Border.GestureRecognizers>
@@ -146,18 +124,14 @@
                     <Border Grid.Column="1" Style="{StaticResource Card}">
                         <VerticalStackLayout Spacing="6"
                                              HorizontalOptions="Center">
-                            <Label Text="&lt;-&gt;"
-                                   FontSize="18"
-                                   TextColor="#1D4ED8"
-                                   HorizontalTextAlignment="Center"/>
                             <Label Text="Historial"
-                                   FontSize="12"
+                                   FontSize="{StaticResource FontSubtitle}"
                                    FontAttributes="Bold"
-                                   TextColor="#111827"
+                                   TextColor="{StaticResource Primary}"
                                    HorizontalTextAlignment="Center"/>
-                            <Label Text="Consultar Lista"
-                                   FontSize="12"
-                                   TextColor="#111827"
+                            <Label Text="Ver transferencias"
+                                   FontSize="{StaticResource FontCaption}"
+                                   TextColor="{StaticResource TextSecondary}"
                                    HorizontalTextAlignment="Center"/>
                         </VerticalStackLayout>
                         <Border.GestureRecognizers>

@@ -1,6 +1,6 @@
 param(
     [int]$Port = 5001,
-    [string]$HostAddress = "0.0.0.0",
+    [string]$HostAddress = "",
     [switch]$OpenFirewall
 )
 
@@ -9,7 +9,6 @@ $ErrorActionPreference = "Stop"
 $scriptDir = Split-Path -Parent $MyInvocation.MyCommand.Path
 $exePath = Join-Path $scriptDir "BackBorradorDev.exe"
 $appSettingsPath = Join-Path $scriptDir "appsettings.json"
-$url = "http://$HostAddress`:$Port"
 
 if (-not (Test-Path -LiteralPath $exePath)) {
     Write-Host "No se encontro BackBorradorDev.exe en:" -ForegroundColor Red
@@ -41,13 +40,23 @@ if ($OpenFirewall) {
     }
 }
 
-$env:Urls = $url
-$env:ASPNETCORE_URLS = $url
+$hasUrlOverride = $PSBoundParameters.ContainsKey("HostAddress") -or $PSBoundParameters.ContainsKey("Port")
+if ($hasUrlOverride) {
+    if ([string]::IsNullOrWhiteSpace($HostAddress)) {
+        $HostAddress = "0.0.0.0"
+    }
+
+    $url = "http://$HostAddress`:$Port"
+    $env:Urls = $url
+    $env:ASPNETCORE_URLS = $url
+    Write-Host "Usando URL indicada: $url" -ForegroundColor Yellow
+}
+else {
+    Write-Host "Usando Urls de appsettings.json." -ForegroundColor Yellow
+}
 
 Write-Host "Levantando BackBorradorDev..." -ForegroundColor Cyan
-Write-Host "URL local:     http://localhost:$Port"
-Write-Host "URL red/PDA:   http://IP-DE-ESTA-PC:$Port"
-Write-Host "Escuchando en: $url"
+Write-Host "Validando IP y SQL antes de confirmar la escucha..." -ForegroundColor Yellow
 Write-Host ""
 Write-Host "Para cambiar SQL o credenciales edita appsettings.json en esta misma carpeta." -ForegroundColor Yellow
 Write-Host "Para cerrar el back presiona Ctrl+C o cierra esta ventana."

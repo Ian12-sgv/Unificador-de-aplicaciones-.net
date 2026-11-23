@@ -49,7 +49,7 @@ namespace Appinventario.Views.BorradorDev
             catch (Exception ex)
             {
                 await CrashReportService.LogExceptionAsync(ex, "BorradorDevSearchPage.OnAppearing");
-                SetStatus("Error al iniciar la búsqueda. Intenta de nuevo.", true);
+                SetStatus("Error al iniciar la búsqueda. Intente de nuevo.", true);
             }
         }
 
@@ -89,7 +89,7 @@ namespace Appinventario.Views.BorradorDev
             catch (Exception ex)
             {
                 await CrashReportService.LogExceptionAsync(ex, "BorradorDevSearchPage.DebouncedLoadAsync");
-                SetStatus("Error de búsqueda. Intenta de nuevo.", true);
+                SetStatus("Error de búsqueda. Intente de nuevo.", true);
             }
         }
 
@@ -103,7 +103,7 @@ namespace Appinventario.Views.BorradorDev
             catch (Exception ex)
             {
                 await CrashReportService.LogExceptionAsync(ex, "BorradorDevSearchPage.OnSearchCompleted");
-                SetStatus("Error al ejecutar la búsqueda. Intenta de nuevo.", true);
+                SetStatus("Error al ejecutar la búsqueda. Intente de nuevo.", true);
             }
         }
 
@@ -117,7 +117,7 @@ namespace Appinventario.Views.BorradorDev
             catch (Exception ex)
             {
                 await CrashReportService.LogExceptionAsync(ex, "BorradorDevSearchPage.OnSearchClicked");
-                SetStatus("Error al ejecutar la búsqueda. Intenta de nuevo.", true);
+                SetStatus("Error al ejecutar la búsqueda. Intente de nuevo.", true);
             }
         }
 
@@ -138,7 +138,7 @@ namespace Appinventario.Views.BorradorDev
             catch (Exception ex)
             {
                 await CrashReportService.LogExceptionAsync(ex, "BorradorDevSearchPage.OnResultTapped");
-                SetStatus("Error al seleccionar el número. Intenta de nuevo.", true);
+                SetStatus("Error al seleccionar el número. Intente de nuevo.", true);
             }
         }
 
@@ -167,14 +167,14 @@ namespace Appinventario.Views.BorradorDev
                 if (cachedItems.Count == 0)
                     SetStatus("Sin resultados.", false);
                 else
-                    SetStatus("Selecciona un numero para seguir.", false);
+                    SetStatus("Seleccione un borrador para continuar.", false);
             }
             catch (Exception ex)
             {
                 cachedItems.Clear();
                 RenderResults();
                 await CrashReportService.LogExceptionAsync(ex, "BorradorDevSearchPage.LoadAsync");
-                SetStatus("No se pudo completar la búsqueda. Revisa la conexión.", true);
+                SetStatus("No se pudo completar la búsqueda. Revise la conexión.", true);
             }
             finally
             {
@@ -202,8 +202,8 @@ namespace Appinventario.Views.BorradorDev
             var card = new Border
             {
                 Padding = new Thickness(12, 10),
-                BackgroundColor = Colors.White,
-                Stroke = Color.FromHex("#D6E0E5"),
+                BackgroundColor = AppColors.Surface,
+                Stroke = AppColors.Outline,
                 StrokeThickness = 1,
                 StrokeShape = new RoundRectangle
                 {
@@ -227,8 +227,8 @@ namespace Appinventario.Views.BorradorDev
             {
                 Text = item.NumeroDisplay,
                 FontAttributes = FontAttributes.Bold,
-                FontSize = 16,
-                TextColor = Color.FromHex("#24343A"),
+                FontSize = AppFonts.Subtitle,
+                TextColor = AppColors.TextPrimary,
                 VerticalTextAlignment = TextAlignment.Center
             };
 
@@ -236,10 +236,10 @@ namespace Appinventario.Views.BorradorDev
             {
                 Text = item.StatusDisplay,
                 FontAttributes = FontAttributes.Bold,
-                FontSize = 12,
+                FontSize = AppFonts.Caption,
                 TextColor = item.Status.HasValue && item.Status.Value == 1
-                    ? Color.FromHex("#8A5A00")
-                    : Color.FromHex("#166534"),
+                    ? AppColors.Warning
+                    : AppColors.Primary,
                 HorizontalTextAlignment = TextAlignment.End,
                 LineBreakMode = LineBreakMode.TailTruncation
             };
@@ -247,8 +247,8 @@ namespace Appinventario.Views.BorradorDev
             var meta = new Label
             {
                 Text = item.FechaDisplay + " | " + item.UsuarioDisplay,
-                FontSize = 12,
-                TextColor = Color.FromHex("#60727A"),
+                FontSize = AppFonts.Caption,
+                TextColor = AppColors.TextSecondary,
                 LineBreakMode = LineBreakMode.TailTruncation,
                 MaxLines = 1
             };
@@ -256,8 +256,8 @@ namespace Appinventario.Views.BorradorDev
             var observacion = new Label
             {
                 Text = item.ObservacionDisplay,
-                FontSize = 13,
-                TextColor = Color.FromHex("#344951"),
+                FontSize = AppFonts.Body,
+                TextColor = AppColors.TextPrimary,
                 LineBreakMode = LineBreakMode.TailTruncation,
                 MaxLines = 1
             };
@@ -291,10 +291,10 @@ namespace Appinventario.Views.BorradorDev
                 return;
 
             lblStatus.Text = message;
-            lblStatus.TextColor = isError ? Color.FromHex("#9C2F27") : Color.FromHex("#1E4855");
+            lblStatus.TextColor = isError ? AppColors.Error : AppColors.Brand;
             frameStatus.IsVisible = !string.IsNullOrWhiteSpace(message);
-            frameStatus.BackgroundColor = isError ? Color.FromHex("#FDECEA") : Color.FromHex("#EEF5F7");
-            frameStatus.Stroke = new SolidColorBrush(isError ? Color.FromHex("#F4C7C3") : Color.FromHex("#D6E0E5"));
+            frameStatus.BackgroundColor = isError ? AppColors.ErrorContainer : AppColors.SurfaceMuted;
+            frameStatus.Stroke = new SolidColorBrush(isError ? AppColors.ErrorOutline : AppColors.Outline);
         }
 
         private void CancelPendingSearch()

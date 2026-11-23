@@ -102,20 +102,20 @@ namespace Appinventario.Views
 
                 if (String.IsNullOrWhiteSpace(this.lblUrl.Text))
                 {
-                    await DisplayAlert("Advertencia", "No hay servidor configurado.", "ok");
+                    await DisplayAlert("Advertencia", "Configure el servidor en Parámetros.", "Aceptar");
                     return;
                 }
 
                 if (String.IsNullOrWhiteSpace(this.txtPagina.Text))
                 {
-                    await DisplayAlert("Advertencia", "Debe insertar página.", "ok");
+                    await FeedbackService.ShowAsync("Indique el número de página.");
                     this.txtCodigo.Text = "";
                     this.txtPagina.Focus();
                     return;
                 }
                 if (String.IsNullOrWhiteSpace(this.txtObs.Text))
                 {
-                    await DisplayAlert("Advertencia", "Debe insertar observación.", "ok");
+                    await FeedbackService.ShowAsync("Escriba una observación.");
                     this.txtCodigo.Text = "";
                     this.txtObs.Focus();
                     return;
@@ -123,7 +123,7 @@ namespace Appinventario.Views
 
                 if (!result)
                 {
-                    await this.DisplayAlert( "Advertencia", "La página debe ser valor numérico válido.", "ok");
+                    await FeedbackService.ShowAsync("La página solo admite números.");
                     this.txtCodigo.Text = "";
                     this.txtPagina.Text = "";
                     this.txtPagina.Focus();
@@ -132,7 +132,7 @@ namespace Appinventario.Views
 
                 if ( Convert.ToInt32(this.txtPagina.Text) > 50000)
                 {
-                    await DisplayAlert("Advertencia", "No puede haber página mayor a 50000.", "ok");
+                    await FeedbackService.ShowAsync("La página debe ser un número entre 1 y 50000.");
                     this.txtPagina.Text = "";
                     this.txtCodigo.Text = "";
                     this.txtPagina.Focus();
@@ -141,7 +141,7 @@ namespace Appinventario.Views
                 
                 if (String.IsNullOrWhiteSpace(this.txtCodigo.Text))
                 {
-                    await DisplayAlert( "Advertencia", "Debe insertar código de barra.", "ok");
+                    await FeedbackService.ShowAsync("Escanee o escriba un código de barra.");
                     this.txtCodigo.Focus();
                     return;
                 }
@@ -166,15 +166,23 @@ namespace Appinventario.Views
               
                 var baseUrl = Util.NormalizeServiceUrl(this.lblUrl.Text);
                 Uri RequestUri = new Uri(baseUrl + "/api/TomaFisica");
-                var client = Util.CreateHttpClient();
+                using var client = Util.CreateHttpClient();
                 if (!TomaFisicaAuthService.ConfigureAuthorization(client))
                 {
                     await VolverAlLoginAsync("Debe iniciar sesion para registrar una toma fisica.");
                     return;
                 }
                 var json = JsonConvert.SerializeObject(toma);
-                var contentJson = new StringContent(json,Encoding.UTF8,"application/json");
-                var response = await client.PostAsync(RequestUri,contentJson);
+                using var contentJson = new StringContent(json,Encoding.UTF8,"application/json");
+                using var response = await client.PostAsync(RequestUri,contentJson);
+
+                if (response.StatusCode == HttpStatusCode.Unauthorized)
+                {
+                    // Token vencido o backend reiniciado: no tiene sentido seguir escaneando.
+                    Util.TryPlayAudioFile("no-valido.mp3");
+                    await VolverAlLoginAsync("La sesion vencio. Inicie sesion nuevamente.");
+                    return;
+                }
 
              //   if (response.StatusCode == HttpStatusCode.OK || response.StatusCode == HttpStatusCode.InternalServerError)
                     if (response.StatusCode == HttpStatusCode.OK)
@@ -184,7 +192,7 @@ namespace Appinventario.Views
                      if (content == "-1")
                     {
                         Util.TryPlayAudioFile("no-valido.mp3");
-                        await DisplayAlert("Información", "Código de barra no existe o Toma física existente en otro dispositivo.", "ok");
+                        await DisplayAlert("Información", "Código de barra no existe o Toma física existente en otro dispositivo.", "Aceptar");
                         SelectTextCodigo();
                         txtCodigo.Text = "";
                         txtCodigo.Focus();
@@ -202,8 +210,8 @@ namespace Appinventario.Views
                         Util.TryPlayAudioFile("no-valido.mp3");
                         var mensaje = response.StatusCode == HttpStatusCode.Conflict
                             ? "Este número de Toma Física ya pertenece a otro usuario."
-                            : "El escucha respondió: " + response.StatusCode;
-                        await DisplayAlert("Toma Física", mensaje, "OK");
+                            : "El servidor respondió con error (código " + (int)response.StatusCode + ").";
+                        await DisplayAlert("Toma Física", mensaje, "Aceptar");
                         SelectTextCodigo();
                         txtCodigo.Text = "";
                         txtCodigo.Focus();
@@ -213,7 +221,7 @@ namespace Appinventario.Views
             catch (Exception fail)
             {
                 Util.TryPlayAudioFile("no-valido.mp3");
-                await DisplayAlert( "Error", "Error: " + fail.Message, "ok");
+                await DisplayAlert("Error", fail.Message, "Aceptar");
                 txtCodigo.Text = "";
                 txtCodigo.Focus();
                 SelectTextCodigo();
@@ -279,7 +287,7 @@ namespace Appinventario.Views
         private async Task VolverAlLoginAsync(string mensaje)
         {
             TomaFisicaAuthService.Clear();
-            await DisplayAlert("Sesion", mensaje, "OK");
+            await DisplayAlert("Sesión", mensaje, "Aceptar");
             await Navigation.PopToRootAsync();
         }
         private void EtiquetaVisible()
@@ -333,7 +341,7 @@ namespace Appinventario.Views
             }
             catch (Exception fail)
             {
-                await DisplayAlert("Error", "Error: " + fail.Message, "ok");
+                await DisplayAlert("Error", fail.Message, "Aceptar");
             }
         }
 
@@ -344,14 +352,14 @@ namespace Appinventario.Views
                 LimpiarArticulo();
                 if (String.IsNullOrWhiteSpace( this.lblUrl.Text) == true)
                 {
-                    DisplayAlert("Advertencia", "No se ha configurado url del servicio en parámetros.", "ok");
+                    DisplayAlert("Advertencia", "Configure el servidor en Parámetros.", "Aceptar");
                     return;
                 }
                 this.Navigation.PushAsync(new BuscarTomaPage(this.lblUrl.Text));
             }
             catch (Exception fail)
             {
-                 DisplayAlert("Error", "Error: " + fail.Message, "ok");
+                 DisplayAlert("Error", fail.Message, "Aceptar");
             }
         }
 
@@ -363,25 +371,25 @@ namespace Appinventario.Views
 
                 if (String.IsNullOrWhiteSpace(this.lblUrl.Text) == true)
                 {
-                    DisplayAlert("Advertencia", "No se ha configurado url del servicio en parámetros.", "ok");
+                    DisplayAlert("Advertencia", "Configure el servidor en Parámetros.", "Aceptar");
                     return;
                 }
                 if (String.IsNullOrWhiteSpace(this.txtPagina.Text))
                 {
-                    DisplayAlert("Advertencia", "Debe insertar página.", "ok");
+                    _ = FeedbackService.ShowAsync("Indique el número de página.");
                     this.txtPagina.Focus();
                     return;
                 }
                 if (!result)
                 {
-                    this.DisplayAlert("Advertencia", "Debe insertar solo números.", "ok");
+                    _ = FeedbackService.ShowAsync("La página solo admite números.");
                     txtPagina.Text = "";
                     this.txtPagina.Focus();
                     return;
                 }
                 if (Convert.ToInt32(this.txtPagina.Text) > 50000)
                 {
-                    DisplayAlert("Advertencia", "No puede haber página mayor a 50000.", "ok");
+                    _ = FeedbackService.ShowAsync("La página debe ser un número entre 1 y 50000.");
                     this.txtPagina.Focus();
                     return;
                 }
@@ -394,7 +402,7 @@ namespace Appinventario.Views
             }
             catch (Exception fail)
             {
-                DisplayAlert("Error", "Error: " + fail.Message, "ok");
+                DisplayAlert("Error", fail.Message, "Aceptar");
             }
 
         }

@@ -51,7 +51,7 @@ namespace Appinventario.Views
                 catch (Exception ex)
                 {
                     Debug.WriteLine($"OnAppearing LoadTransferencia unexpected: {ex}");
-                    MostrarEstado("Error cargando transferencias.", true);
+                    MostrarEstado("No se pudieron cargar las transferencias.", true);
                 }
             }
         }
@@ -67,7 +67,7 @@ namespace Appinventario.Views
                 await Task.Yield();
 
                 estadoCarga.Text = "Cargando transferencias...";
-                estadoCarga.TextColor = Color.FromArgb("#475569");
+                estadoCarga.TextColor = AppColors.TextSecondary;
                 estadoCarga.IsVisible = true;
 
                 var parameter = await App.Database.GetParameterAsync();
@@ -77,7 +77,7 @@ namespace Appinventario.Views
                 Debug.WriteLine($"LoadTransferencia: serviceUrl={serviceUrl}");
                 if (string.IsNullOrWhiteSpace(serviceUrl))
                 {
-                    MostrarEstado("No se ha configurado url del servicio en parametros.", true);
+                    MostrarEstado("Configure el servidor en Parámetros.", true);
                     return;
                 }
 
@@ -107,7 +107,7 @@ namespace Appinventario.Views
             {
                 Debug.WriteLine($"LoadTransferencia exception: {fail}");
                 Util.TryPlayAudioFile("no-valido.mp3");
-                MostrarEstado("Error: " + Util.NormalizeHttpExceptionMessage(fail), true);
+                MostrarEstado("Sin conexión con el servidor. Revise la red y Parámetros (" + Util.NormalizeHttpExceptionMessage(fail) + ").", true);
             }
             finally
             {
@@ -228,8 +228,8 @@ namespace Appinventario.Views
 
         private static void PintarBoton(Button boton, bool activo)
         {
-            boton.BackgroundColor = activo ? Color.FromArgb("#2447B8") : Color.FromArgb("#E9EEF6");
-            boton.TextColor = activo ? Colors.White : Color.FromArgb("#475569");
+            boton.BackgroundColor = activo ? AppColors.Primary : AppColors.SurfaceMuted;
+            boton.TextColor = activo ? AppColors.OnPrimary : AppColors.TextSecondary;
         }
 
         private void MostrarEstado(string mensaje, bool error)
@@ -241,7 +241,7 @@ namespace Appinventario.Views
             }
 
             estadoCarga.Text = mensaje;
-            estadoCarga.TextColor = error ? Color.FromArgb("#9C2F27") : Color.FromArgb("#475569");
+            estadoCarga.TextColor = error ? AppColors.Error : AppColors.TextSecondary;
             estadoCarga.IsVisible = !string.IsNullOrWhiteSpace(mensaje);
         }
 
@@ -256,7 +256,7 @@ namespace Appinventario.Views
 
             if (item.Status != 0)
             {
-                await DisplayAlert("Transferencia", "Solo se puede acceder a transferencias guardadas.", "ok");
+                await DisplayAlert("Transferencia", "Solo se puede acceder a transferencias guardadas.", "Aceptar");
                 return;
             }
 
@@ -265,7 +265,7 @@ namespace Appinventario.Views
             {
                 if (!int.TryParse(item.Numero, out var numeroTransferencia))
                 {
-                    await DisplayAlert("Transferencia", "El numero de transferencia no es valido: " + item.Numero, "ok");
+                    await DisplayAlert("Transferencia", "El número de transferencia no es válido: " + item.Numero, "Aceptar");
                     return;
                 }
 
@@ -394,15 +394,15 @@ namespace Appinventario.Views
                 get
                 {
                     if (Status == 0)
-                        return Color.FromArgb("#F59E0B");
+                        return AppColors.Warning;
 
                     if (Status == 1)
-                        return Color.FromArgb("#00965F");
+                        return AppColors.Primary;
 
                     if (Status == 2)
-                        return Color.FromArgb("#1D4ED8");
+                        return AppColors.Info;
 
-                    return Color.FromArgb("#475569");
+                    return AppColors.TextSecondary;
                 }
             }
 
@@ -411,15 +411,15 @@ namespace Appinventario.Views
                 get
                 {
                     if (Status == 0)
-                        return Color.FromArgb("#FFF3D8");
+                        return AppColors.WarningContainer;
 
                     if (Status == 1)
-                        return Color.FromArgb("#E6FFF4");
+                        return AppColors.PrimaryContainer;
 
                     if (Status == 2)
-                        return Color.FromArgb("#EEF4FF");
+                        return AppColors.InfoContainer;
 
-                    return Color.FromArgb("#E9EEF6");
+                    return AppColors.SurfaceMuted;
                 }
             }
 

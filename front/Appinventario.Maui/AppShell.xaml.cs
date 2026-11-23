@@ -43,7 +43,7 @@ namespace Appinventario
 
         private async Task Salir()
         {
-            var action = await DisplayAlert("CONETSOFT", "Desea salir?", "SI", "NO");
+            var action = await DisplayAlert("Cerrar sesión", "¿Desea cerrar la sesión?", "Cerrar sesión", "Cancelar");
             if (!action)
                 return;
 

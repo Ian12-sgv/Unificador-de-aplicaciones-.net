@@ -3,7 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:local="clr-namespace:Appinventario.Controls"
              x:Class="Appinventario.Views.TomaFisica2Page"
-             Title="Toma F&#237;sica 2">
+             Title="Toma física 2">
     <ContentPage.ToolbarItems>
         <ToolbarItem IconImageSource="delete.png" Text="" Clicked="OnLimpiarClicked" />
         <ToolbarItem IconImageSource="search.png" Text="" Clicked="SearchCatalogo2" />
@@ -22,21 +22,21 @@
         <local:SoftkeyboardDisabledEntry x:Name="txtCodigo"
                                          Placeholder="C&#243;digo de barra"
                                          Text="{Binding CodigoBarra, Mode=TwoWay}"
-                                         FontSize="Large"
+                                         FontSize="{StaticResource FontHeadline}"
                                          HorizontalTextAlignment="Center"
                                          TextChanged="CodigoTextChanged"
                                          Completed="OnCodigoCompleted" />
-        <Label x:Name="lblArt" Text="Art&#237;culo" FontSize="Small" FontAttributes="Italic" />
+        <Label x:Name="lblArt" Text="Art&#237;culo" FontSize="{StaticResource FontBody}" FontAttributes="Italic" />
         <Label x:Name="lblArticulo"
-               FontSize="{OnIdiom Phone=14, Tablet=16, Desktop=18}"
+               FontSize="{StaticResource FontBody}"
                LineBreakMode="WordWrap"
-               TextColor="#F35E20" />
-        <Label x:Name="lblExis" Text="Cantidad:" FontSize="Small" FontAttributes="Italic" />
-        <Label x:Name="lblExistencia" FontSize="Large" TextColor="#F35E20" />
+               TextColor="{StaticResource Price}" />
+        <Label x:Name="lblExis" Text="Cantidad:" FontSize="{StaticResource FontBody}" FontAttributes="Italic" />
+        <Label x:Name="lblExistencia" FontSize="{StaticResource FontHeadline}" TextColor="{StaticResource Price}" />
         <Button Text="Ver detalle"
                 VerticalOptions="Center"
                 HorizontalOptions="Center"
-                HeightRequest="42"
+                HeightRequest="48"
                 MinimumWidthRequest="130"
                 Padding="16,6"
                 Clicked="LoadDetalle" />

@@ -1,5 +1,4 @@
 using Android.Content;
-using Android.Graphics.Drawables;
 using Android.Views.InputMethods;
 using Appinventario.Controls;
 using Microsoft.Maui.Handlers;
@@ -12,11 +11,7 @@ public class SoftkeyboardDisabledEntryHandler : EntryHandler
     {
         base.ConnectHandler(platformView);
 
-        var gradientDrawable = new GradientDrawable();
-        gradientDrawable.SetStroke(2, global::Android.Graphics.Color.Orange);
-        gradientDrawable.SetColor(global::Android.Graphics.Color.LightGray);
-
-        platformView.Background = gradientDrawable;
+        platformView.Background = EntryBackground.Create(platformView.Context, "Primary", 2, 8);
         platformView.SetPadding(50, platformView.PaddingTop, platformView.PaddingRight, platformView.PaddingBottom);
         platformView.ShowSoftInputOnFocus = false;
         platformView.FocusChange += OnFocusChange;

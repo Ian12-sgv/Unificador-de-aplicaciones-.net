@@ -3,34 +3,34 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="Appinventario.Views.TomaFisicaMenuPage"
              Title="Toma física"
-             BackgroundColor="#F4F6F8">
+             BackgroundColor="{StaticResource Canvas}">
     <Grid Padding="18" RowDefinitions="Auto,*,Auto" RowSpacing="16">
         <VerticalStackLayout Grid.Row="0" Spacing="3">
             <Label Text="Seleccione el tipo de toma"
-                   FontSize="22"
+                   FontSize="{StaticResource FontHeadline}"
                    FontAttributes="Bold"
-                   TextColor="#24343A" />
+                   TextColor="{StaticResource TextPrimary}" />
             <Label x:Name="lblUsuario"
-                   FontSize="13"
-                   TextColor="#60727A" />
+                   FontSize="{StaticResource FontBody}"
+                   TextColor="{StaticResource TextSecondary}" />
         </VerticalStackLayout>
 
         <VerticalStackLayout Grid.Row="1"
                              VerticalOptions="Center"
                              Spacing="16">
             <Button x:Name="btnToma1" Text="Toma física 1"
-                    FontSize="20"
+                    FontSize="{StaticResource FontTitle}"
                     HeightRequest="82"
                     Clicked="OnToma1Clicked"
-                    BackgroundColor="#0B8F72"
-                    TextColor="White"
+                    BackgroundColor="{StaticResource Primary}"
+                    TextColor="{StaticResource OnPrimary}"
                     CornerRadius="14" />
             <Button x:Name="btnToma2" Text="Toma física 2"
-                    FontSize="20"
+                    FontSize="{StaticResource FontTitle}"
                     HeightRequest="82"
                     Clicked="OnToma2Clicked"
-                    BackgroundColor="#176B87"
-                    TextColor="White"
+                    BackgroundColor="{StaticResource Brand}"
+                    TextColor="{StaticResource OnPrimary}"
                     CornerRadius="14" />
         </VerticalStackLayout>
 
@@ -38,6 +38,6 @@
                 Text="Cerrar sesión de Toma física"
                 Clicked="OnCerrarSesionClicked"
                 BackgroundColor="Transparent"
-                TextColor="#9C2F27" />
+                TextColor="{StaticResource Error}" />
     </Grid>
 </ContentPage>

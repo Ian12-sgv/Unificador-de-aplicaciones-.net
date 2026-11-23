@@ -4,48 +4,44 @@
              x:Class="Appinventario.Views.NewItemPage"
              xmlns:local="clr-namespace:Appinventario.Controls"
              Shell.PresentationMode="ModalAnimated"
-             Title="Parámetro"
+             Title="Parámetros"
              IsVisible="{Binding SelectCommand}"  >
     <ContentPage.Content>
         <StackLayout Spacing="3" Padding="15" >
             <Label Text="{Binding Id, Mode=TwoWay}" 
-                   FontSize="Medium" 
+                   FontSize="{StaticResource FontSubtitle}" 
                    IsVisible="false"/>
-            <Label Text="Ruta conexión compartida" 
-                   FontSize="Medium" />
-            <local:RoundedEntry  Placeholder="URL: 192.168.10.10:8000" 
+            <Label Text="Dirección del servidor" 
+                   FontSize="{StaticResource FontSubtitle}" />
+            <local:RoundedEntry  Placeholder="Ej.: 192.168.0.135:5001" 
                                  Text="{Binding IP, Mode=TwoWay}" 
-                                 FontSize="Medium"
+                                 FontSize="{StaticResource FontSubtitle}"
                                  Keyboard="Url"/>
-            <Label Text="La prueba valida el escucha de Borrador Dev sin depender de la base de datos."
-                   FontSize="12" />
+            <Label Text="La prueba verifica la conexión con el servidor, sin consultar la base de datos."
+                   FontSize="{StaticResource FontCaption}" />
             <Label Text=" " />
             <StackLayout Orientation="Horizontal">
-                <Label Text="Usar id único al procesar?" />
+                <Label Text="¿Usar ID único al procesar?" />
                 <CheckBox x:Name="chkImei" IsChecked="{Binding Idimei}"/>
             </StackLayout>
-            <StackLayout Orientation="Horizontal">
-                <Button Text="Cancelar" 
-                        Command="{Binding CancelCommand}" 
-                        HorizontalOptions="FillAndExpand">
-                    
-                </Button>
-                <Button Text="Testear" 
-                        Clicked="OnButtonClicked" 
-                        HorizontalOptions="FillAndExpand">
-                    
-                </Button>
-                <Button Text="Guardar" Command="{Binding SaveCommand}" 
-                        HorizontalOptions="FillAndExpand">
-                    
-                </Button>
-            </StackLayout>
+            <VerticalStackLayout Spacing="8">
+                <Button Text="Guardar"
+                        Command="{Binding SaveCommand}" />
+                <Button Text="Probar conexión"
+                        Clicked="OnButtonClicked"
+                        BackgroundColor="{StaticResource SurfaceMuted}"
+                        TextColor="{StaticResource Brand}" />
+                <Button Text="Cancelar"
+                        Command="{Binding CancelCommand}"
+                        BackgroundColor="Transparent"
+                        TextColor="{StaticResource TextSecondary}" />
+            </VerticalStackLayout>
             <Label x:Name="lblMessage" 
                    Text="{Binding Message, Mode=TwoWay}" 
-                   FontSize="Medium" 
+                   FontSize="{StaticResource FontSubtitle}" 
                    IsVisible="true"/>
             <Label Text="{Binding Sucursal, Mode=TwoWay}"
-                   FontSize="Medium" 
+                   FontSize="{StaticResource FontSubtitle}" 
                    IsVisible="true"/>
         </StackLayout>
     </ContentPage.Content>

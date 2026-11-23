@@ -29,7 +29,7 @@ namespace Appinventario.Views
 
         private async void EliminarTransfer_Clicked(object sender, EventArgs e)
         {
-            bool respuesta = await DisplayAlert("Eliminar Transferencia","Desea eliminar la Transferencia?", "Eliminar","Cancelar");
+            bool respuesta = await DisplayAlert("Eliminar transferencia", "¿Desea eliminar la transferencia?", "Eliminar", "Cancelar");
         }
 
 

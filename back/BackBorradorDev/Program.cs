@@ -15,12 +15,11 @@ if (!string.IsNullOrWhiteSpace(urls))
 {
     if (!ValidateConfiguredIp(urls, localIp, out var invalidIp))
     {
-        var configuredPort = GetConfiguredPorts(urls).FirstOrDefault();
-        if (configuredPort <= 0)
-            configuredPort = 5001;
-
-        WriteStartupLine("IP configurada " + invalidIp + " no coincide con la IP LOCAL " + localIp + ". Se usara la IP local automaticamente.");
-        urls = "http://0.0.0.0:" + configuredPort;
+        WriteStartupLine("IP ERROR: La IP configurada " + invalidIp + " no coincide con la IP LOCAL " + localIp + ". El escucha no se iniciará.");
+        LogStartupInfo(builder.Configuration, localIp);
+        WaitForExitWhenInteractive();
+        Environment.ExitCode = 1;
+        return;
     }
 
     var stopExistingSetting = builder.Configuration["Startup:StopExistingBackBorradorDevOnSamePort"];
@@ -65,10 +64,7 @@ var app = builder.Build();
 LogStartupInfo(app.Configuration, localIp);
 app.Lifetime.ApplicationStarted.Register(() =>
 {
-    foreach (var url in GetDisplayListenUrls(listenUrls))
-        Console.WriteLine("Now listening on: " + url);
-
-    Console.WriteLine("Application started. Press Ctrl+C to shut down.");
+    _ = LogStartupStatusAsync(app.Configuration, listenUrls);
 });
 
 // CORS antes de MapControllers
@@ -89,6 +85,29 @@ static void LogStartupInfo(IConfiguration configuration, string localIp)
     WriteStartupLine("IP LOCAL: " + localIp);
 }
 
+static void WaitForExitWhenInteractive()
+{
+    if (Console.IsInputRedirected || Console.IsOutputRedirected)
+        return;
+
+    using var cancellation = new ManualResetEventSlim(false);
+    ConsoleCancelEventHandler onCancel = (_, eventArgs) =>
+    {
+        eventArgs.Cancel = true;
+        cancellation.Set();
+    };
+
+    Console.CancelKeyPress += onCancel;
+    try
+    {
+        Console.WriteLine("Presiona Ctrl+C para cerrar.");
+        cancellation.Wait();
+    }
+    finally
+    {
+        Console.CancelKeyPress -= onCancel;
+    }
+}
 static void WriteStartupLine(string message)
 {
     Console.WriteLine($"{DateTime.Now:yyyy-MM-dd HH:mm:ss,fff} [1] INFO  WebServicesApiNetCor.Startup - {message}");
@@ -216,6 +235,35 @@ static bool Is172PrivateIp(string ip)
            second <= 31;
 }
 
+static async Task LogStartupStatusAsync(IConfiguration configuration, string listenUrls)
+{
+    var shouldCheckDatabase = configuration.GetValue("DatabaseDiagnostics:LogOnStartup", true);
+    if (shouldCheckDatabase)
+    {
+        var timeout = configuration.GetValue<int?>("DatabaseDiagnostics:ConnectTimeoutSeconds") ?? 3;
+        var diagnostic = await SqlConnectionDiagnostics.CheckAsync(
+            configuration.GetConnectionString("SqlServer"),
+            timeout);
+
+        if (!diagnostic.DatabaseOk)
+        {
+            WriteStartupLine($"SQL ERROR {diagnostic.ErrorType}: {diagnostic.Message}");
+            if (!string.IsNullOrWhiteSpace(diagnostic.Server))
+            {
+                WriteStartupLine($"SQL CONFIGURADO: Servidor={diagnostic.Server}; Base={diagnostic.Database}; Autenticación={diagnostic.Authentication}.");
+            }
+
+            return;
+        }
+
+        WriteStartupLine("SQL: CONEXIÓN SATISFACTORIA.");
+    }
+
+    foreach (var url in GetDisplayListenUrls(listenUrls))
+        Console.WriteLine("Now listening on: " + url);
+
+    Console.WriteLine("Application started. Press Ctrl+C to shut down.");
+}
 static void StopExistingBackBorradorDevOnSamePorts(string urls)
 {
     var ports = GetConfiguredPorts(urls);

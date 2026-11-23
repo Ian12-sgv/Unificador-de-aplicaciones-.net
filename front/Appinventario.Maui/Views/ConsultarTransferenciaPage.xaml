@@ -4,7 +4,7 @@
              xmlns:shapes="clr-namespace:Microsoft.Maui.Controls.Shapes;assembly=Microsoft.Maui.Controls"
              x:Class="Appinventario.Views.ConsultarTransferenciaPage"
              Title="Transferencias"
-             BackgroundColor="#F4F4F5">
+             BackgroundColor="{StaticResource Canvas}">
     <Grid RowDefinitions="Auto,*"
           Padding="8,12,8,0"
           RowSpacing="10">
@@ -12,81 +12,81 @@
                              Spacing="8">
             <VerticalStackLayout Spacing="0">
                 <Label Text="Transferencias"
-                       FontSize="20"
+                       FontSize="{StaticResource FontTitle}"
                        FontAttributes="Bold"
-                       TextColor="#111827"/>
-                <Label Text="Historial y Estado de Inventario"
-                       FontSize="13"
-                       TextColor="#111827"/>
+                       TextColor="{StaticResource TextPrimary}"/>
+                <Label Text="Historial y estado"
+                       FontSize="{StaticResource FontBody}"
+                       TextColor="{StaticResource TextPrimary}"/>
             </VerticalStackLayout>
 
-            <Border BackgroundColor="White"
-                    Stroke="#E2E8F0"
+            <Border BackgroundColor="{StaticResource Surface}"
+                    Stroke="{StaticResource Outline}"
                     StrokeThickness="1"
                     Padding="0">
                 <Border.StrokeShape>
                     <shapes:RoundRectangle CornerRadius="7"/>
                 </Border.StrokeShape>
                 <SearchBar x:Name="buscarTransferencia"
-                           Placeholder="Buscar por N, sucursal u observacion..."
+                           Placeholder="Buscar por número, sucursal u observación"
                            TextChanged="BuscarTransferencia_TextChanged"
                            BackgroundColor="Transparent"
-                           CancelButtonColor="#1F4AB8"
-                           FontSize="12"
-                           HeightRequest="44"/>
+                           CancelButtonColor="{StaticResource Primary}"
+                           FontSize="{StaticResource FontBody}"
+                           HeightRequest="48"/>
             </Border>
 
             <ScrollView Orientation="Horizontal"
                         HorizontalScrollBarVisibility="Never"
-                        HeightRequest="36">
-                <HorizontalStackLayout Spacing="7">
+                        HeightRequest="52">
+                <HorizontalStackLayout Spacing="8">
                     <Button x:Name="btnTodas"
                             Text="Todas"
                             Clicked="FiltroTodas_Clicked"
-                            HeightRequest="32"
-                            Padding="13,0"
-                            FontSize="12"
+                            HeightRequest="48"
+                            Padding="16,0"
+                            FontSize="{StaticResource FontBody}"
                             FontAttributes="Bold"
-                            CornerRadius="16"
-                            BackgroundColor="#2447B8"
-                            TextColor="White"/>
+                            CornerRadius="24"
+                            BackgroundColor="{StaticResource Primary}"
+                            TextColor="{StaticResource OnPrimary}"/>
                     <Button x:Name="btnAbierta"
-                            Text="GUARDADA"
+                            Text="Guardadas"
                             Clicked="FiltroAbierta_Clicked"
-                            HeightRequest="32"
-                            Padding="13,0"
-                            FontSize="12"
+                            HeightRequest="48"
+                            Padding="16,0"
+                            FontSize="{StaticResource FontBody}"
                             FontAttributes="Bold"
-                            CornerRadius="16"
-                            BackgroundColor="#E9EEF6"
-                            TextColor="#475569"/>
+                            CornerRadius="24"
+                            BackgroundColor="{StaticResource SurfaceMuted}"
+                            TextColor="{StaticResource TextSecondary}"/>
                     <Button x:Name="btnConfirmada"
-                            Text="APROBADA"
+                            Text="Aprobadas"
                             Clicked="FiltroConfirmada_Clicked"
-                            HeightRequest="32"
-                            Padding="13,0"
-                            FontSize="12"
+                            HeightRequest="48"
+                            Padding="16,0"
+                            FontSize="{StaticResource FontBody}"
                             FontAttributes="Bold"
-                            CornerRadius="16"
-                            BackgroundColor="#E9EEF6"
-                            TextColor="#475569"/>
+                            CornerRadius="24"
+                            BackgroundColor="{StaticResource SurfaceMuted}"
+                            TextColor="{StaticResource TextSecondary}"/>
                     <Button x:Name="btnProcesada"
-                            Text="EXPORTADA"
+                            Text="Exportadas"
                             Clicked="FiltroProcesada_Clicked"
-                            HeightRequest="32"
-                            Padding="13,0"
-                            FontSize="12"
+                            HeightRequest="48"
+                            Padding="16,0"
+                            FontSize="{StaticResource FontBody}"
                             FontAttributes="Bold"
-                            CornerRadius="16"
-                            BackgroundColor="#E9EEF6"
-                            TextColor="#475569"/>
+                            CornerRadius="24"
+                            BackgroundColor="{StaticResource SurfaceMuted}"
+                            TextColor="{StaticResource TextSecondary}"/>
                 </HorizontalStackLayout>
             </ScrollView>
 
             <Label x:Name="estadoCarga"
                    IsVisible="False"
-                   FontSize="12"
-                   TextColor="#9C2F27"/>
+                   FontSize="{StaticResource FontCaption}"
+                   TextColor="{StaticResource Error}"/>
         </VerticalStackLayout>
 
         <CollectionView Grid.Row="1"
@@ -96,15 +96,15 @@
             <CollectionView.EmptyView>
                 <Grid Padding="12,40">
                     <Label Text="Sin transferencias para mostrar."
-                           FontSize="13"
+                           FontSize="{StaticResource FontBody}"
                            HorizontalTextAlignment="Center"
-                           TextColor="#64748B"/>
+                           TextColor="{StaticResource TextSecondary}"/>
                 </Grid>
             </CollectionView.EmptyView>
             <CollectionView.ItemTemplate>
                 <DataTemplate>
-                    <Border BackgroundColor="White"
-                            Stroke="#EEF2F7"
+                    <Border BackgroundColor="{StaticResource Surface}"
+                            Stroke="{StaticResource SurfaceMuted}"
                             StrokeThickness="1"
                             Margin="0,0,0,10"
                             Padding="13,12">
@@ -121,8 +121,8 @@
                                    Grid.Column="0"
                                    Text="{Binding NumeroDisplay}"
                                    FontAttributes="Bold"
-                                   FontSize="13"
-                                   TextColor="#111827"/>
+                                   FontSize="{StaticResource FontBody}"
+                                   TextColor="{StaticResource TextPrimary}"/>
                             <Border Grid.Row="0"
                                     Grid.Column="1"
                                     BackgroundColor="{Binding EstadoFondo}"
@@ -134,25 +134,25 @@
                                 <Label Text="{Binding EstadoTexto}"
                                        TextColor="{Binding EstadoColor}"
                                        FontAttributes="Bold"
-                                       FontSize="12"/>
+                                       FontSize="{StaticResource FontCaption}"/>
                             </Border>
 
                             <VerticalStackLayout Grid.Row="1"
                                                  Grid.ColumnSpan="2"
                                                  Spacing="8">
                                 <Label Text="{Binding SucursalNombreDisplay}"
-                                       FontSize="12"
-                                       TextColor="#111827"/>
+                                       FontSize="{StaticResource FontCaption}"
+                                       TextColor="{StaticResource TextPrimary}"/>
                                 <Label Text="{Binding ObservacionDisplay}"
-                                       FontSize="12"
+                                       FontSize="{StaticResource FontCaption}"
                                        FontAttributes="Italic"
-                                       TextColor="#111827"/>
+                                       TextColor="{StaticResource TextPrimary}"/>
                             </VerticalStackLayout>
 
                             <BoxView Grid.Row="2"
                                      Grid.ColumnSpan="2"
                                      HeightRequest="1"
-                                     Color="#EEF2F7"/>
+                                     Color="{StaticResource SurfaceMuted}"/>
 
                             <Grid Grid.Row="3"
                                   Grid.ColumnSpan="2"
@@ -160,16 +160,16 @@
                                   ColumnSpacing="8">
                                 <Label Grid.Column="0"
                                        Text="{Binding FechaDisplay}"
-                                       FontSize="12"
-                                       TextColor="#111827"/>
+                                       FontSize="{StaticResource FontCaption}"
+                                       TextColor="{StaticResource TextPrimary}"/>
                                 <Label Grid.Column="1"
                                        Text="{Binding ResumenItems}"
-                                       FontSize="12"
-                                       TextColor="#111827"/>
+                                       FontSize="{StaticResource FontCaption}"
+                                       TextColor="{StaticResource TextPrimary}"/>
                                 <Label Grid.Column="2"
                                        Text=">"
-                                       FontSize="18"
-                                       TextColor="#94A3B8"
+                                       FontSize="{StaticResource FontTitle}"
+                                       TextColor="{StaticResource TextSecondary}"
                                        VerticalTextAlignment="Center"/>
                             </Grid>
                         </Grid>

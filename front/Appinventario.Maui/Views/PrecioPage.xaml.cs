@@ -116,13 +116,13 @@ var codigoBarra = (BarcodeEntry.Text ?? string.Empty).Trim();
             {
                 if (string.IsNullOrWhiteSpace(baseUrl))
                 {
-                    await DisplayAlert("Advertencia", "No se ha configurado url del servicio en parametros.", "ok");
+                    await DisplayAlert("Advertencia", "Configure el servidor en Parámetros.", "Aceptar");
                     return;
                 }
 
                 if (string.IsNullOrWhiteSpace(codigoBarra))
                 {
-                    await DisplayAlert("Advertencia", "Debe insertar codigo de barra.", "ok");
+                    await FeedbackService.ShowAsync("Escanee o escriba un código de barra.");
                     return;
                 }
 
@@ -132,7 +132,7 @@ var codigoBarra = (BarcodeEntry.Text ?? string.Empty).Trim();
                 using var response = await _httpClient.SendAsync(request);
                 if (response.StatusCode != HttpStatusCode.OK)
                 {
-                    string errorMessage = "No fue posible consultar el precio. Verifica el escucha o la conexion.";
+                    string errorMessage = "No se pudo consultar el precio. Revise la conexión con el servidor.";
                     string errorContent = await response.Content.ReadAsStringAsync();
 
                     if (!string.IsNullOrWhiteSpace(errorContent))
@@ -160,7 +160,7 @@ var codigoBarra = (BarcodeEntry.Text ?? string.Empty).Trim();
 
                     EtiquetaInVisible();
                     Util.TryPlayAudioFile("no-valido.mp3");
-                    await DisplayAlert("Informacion", errorMessage, "ok");
+                    await DisplayAlert("Información", errorMessage, "Aceptar");
                     return;
                 }
 
@@ -170,7 +170,7 @@ var codigoBarra = (BarcodeEntry.Text ?? string.Empty).Trim();
                 if (listArt.Count == 0)
                 {
                     Util.TryPlayAudioFile("no-valido.mp3");
-                    await DisplayAlert("Error", "Error de codigo de barra.", "ok");
+                    await DisplayAlert("Error", "No se encontró ningún artículo con ese código.", "Aceptar");
                     EtiquetaInVisible();
                     return;
                 }
@@ -197,7 +197,7 @@ var codigoBarra = (BarcodeEntry.Text ?? string.Empty).Trim();
             {
                 EtiquetaInVisible();
                 Util.TryPlayAudioFile("no-valido.mp3");
-                await DisplayAlert("Error", "Error: " + Util.NormalizeHttpExceptionMessage(fail, "El escucha tardó demasiado en responder. Intenta de nuevo."), "ok");
+                await DisplayAlert("Error", Util.NormalizeHttpExceptionMessage(fail, "El servidor tardó demasiado en responder. Intente de nuevo."), "Aceptar");
             }
             finally
             {

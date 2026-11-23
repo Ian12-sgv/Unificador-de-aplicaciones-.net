@@ -1,4 +1,5 @@
 ﻿using Appinventario.Models.BorradorDev;
+using Appinventario.Services;
 using Appinventario.Services.BorradorDev;
 using System;
 using System.Collections.ObjectModel;
@@ -52,7 +53,7 @@ namespace Appinventario.Views.BorradorDev
                 var response = await apiService.GetDetalleAsync(numero);
                 if (response == null || response.Header == null)
                 {
-                    SetStatus("Ese numero no existe en la base de datos.", true);
+                    SetStatus("No existe un borrador con ese número.", true);
                     rows.Clear();
                     frameLock.IsVisible = false;
                     lblEmpty.IsVisible = true;
@@ -84,7 +85,7 @@ namespace Appinventario.Views.BorradorDev
 
         private void FillHeader(BorradorDevHeader header)
         {
-            lblHeaderNumero.Text = "Numero: " + header.Numero;
+            lblHeaderNumero.Text = "Número: " + header.Numero;
             lblHeaderFecha.Text = "Fecha: " + (header.Fecha.HasValue ? header.Fecha.Value.ToString("yyyy-MM-dd") : "-");
             lblHeaderUsuario.Text = "Usuario: " + (string.IsNullOrWhiteSpace(header.Usuario) ? "-" : header.Usuario);
             lblHeaderObservacion.Text = "Observacion: " + (string.IsNullOrWhiteSpace(header.Observacion) ? "-" : header.Observacion);
@@ -110,7 +111,7 @@ namespace Appinventario.Views.BorradorDev
         {
             if (locked)
             {
-                SetStatus("Este numero esta aprobado y no se puede editar.", true);
+                SetStatus("Este borrador está aprobado y no se puede editar.", true);
                 return;
             }
 
@@ -161,10 +162,10 @@ namespace Appinventario.Views.BorradorDev
         private void SetStatus(string message, bool isError)
         {
             lblStatus.Text = message;
-            lblStatus.TextColor = isError ? Color.FromHex("#9C2F27") : Color.FromHex("#166534");
+            lblStatus.TextColor = isError ? AppColors.Error : AppColors.Primary;
             frameStatus.IsVisible = !string.IsNullOrWhiteSpace(message);
-            frameStatus.BackgroundColor = isError ? Color.FromHex("#FDECEA") : Color.FromHex("#E8F5EE");
-            frameStatus.BorderColor = isError ? Color.FromHex("#F4C7C3") : Color.FromHex("#B7E1C3");
+            frameStatus.BackgroundColor = isError ? AppColors.ErrorContainer : AppColors.PrimaryContainer;
+            frameStatus.BorderColor = isError ? AppColors.ErrorOutline : AppColors.PrimaryOutline;
         }
 
         private class DetailRowState
@@ -175,7 +176,7 @@ namespace Appinventario.Views.BorradorDev
 
             public string CodigoDisplay
             {
-                get { return "Codigo: " + (Item != null && !string.IsNullOrWhiteSpace(Item.CodigoBarra) ? Item.CodigoBarra : "-"); }
+                get { return "Código: " + (Item != null && !string.IsNullOrWhiteSpace(Item.CodigoBarra) ? Item.CodigoBarra : "-"); }
             }
 
             public string CajaDisplay

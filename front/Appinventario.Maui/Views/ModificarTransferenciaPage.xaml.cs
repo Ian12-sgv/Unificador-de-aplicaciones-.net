@@ -27,7 +27,7 @@ namespace Appinventario.Views
 
         private async void ModificarTransfer_Clicked(object sender, EventArgs e)
         {
-            bool respuesta = await DisplayAlert("Modificar Transferencia", "Desea Modificar la Transferencia?", "Modificar", "Cancelar");
+            bool respuesta = await DisplayAlert("Modificar transferencia", "¿Desea modificar la transferencia?", "Modificar", "Cancelar");
         }
     }
 }

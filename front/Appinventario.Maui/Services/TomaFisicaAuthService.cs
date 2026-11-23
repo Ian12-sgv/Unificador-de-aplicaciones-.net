@@ -22,7 +22,7 @@ namespace Appinventario.Services
             var baseUrl = BorradorDevSettings.BuildBaseUrlFromPrecioEndpoint(parameter?.IP);
 
             if (string.IsNullOrWhiteSpace(baseUrl))
-                return TomaFisicaLoginResult.Error("Configure el escucha en Parámetros.");
+                return TomaFisicaLoginResult.Error("Configure el servidor en Parámetros.");
 
             if (string.IsNullOrWhiteSpace(usuario) || string.IsNullOrEmpty(password))
                 return TomaFisicaLoginResult.Error("Indique usuario y contraseña.");
@@ -58,7 +58,7 @@ namespace Appinventario.Services
             catch (Exception fail)
             {
                 return TomaFisicaLoginResult.Error(
-                    Util.NormalizeHttpExceptionMessage(fail, "El escucha tardó demasiado en responder."));
+                    Util.NormalizeHttpExceptionMessage(fail, "El servidor tardó demasiado en responder."));
             }
         }
 

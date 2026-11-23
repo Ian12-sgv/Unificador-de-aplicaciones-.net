@@ -3,8 +3,8 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="Appinventario.Views.BorradorDev.BorradorDevSearchPage"
              Visual="Material"
-             Title="Buscar Numero"
-             BackgroundColor="#F4F6F8">
+             Title="Buscar número"
+             BackgroundColor="{StaticResource Canvas}">
     <ContentPage.Content>
         <Grid Padding="12" RowSpacing="10">
             <Grid.RowDefinitions>
@@ -23,17 +23,17 @@
 
                 <Entry x:Name="txtSearch"
                        Grid.Column="0"
-                       Placeholder="Numero, usuario u observacion"
+                       Placeholder="Número, usuario u observación"
                        TextChanged="OnSearchTextChanged"
                        Completed="OnSearchCompleted"
-                       BackgroundColor="White"
-                       TextColor="#1D2E35" />
+                       BackgroundColor="{StaticResource Surface}"
+                       TextColor="{StaticResource TextPrimary}" />
 
                 <Button Grid.Column="1"
                         Text="Buscar"
                         Clicked="OnSearchClicked"
-                        BackgroundColor="#EAF1F4"
-                        TextColor="#1E4855"
+                        BackgroundColor="{StaticResource SurfaceMuted}"
+                        TextColor="{StaticResource Brand}"
                         CornerRadius="8" />
             </Grid>
 
@@ -41,23 +41,23 @@
                     Grid.Row="1"
                     IsVisible="False"
                     Padding="12,10"
-                    Stroke="#D6E0E5"
+                    Stroke="{StaticResource Outline}"
                     StrokeThickness="1"
-                    BackgroundColor="#EEF5F7">
+                    BackgroundColor="{StaticResource SurfaceMuted}">
                 <Border.StrokeShape>
                     <RoundRectangle CornerRadius="10" />
                 </Border.StrokeShape>
                 <Label x:Name="lblStatus"
-                       FontSize="13"
-                       TextColor="#1E4855"
+                       FontSize="{StaticResource FontBody}"
+                       TextColor="{StaticResource Brand}"
                        LineBreakMode="WordWrap" />
             </Border>
 
             <Label Grid.Row="2"
                    Text="Resultados"
                    FontAttributes="Bold"
-                   FontSize="13"
-                   TextColor="#60727A" />
+                   FontSize="{StaticResource FontBody}"
+                   TextColor="{StaticResource TextSecondary}" />
 
             <ScrollView Grid.Row="3"
                         VerticalScrollBarVisibility="Always">
@@ -68,12 +68,12 @@
 
             <Button x:Name="btnMore"
                     Grid.Row="4"
-                    Text="Mas"
+                    Text="Más"
                     Clicked="OnMoreClicked"
                     IsVisible="False"
-                    BackgroundColor="#FFFFFF"
-                    TextColor="#1E4855"
-                    BorderColor="#C8D5DB"
+                    BackgroundColor="{StaticResource Surface}"
+                    TextColor="{StaticResource Brand}"
+                    BorderColor="{StaticResource Outline}"
                     BorderWidth="1"
                     CornerRadius="8" />
         </Grid>

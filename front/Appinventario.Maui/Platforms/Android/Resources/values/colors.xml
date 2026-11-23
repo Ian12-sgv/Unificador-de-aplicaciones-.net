@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#512BD4</color>
-    <color name="colorPrimaryDark">#2B0B98</color>
-    <color name="colorAccent">#2B0B98</color>
+    <!-- Mantener en sincronía con Resources/Styles/Colors.xaml (Brand, BrandDark, Primary). -->
+    <color name="colorPrimary">#1E4855</color>
+    <color name="colorPrimaryDark">#163A45</color>
+    <color name="colorAccent">#087A62</color>
 </resources>
